@@ -17,7 +17,7 @@ namespace LogicLayer
         public static string GetSystemFolder()
         {
             string AppendedPath = HouseKeeping.AppenedFileSystemPath(RootFolder,"System");
-            return RootFolder;
+            return AppendedPath;
         }
 
         public static string AppenedFileSystemPath(params string[] p)

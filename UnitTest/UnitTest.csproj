@@ -53,6 +53,14 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
+    <Compile Include="Helpers.cs" />
+    <Compile Include="ProjectItemTestsBaseClass.cs" />
+    <Compile Include="ProjectToDoTest.cs" />
+    <Compile Include="SourceControlPayloadTest.cs" />
+    <Compile Include="DocumentPayloadTests.cs" />
+    <Compile Include="CommunicationPayloadTests.cs" />
+    <Compile Include="ChecklistPayloadTests.cs" />
+    <Compile Include="ProjectPayloadTests.cs" />
     <Compile Include="XMLDALTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

@@ -39,9 +39,21 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Common\XmlOperations.cs" />
     <Compile Include="HouseKeeping.cs" />
+    <Compile Include="Interfaces\IProjectItem.cs" />
+    <Compile Include="Interfaces\IXmlLoadable.cs" />
+    <Compile Include="Payloads\CheckListPayload.cs" />
+    <Compile Include="Payloads\CommunicationPayload.cs" />
+    <Compile Include="Payloads\DocumentPayload.cs" />
+    <Compile Include="Payloads\ProjectPayload.cs" />
+    <Compile Include="Payloads\SourceControlPayload.cs" />
+    <Compile Include="Payloads\ToDoPayload.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="XMLDAL.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="ExtensionPoints\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
