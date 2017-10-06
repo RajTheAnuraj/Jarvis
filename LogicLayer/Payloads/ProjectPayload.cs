@@ -61,6 +61,35 @@ namespace LogicLayer.Payloads
             this.ProjectLogText = Retval.ProjectLogText;
             this.ProjectName = Retval.ProjectName;
             this.ProjectSummaryText = Retval.ProjectSummaryText;
+            CreateProjectItems(xml, this);
+        }
+
+        private void CreateProjectItems(string xml, ProjectPayload projectPayload)
+        {
+            XmlDocument xdoc = new XmlDocument();
+            xdoc.LoadXml(xml);
+            var rootNode = xdoc.DocumentElement;
+            var projectItems = rootNode.SelectSingleNode("ProjectItems");
+            foreach (XmlNode xn in projectItems.ChildNodes)
+            {
+                if (xn.NodeType == XmlNodeType.Element)
+                {
+                    string docXml = xn.OuterXml;
+                    var ndtypeOfProjectItem = xn.SelectSingleNode("ProjectItemClassName");
+                    if (ndtypeOfProjectItem == null) continue;
+                    string typeOfProjectItem = ndtypeOfProjectItem.InnerText;
+                    IProjectItem PI = Activator.CreateInstance(Type.GetType(typeOfProjectItem)) as IProjectItem;
+                    PI.CreateFromXml(docXml);
+                    PI.onProjectItemDeleted += PI_onProjectItemDeleted;
+                    projectPayload.ProjectItems.Add(PI);
+                }
+
+            }
+        }
+
+        void PI_onProjectItemDeleted(IProjectItem item)
+        {
+            this.ProjectItems.Remove(item);
         }
 
         public string ReadToString()
@@ -112,7 +141,12 @@ namespace LogicLayer.Payloads
 
         public void UpdateFromXml(string xml)
         {
-            throw new NotImplementedException();
+            ProjectPayload Retval = XmlOperations.DeserializeFromXml<ProjectPayload>(xml);
+            this.ProjectLogText = Retval.ProjectLogText;
+            this.ProjectName = Retval.ProjectName;
+            this.ProjectSummaryText = Retval.ProjectSummaryText;
+            this.ProjectItems.Clear();
+            CreateProjectItems(xml, this);
         }
 
         public void DeleteItem()
