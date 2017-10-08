@@ -70,6 +70,15 @@ namespace LogicLayer.Implementations
             return new DeleteProjectItemCommand(Project, ProjectItem);
         }
 
+        public IUndoableCommand GetProjectInitializeCommand(ProjectPayload Project)
+        {
+            return new ProjectInitializeCommand(Project);
+        }
+
+        public IUndoableCommand GetProjectSaveCommand(ProjectPayload Project)
+        {
+            return new ProjectSaveCommand(Project);
+        }
 
         public ICommand GetFileReadAsStringCommand(string FilePath)
         {
@@ -80,5 +89,8 @@ namespace LogicLayer.Implementations
         {
             return new ReadContentToProjectItem(Project, ProjectItem);
         }
+
+
+       
     }
 }

@@ -28,7 +28,6 @@ namespace LogicLayer.Payloads
         public override void CreateFromXml(string xml)
         {
             DocumentPayload Retval = XmlOperations.DeserializeFromXml<DocumentPayload>(xml);
-            this.Id = Retval.Id??Guid.NewGuid().ToString();
             base.LoadFromXml(Retval);
         }
 

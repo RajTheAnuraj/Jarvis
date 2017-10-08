@@ -53,8 +53,9 @@ namespace LogicLayer.Implementations
                 createProjTrashDirectory.Execute();
             }
 
+            string projectXml = Project.ProjectFolder + "\\Project.Jarvis";
             //if project xml doesnt exisit Create it
-            if (!File.Exists(Project.ProjectFolder + "\\Project.Jarvis"))
+            if (!File.Exists(projectXml))
             {
                 string Content = Project.ReadToString();
                 IUndoableCommand createProjectFile = CommandProvider.GetFileCreateCommand(Project.ProjectFolder + "\\Project.Jarvis", Content);
@@ -62,7 +63,10 @@ namespace LogicLayer.Implementations
                 createProjectFile.Execute();
             }else //if file exists load it to project
             {
-
+                ICommand fileReadCommand = CommandProvider.GetFileReadAsStringCommand(projectXml);
+                fileReadCommand.Execute();
+                string fileContent = ((IReadTillEndAsString)fileReadCommand).ReadTillEndAsString;
+                Project.UpdateFromXml(fileContent);
             }
             
         }

@@ -24,6 +24,10 @@ namespace LogicLayer.Interfaces
         IUndoableCommand GetAddProjectItemCommand(ProjectPayload Project, PayloadBase ProjectItemToBeAdded);
         IUndoableCommand GetDeleteProjectItemCommand(ProjectPayload Project, PayloadBase ProjectItem);
 
+        IUndoableCommand GetProjectInitializeCommand(ProjectPayload Project);
+        IUndoableCommand GetProjectSaveCommand(ProjectPayload Project);
+
+
         ICommand GetFileReadAsStringCommand(string FilePath);
         ICommand GetReadContentToProjectItem(ProjectPayload Project, PayloadBase ProjectItem);
     }

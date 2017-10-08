@@ -50,12 +50,17 @@ namespace LogicLayer.Implementations
 
                 if (ProjectItemToBeAdded.NeedsUpload)
                 {
-                    ProjectItemToBeAdded.FileName = Path.GetFileName(ProjectItemToBeAdded.UploadPath);
-                    string DocumentToBeAddedDocumentPath = thisDocumentsFolder + "\\" + ProjectItemToBeAdded.FileName;
+                    if (!String.IsNullOrWhiteSpace(ProjectItemToBeAdded.UploadPath))
+                    {
+                        ProjectItemToBeAdded.FileName = Path.GetFileName(ProjectItemToBeAdded.UploadPath);
+                        string DocumentToBeAddedDocumentPath = thisDocumentsFolder + "\\" + ProjectItemToBeAdded.FileName;
 
-                    IUndoableCommand copyCommand = CommandProvider.GetFileCopyCommand(ProjectItemToBeAdded.UploadPath, DocumentToBeAddedDocumentPath);
-                    History.Push(copyCommand);
-                    copyCommand.Execute();
+                        IUndoableCommand copyCommand = CommandProvider.GetFileCopyCommand(ProjectItemToBeAdded.UploadPath, DocumentToBeAddedDocumentPath);
+                        History.Push(copyCommand);
+                        copyCommand.Execute();
+                    }
+
+                    string documentPath = thisDocumentsFolder + "\\" + ProjectItemToBeAdded.FileName;
                 }
                 else
                 {
@@ -66,7 +71,7 @@ namespace LogicLayer.Implementations
                         History.Push(createCommand);
                         createCommand.Execute();
                     }
-                } 
+                }
             }
             Project.AddProjectItem(ProjectItemToBeAdded);
         }

@@ -9,6 +9,11 @@ namespace LogicLayer.Payloads
 {
     public abstract class PayloadBase : IProjectItem
     {
+        public PayloadBase()
+        {
+            this.Id = Guid.NewGuid().ToString();
+        }
+
         protected void LoadFromXml(PayloadBase child)
         {
             this.Id = child.Id;

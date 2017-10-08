@@ -3,6 +3,9 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using LogicLayer.Payloads;
 using LogicLayer.Interfaces;
 using LogicLayer.Implementations;
+using System.Collections;
+using System.Collections.Generic;
+using LogicLayer.Factories;
 
 namespace UnitTest
 {
@@ -12,7 +15,7 @@ namespace UnitTest
         [TestMethod]
         public void TestInterfaceCollection()
         {
-            ProjectPayload pload = new ProjectPayload();
+            ProjectPayload pload = new ProjectPayload("Raj");
             pload.AddProjectItem(new DocumentPayload {  ProjectItemSubType = "Screenshot" });
             pload.AddProjectItem(new CommunicationPayload { Id = "comin", ProjectItemSubType = "Email" });
 
@@ -53,7 +56,7 @@ namespace UnitTest
             </ProjectPayload>";
 
 
-            IProjectItem pload = new ProjectPayload();
+            IProjectItem pload = new ProjectPayload("Anuraj");
             pload.CreateFromXml(Input);
             string str = pload.ReadToString();
             Assert.AreEqual(Helpers.rg.Replace(Input, ""), Helpers.rg.Replace(str, ""));
@@ -203,20 +206,23 @@ namespace UnitTest
         [TestMethod]
         public void ProjectInitializeTest()
         {
-            ProjectPayload pload = new ProjectPayload();
-            pload.ProjectName = "Anuraj";
+            ProjectPayload pload = new ProjectPayload("Anuraj");
 
             ProjectInitializeCommand com = new ProjectInitializeCommand(pload);
             com.Execute();
 
-            com.Undo();
+            PayloadBase pb = ((PayloadBase)(pload.GetProjectItem(0)));
+            ICommand bb = new ReadContentToProjectItem(pload, pb);
+            bb.Execute();
+
+
+            //com.Undo();
         }
 
         [TestMethod]
         public void ProjectSaveTest()
         {
-            ProjectPayload pload = new ProjectPayload();
-            pload.ProjectName = "Anuraj";
+            ProjectPayload pload = new ProjectPayload("Raj");
 
             ProjectInitializeCommand com = new ProjectInitializeCommand(pload);
             com.Execute();
@@ -296,6 +302,101 @@ namespace UnitTest
 
             modDoc1.Undo();
             modDoc.Undo();
+        }
+
+
+        [TestMethod]
+        public void FullConsoleTest()
+        {
+            Stack<IUndoableCommand> History = new Stack<IUndoableCommand>();
+            IProjectPayloadProvider CommandProvider = ProviderFactory.GetCurrentProvider();
+
+            try
+            {
+                ProjectPayload PPload = new ProjectPayload("Manjari");
+                
+                IUndoableCommand projectInitialize = CommandProvider.GetProjectInitializeCommand(PPload);
+                History.Push(projectInitialize);
+                projectInitialize.Execute();
+
+                DocumentPayload Dpayload = new DocumentPayload();
+                Dpayload.DisplayString = "Application Config";
+                Dpayload.NeedsUpload = true;
+                Dpayload.UploadPath = @"C:\Users\Anuraj\Documents\IISExpress\config\applicationhost.config";
+                Dpayload.ProjectItemSubType = "File";
+                IUndoableCommand addDocCommand = CommandProvider.GetAddProjectItemCommand(PPload, Dpayload);
+                History.Push(addDocCommand);
+                addDocCommand.Execute();
+
+                DocumentPayload DplCodeSnippet = new DocumentPayload();
+                DplCodeSnippet.DisplayString = "Queries For Rebates";
+                DplCodeSnippet.NeedsUpload = false;
+                DplCodeSnippet.FileContent = "Select * from table";
+                DplCodeSnippet.ProjectItemSubType = "Code Snippet";
+                DplCodeSnippet.FileName = "Queries For Rebates.txt";
+                IUndoableCommand addDocSnippetCommand = CommandProvider.GetAddProjectItemCommand(PPload, DplCodeSnippet);
+                History.Push(addDocSnippetCommand);
+                addDocSnippetCommand.Execute();
+
+                CommunicationPayload cpl = new CommunicationPayload();
+                cpl.DisplayString = "Email With Peopls";
+                cpl.FileContent = "Hi How are you";
+                cpl.FileName = "EmailWithPeeps.txt";
+                cpl.NeedsUpload = false;
+                cpl.ProjectItemSubType = "Email";
+                IUndoableCommand addComCommand = CommandProvider.GetAddProjectItemCommand(PPload, cpl);
+                History.Push(addComCommand);
+                addComCommand.Execute();
+
+                ToDoPayload tdpl = new ToDoPayload();
+                tdpl.DisplayString = "Get the stuff done man";
+                tdpl.DueDate = DateTime.Now;
+                IUndoableCommand addToDoCommand = CommandProvider.GetAddProjectItemCommand(PPload, tdpl);
+                History.Push(addToDoCommand);
+                addToDoCommand.Execute();
+
+                SourceControlPayload scpl = new SourceControlPayload();
+                scpl.DisplayString = "12345";
+                scpl.ProjectItemSubType = "Changeset";
+                scpl.SourceControlDateTime = DateTime.Now;
+                scpl.SourceControlDetail = "Assembly control";
+                IUndoableCommand addSCCommand = CommandProvider.GetAddProjectItemCommand(PPload, scpl);
+                History.Push(addSCCommand);
+                addSCCommand.Execute();
+
+                IUndoableCommand saveProjCommand = CommandProvider.GetProjectSaveCommand(PPload);
+                History.Push(saveProjCommand);
+                saveProjCommand.Execute();
+
+                while (true)
+                {
+                    if (History.Count == 0) break;
+                    History.Pop().Undo();
+                }
+            }
+            catch (Exception)
+            {
+                while (true)
+                {
+                    if (History.Count == 0) break;
+                    History.Pop().Undo();
+                }
+                throw;
+            }
+
+
+        }
+
+        [TestMethod]
+        public void ProjectInitializeFullTest()
+        {
+            Stack<IUndoableCommand> History = new Stack<IUndoableCommand>();
+            IProjectPayloadProvider CommandProvider = ProviderFactory.GetCurrentProvider();
+
+            ProjectPayload pl = new ProjectPayload("Manjari");
+            IUndoableCommand initProjCommand = CommandProvider.GetProjectInitializeCommand(pl);
+            History.Push(initProjCommand);
+            initProjCommand.Execute();
         }
 
 

@@ -9,6 +9,7 @@ using System.Xml;
 using System.IO;
 using System.Xml.Linq;
 using LogicLayer.Implementations;
+using LogicLayer.Factories;
 
 namespace LogicLayer.Payloads
 {
@@ -16,19 +17,21 @@ namespace LogicLayer.Payloads
     {
         string _ProjectFolder;
 
-        public ProjectPayload()
+        private ProjectPayload()
         {
             Id = Guid.NewGuid().ToString();
             ProjectItems = new List<IProjectItem>();
+            CommandProvider = ProviderFactory.GetCurrentProvider();
         }
 
-        public ProjectPayload(string ProjectFolder)
+        public ProjectPayload(string ProjectName)
             : this()
         {
-            this.ProjectFolder = ProjectFolder;
+            this.ProjectName = ProjectName;
         }
 
         Stack<IUndoableCommand> History = new Stack<IUndoableCommand>();
+        IProjectPayloadProvider CommandProvider = null;
 
         public string Id { get; set; }
         public string ProjectName { get; set; }
@@ -163,10 +166,13 @@ namespace LogicLayer.Payloads
                     var ndtypeOfProjectItem = xn.SelectSingleNode("ProjectItemClassName");
                     if (ndtypeOfProjectItem == null) continue;
                     string typeOfProjectItem = ndtypeOfProjectItem.InnerText;
-                    IProjectItem PI = Activator.CreateInstance(Type.GetType(typeOfProjectItem)) as IProjectItem;
+                    PayloadBase PI = Activator.CreateInstance(Type.GetType(typeOfProjectItem)) as PayloadBase;
                     PI.CreateFromXml(docXml);
-                    PI.onProjectItemDeleted += PI_onProjectItemDeleted;
-                    projectPayload.ProjectItems.Add(PI);
+
+                    IUndoableCommand addProjectItemCommand = CommandProvider.GetAddProjectItemCommand(this, PI);
+                    History.Push(addProjectItemCommand);
+                    addProjectItemCommand.Execute();
+                    
                 }
 
             }
@@ -234,7 +240,6 @@ namespace LogicLayer.Payloads
         {
             ProjectPayload Retval = XmlOperations.DeserializeFromXml<ProjectPayload>(xml);
             this.ProjectLogText = Retval.ProjectLogText;
-            this.ProjectName = Retval.ProjectName;
             this.ProjectSummaryText = Retval.ProjectSummaryText;
             this.ProjectItems.Clear();
             CreateProjectItems(xml, this);
