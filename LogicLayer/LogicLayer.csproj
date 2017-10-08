@@ -41,6 +41,10 @@
   <ItemGroup>
     <Compile Include="Common\XmlOperations.cs" />
     <Compile Include="HouseKeeping.cs" />
+    <Compile Include="Implementations\DirectoryCommands.cs" />
+    <Compile Include="Implementations\FileCommands.cs" />
+    <Compile Include="Implementations\ProjectDocumentCommands.cs" />
+    <Compile Include="Interfaces\ICommand.cs" />
     <Compile Include="Interfaces\IProjectItem.cs" />
     <Compile Include="Interfaces\IXmlLoadable.cs" />
     <Compile Include="Payloads\CheckListPayload.cs" />

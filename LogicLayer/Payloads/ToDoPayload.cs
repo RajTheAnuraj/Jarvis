@@ -12,7 +12,7 @@ namespace LogicLayer.Payloads
 {
     public class ToDoPayload : IProjectItem
     {
-        public string ToDoId { get; set; }
+        public string Id { get; set; }
         public string ToDoDisplayName { get; set; }
 
         [XmlElement(DataType = "date")]
@@ -45,7 +45,7 @@ namespace LogicLayer.Payloads
         public void CreateFromXml(string xml)
         {
             ToDoPayload Retval = XmlOperations.DeserializeFromXml<ToDoPayload>(xml);
-            this.ToDoId = Retval.ToDoId;
+            this.Id = Retval.Id;
             this.ToDoDisplayName = Retval.ToDoDisplayName;
             this.DueDate = Retval.DueDate;
         }
@@ -69,5 +69,10 @@ namespace LogicLayer.Payloads
         }
 
         public event ProjectItemDeleted onProjectItemDeleted;
+
+        public bool Equals(IProjectItem other)
+        {
+            return other.ProjectItemType == this.ProjectItemType && other.Id == this.Id;
+        }
     }
 }

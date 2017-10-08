@@ -4,16 +4,23 @@ using System.Linq;
 using System.Text;
 using LogicLayer.Interfaces;
 using LogicLayer.Common;
+using System.Xml.Serialization;
 
 namespace LogicLayer.Payloads
 {
     public class DocumentPayload: IProjectItem
     {
-        public string DocumentId { get; set; }
+        public string Id { get; set; }
         public string DocumentDisplayString { get; set; }
         public string DocumentPath { get; set; }
         public string DocumentType { get; set; }
+        public bool NeedsUpload { get; set; }
 
+        [XmlIgnore]
+        public string DocumentUploadFromPath { get; set; }
+        
+        [XmlIgnore]
+        public string DocumentContent { get; set; }
 
         public string ProjectItemType
         {
@@ -42,7 +49,7 @@ namespace LogicLayer.Payloads
         public void CreateFromXml(string xml)
         {
             DocumentPayload Retval = XmlOperations.DeserializeFromXml<DocumentPayload>(xml);
-            this.DocumentId = Retval.DocumentId??Guid.NewGuid().ToString();
+            this.Id = Retval.Id??Guid.NewGuid().ToString();
             this.DocumentDisplayString = Retval.DocumentDisplayString;
             this.DocumentPath = Retval.DocumentPath;
             this.DocumentType = Retval.DocumentType;
@@ -67,5 +74,10 @@ namespace LogicLayer.Payloads
         }
 
         public event ProjectItemDeleted onProjectItemDeleted;
+
+        public bool Equals(IProjectItem other)
+        {
+            return other.ProjectItemType == this.ProjectItemType && other.Id == this.Id;
+        }
     }
 }

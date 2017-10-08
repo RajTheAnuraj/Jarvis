@@ -7,10 +7,11 @@ namespace LogicLayer.Interfaces
 {
     public delegate void ProjectItemDeleted(IProjectItem item);
 
-    public interface IProjectItem
+    public interface IProjectItem: IEquatable<IProjectItem>
     {
         string ProjectItemType { get; set; }
         string ProjectItemClassName { get; set; }
+        string Id { get; set; }
 
         void CreateFromXml(string xml);
         string ReadToString();

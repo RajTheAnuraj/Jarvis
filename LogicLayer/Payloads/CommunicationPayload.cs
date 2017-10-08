@@ -9,7 +9,7 @@ namespace LogicLayer.Payloads
 {
     public class CommunicationPayload: IProjectItem
     {
-        public string CommunicationId { get; set; }
+        public string Id { get; set; }
         public string CommunicationDisplayName { get; set; }
         public string CommunicationType { get; set; }
         public string CommunicationDetails { get; set; }
@@ -42,7 +42,7 @@ namespace LogicLayer.Payloads
         public void CreateFromXml(string xml)
         {
             CommunicationPayload Retval = XmlOperations.DeserializeFromXml<CommunicationPayload>(xml);
-            this.CommunicationId = Retval.CommunicationId;
+            this.Id = Retval.Id;
             this.CommunicationDisplayName = Retval.CommunicationDisplayName;
             this.CommunicationType = Retval.CommunicationType;
             this.CommunicationDetails = Retval.CommunicationDetails;
@@ -69,5 +69,10 @@ namespace LogicLayer.Payloads
         }
 
         public event ProjectItemDeleted onProjectItemDeleted;
+
+        public bool Equals(IProjectItem other)
+        {
+            return other.ProjectItemType == this.ProjectItemType && other.Id == this.Id;
+        }
     }
 }

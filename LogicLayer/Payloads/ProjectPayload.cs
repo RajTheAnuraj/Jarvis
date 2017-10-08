@@ -8,27 +8,53 @@ using System.Xml.Serialization;
 using System.Xml;
 using System.IO;
 using System.Xml.Linq;
+using LogicLayer.Implementations;
 
 namespace LogicLayer.Payloads
 {
     public class ProjectPayload : IProjectItem
     {
+        string _ProjectFolder;
+
         public ProjectPayload()
         {
-            ProjectId = String.Format("Proj-{0}", new Guid());
+            Id = String.Format("Proj-{0}", new Guid());
             ProjectItems = new List<IProjectItem>();
-
-            
         }
 
-        public string ProjectId { get; set; }
+        public ProjectPayload(string ProjectFolder)
+            : this()
+        {
+            this.ProjectFolder = ProjectFolder;
+        }
+
+        Stack<IUndoableCommand> History = new Stack<IUndoableCommand>();
+
+        public string Id { get; set; }
         public string ProjectName { get; set; }
         public string ProjectLogText { get; set; }
         public string ProjectSummaryText { get; set; }
 
+        public string ProjectFolder
+        {
+            get
+            {
+                return _ProjectFolder;
+            }
+            set
+            {
+                _ProjectFolder = value;
+                if (!Directory.Exists(_ProjectFolder))
+                {
+                    DirectoryCreateRecursiveCommand createProjDirectory = new DirectoryCreateRecursiveCommand(_ProjectFolder);
+                    History.Push(createProjDirectory);
+                    createProjDirectory.Execute();
+                }
+            }
+        }
+
         [XmlIgnore]
         public List<IProjectItem> ProjectItems { get; set; }
-
 
         public string ProjectItemType
         {
@@ -57,7 +83,7 @@ namespace LogicLayer.Payloads
         public void CreateFromXml(string xml)
         {
             ProjectPayload Retval = XmlOperations.DeserializeFromXml<ProjectPayload>(xml);
-            this.ProjectId = Retval.ProjectId;
+            this.Id = Retval.Id;
             this.ProjectLogText = Retval.ProjectLogText;
             this.ProjectName = Retval.ProjectName;
             this.ProjectSummaryText = Retval.ProjectSummaryText;
@@ -100,9 +126,9 @@ namespace LogicLayer.Payloads
 
             sb.Append("<ProjectPayload>");
 
-            sb.Append("<ProjectId>");
-            sb.Append(ProjectId);
-            sb.Append("</ProjectId>");
+            sb.Append("<Id>");
+            sb.Append(Id);
+            sb.Append("</Id>");
 
             sb.Append("<ProjectItemClassName>");
             sb.Append(ProjectItemClassName);
@@ -169,6 +195,11 @@ namespace LogicLayer.Payloads
             {
                 return xml;
             }
+        }
+
+        public bool Equals(IProjectItem other)
+        {
+            return other.ProjectItemType == this.ProjectItemType && other.Id == this.Id;
         }
     }
 }

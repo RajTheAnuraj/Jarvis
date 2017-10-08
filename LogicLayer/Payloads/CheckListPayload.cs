@@ -10,7 +10,7 @@ namespace LogicLayer.Payloads
 {
     public class ChecklistPayload: IProjectItem
     {
-        public string ChecklistId { get; set; }
+        public string Id { get; set; }
         public string ChecklistDisplayString { get; set; }
 
         [XmlElement(DataType = "date")]
@@ -45,7 +45,7 @@ namespace LogicLayer.Payloads
         public void CreateFromXml(string xml)
         {
             ChecklistPayload Retval = XmlOperations.DeserializeFromXml<ChecklistPayload>(xml);
-            this.ChecklistId = Retval.ChecklistId;
+            this.Id = Retval.Id;
             this.ChecklistDisplayString = Retval.ChecklistDisplayString;
             this.ChecklistAlertDate = Retval.ChecklistAlertDate;
             this.ChecklistPhase = Retval.ChecklistPhase;
@@ -72,5 +72,10 @@ namespace LogicLayer.Payloads
         }
 
         public event ProjectItemDeleted onProjectItemDeleted;
+
+        public bool Equals(IProjectItem other)
+        {
+            return other.ProjectItemType == this.ProjectItemType && other.Id == this.Id;
+        }
     }
 }
