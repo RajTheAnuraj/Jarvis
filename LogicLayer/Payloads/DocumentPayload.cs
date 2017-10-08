@@ -9,78 +9,47 @@ using LogicLayer.Implementations;
 
 namespace LogicLayer.Payloads
 {
-    public class DocumentPayload: IProjectItem
+    public class DocumentPayload : PayloadBase
     {
-        public string Id { get; set; }
-        public string DocumentDisplayString { get; set; }
-        public string DocumentPath { get; set; }
-        public string DocumentType { get; set; }
-        public bool NeedsUpload { get; set; }
+        public DocumentPayload()
+        {
+            NeedFileManipulation = true;
+        }
 
-        [XmlIgnore]
-        public string DocumentUploadFromPath { get; set; }
-        
-        [XmlIgnore]
-        public string DocumentContent { get; set; }
-
-        public string ProjectItemType
+        public override string ProjectItemType
         {
             get
             {
                 return "Document";
             }
-            set
-            {
-                //Do nothing. Leaving here for serialization
-            }
+            set{ }
         }
 
-        public string ProjectItemClassName
-        {
-            get
-            {
-                return this.GetType().AssemblyQualifiedName;
-            }
-            set
-            {
-                //Do nothing. Leaving here for serialization
-            }
-        }
-
-        public void CreateFromXml(string xml)
+        public override void CreateFromXml(string xml)
         {
             DocumentPayload Retval = XmlOperations.DeserializeFromXml<DocumentPayload>(xml);
             this.Id = Retval.Id??Guid.NewGuid().ToString();
-            this.DocumentDisplayString = Retval.DocumentDisplayString;
-            this.DocumentPath = Retval.DocumentPath;
-            this.DocumentType = Retval.DocumentType;
+            this.DisplayString = Retval.DisplayString;
+            this.FileName = Retval.FileName;
+            this.ProjectItemSubType = Retval.ProjectItemSubType;
         }
 
-        public string ReadToString()
+        public override string ReadToString()
         {
             return XmlOperations.SerializeToXml<DocumentPayload>(this);
         }
 
-        public void UpdateFromXml(string xml)
+        public override void UpdateFromXml(string xml)
         {
             DocumentPayload Retval = XmlOperations.DeserializeFromXml<DocumentPayload>(xml);
-            this.DocumentDisplayString = Retval.DocumentDisplayString;
-            this.DocumentPath = Retval.DocumentPath;
+            this.DisplayString = Retval.DisplayString;
+            this.FileName = Retval.FileName;
         }
 
-        public void DeleteItem()
+        public override void DeleteItem()
         {
-            if (onProjectItemDeleted != null)
-                onProjectItemDeleted.Invoke(this);
+            InvokeDeleteItem(this);
         }
 
-        public event ProjectItemDeleted onProjectItemDeleted;
-
-        public bool Equals(IProjectItem other)
-        {
-            return other.ProjectItemType == this.ProjectItemType && other.Id == this.Id;
-        }
-
-       
     }
 }

@@ -50,6 +50,7 @@
     <Compile Include="Payloads\CheckListPayload.cs" />
     <Compile Include="Payloads\CommunicationPayload.cs" />
     <Compile Include="Payloads\DocumentPayload.cs" />
+    <Compile Include="Payloads\PayloadBase.cs" />
     <Compile Include="Payloads\ProjectPayload.cs" />
     <Compile Include="Payloads\SourceControlPayload.cs" />
     <Compile Include="Payloads\ToDoPayload.cs" />

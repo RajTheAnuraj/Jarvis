@@ -10,15 +10,13 @@ using LogicLayer.Common;
 
 namespace LogicLayer.Payloads
 {
-    public class ToDoPayload : IProjectItem
+    public class ToDoPayload : PayloadBase
     {
-        public string Id { get; set; }
-        public string ToDoDisplayName { get; set; }
 
         [XmlElement(DataType = "date")]
         public DateTime DueDate { get; set; }
     
-        public string ProjectItemType
+        public override string ProjectItemType
         {
             get
             {
@@ -30,49 +28,33 @@ namespace LogicLayer.Payloads
             }
         }
 
-        public string ProjectItemClassName
-        {
-            get
-            {
-                return this.GetType().AssemblyQualifiedName;
-            }
-            set
-            {
-                //Do nothing. Leaving here for serialization
-            }
-        }
+       
 
-        public void CreateFromXml(string xml)
+        public override void CreateFromXml(string xml)
         {
             ToDoPayload Retval = XmlOperations.DeserializeFromXml<ToDoPayload>(xml);
             this.Id = Retval.Id;
-            this.ToDoDisplayName = Retval.ToDoDisplayName;
+            this.DisplayString = Retval.DisplayString;
             this.DueDate = Retval.DueDate;
         }
 
-        public string ReadToString()
+        public override string ReadToString()
         {
             return XmlOperations.SerializeToXml<ToDoPayload>(this);
         }
 
-        public void UpdateFromXml(string xml)
+        public override void UpdateFromXml(string xml)
         {
             ToDoPayload Retval = XmlOperations.DeserializeFromXml<ToDoPayload>(xml);
-            this.ToDoDisplayName = Retval.ToDoDisplayName;
+            this.DisplayString = Retval.DisplayString;
             this.DueDate = Retval.DueDate;
         }
 
-        public void DeleteItem()
+        public override void DeleteItem()
         {
-            if (onProjectItemDeleted != null)
-                onProjectItemDeleted.Invoke(this);
+            base.InvokeDeleteItem(this);
         }
 
-        public event ProjectItemDeleted onProjectItemDeleted;
-
-        public bool Equals(IProjectItem other)
-        {
-            return other.ProjectItemType == this.ProjectItemType && other.Id == this.Id;
-        }
+        
     }
 }

@@ -13,8 +13,8 @@ namespace UnitTest
         public void TestInterfaceCollection()
         {
             ProjectPayload pload = new ProjectPayload();
-            pload.ProjectItems.Add(new DocumentPayload {  DocumentType = "Screenshot" });
-            pload.ProjectItems.Add(new CommunicationPayload { Id = "comin", CommunicationType = "Email" });
+            pload.ProjectItems.Add(new DocumentPayload {  ProjectItemSubType = "Screenshot" });
+            pload.ProjectItems.Add(new CommunicationPayload { Id = "comin", ProjectItemSubType = "Email" });
 
             string str = pload.ReadToString();
         }
@@ -105,25 +105,25 @@ namespace UnitTest
         {
             ProjectPayload pload = new ProjectPayload(@"C:\Temp\NewProj");
             DocumentPayload dpload = new DocumentPayload();
-            dpload.DocumentContent = "New DocumentContent";
-            dpload.DocumentDisplayString = "Some stuff that I created";
-            dpload.DocumentPath = @"as.txt";
-            dpload.DocumentType = "CodeSnippet";
+            dpload.FileContent = "New DocumentContent";
+            dpload.DisplayString = "Some stuff that I created";
+            dpload.FileName = @"as.txt";
+            dpload.ProjectItemSubType = "CodeSnippet";
             dpload.NeedsUpload = false;
             dpload.Id = Guid.NewGuid().ToString();
 
-            AddDocumentCommand addNewDoc = new AddDocumentCommand(pload, dpload);
+            AddProjectItemCommand addNewDoc = new AddProjectItemCommand(pload, dpload);
             addNewDoc.Execute();
 
             DocumentPayload dpload2 = new DocumentPayload();
-            dpload2.DocumentContent = "New DocumentContent Modified Baba";
-            dpload2.DocumentDisplayString = "Some stuff that I created";
-            dpload2.DocumentPath = @"as2.txt";
-            dpload2.DocumentType = "CodeSnippet";
+            dpload2.FileContent = "New DocumentContent Modified Baba";
+            dpload2.DisplayString = "Some stuff that I created";
+            dpload2.FileName = @"as2.txt";
+            dpload2.ProjectItemSubType = "CodeSnippet";
             dpload2.NeedsUpload = false;
             dpload2.Id = dpload.Id;
 
-            AddDocumentCommand addNewDoc2 = new AddDocumentCommand(pload, dpload2);
+            AddProjectItemCommand addNewDoc2 = new AddProjectItemCommand(pload, dpload2);
             addNewDoc2.Execute();
 
         }
@@ -133,15 +133,15 @@ namespace UnitTest
         {
             ProjectPayload pload = new ProjectPayload(@"C:\Temp\NewProj");
             DocumentPayload dpload = new DocumentPayload();
-            dpload.DocumentContent = "New DocumentContent";
-            dpload.DocumentDisplayString = "Uploaded Doc";
-            dpload.DocumentPath = @"as.txt";
-            dpload.DocumentType = "Screenshots";
+            dpload.FileContent = "New DocumentContent";
+            dpload.DisplayString = "Uploaded Doc";
+            dpload.FileName = @"as.txt";
+            dpload.ProjectItemSubType = "Screenshots";
             dpload.NeedsUpload = true;
-            dpload.DocumentUploadFromPath = @"C:\Users\Anuraj\.nbi\registry.xml";
+            dpload.UploadPath = @"C:\Users\Anuraj\.nbi\registry.xml";
             dpload.Id = Guid.NewGuid().ToString();
 
-            AddDocumentCommand addNewDoc = new AddDocumentCommand(pload, dpload);
+            AddProjectItemCommand addNewDoc = new AddProjectItemCommand(pload, dpload);
             addNewDoc.Execute();
 
             
@@ -152,19 +152,19 @@ namespace UnitTest
         {
             ProjectPayload pload = new ProjectPayload(@"C:\Temp\NewProj");
             DocumentPayload dpload = new DocumentPayload();
-            //dpload.DocumentContent = "New DocumentContent";
-            dpload.DocumentDisplayString = "Some stuff that I created";
-            dpload.DocumentPath = @"as.txt";
-            dpload.DocumentType = "CodeSnippet";
+            dpload.FileContent = "New DocumentContent";
+            dpload.DisplayString = "Some stuff that I created";
+            dpload.FileName = @"as.txt";
+            dpload.ProjectItemSubType = "CodeSnippet";
             dpload.NeedsUpload = false;
             dpload.Id = Guid.NewGuid().ToString();
 
-            AddDocumentCommand addNewDoc = new AddDocumentCommand(pload, dpload);
+            AddProjectItemCommand addNewDoc = new AddProjectItemCommand(pload, dpload);
             addNewDoc.Execute();
 
-            ReadContentToDocument readCommand = new ReadContentToDocument(pload, dpload);
+            ReadContentToProjectItem readCommand = new ReadContentToProjectItem(pload, dpload);
             readCommand.Execute();
-            var ss= dpload.DocumentContent;
+            var ss= dpload.FileContent;
         }
 
         [TestMethod]
@@ -172,17 +172,17 @@ namespace UnitTest
         {
             ProjectPayload pload = new ProjectPayload(@"C:\Temp\NewProj");
             DocumentPayload dpload = new DocumentPayload();
-            dpload.DocumentContent = "New DocumentContent";
-            dpload.DocumentDisplayString = "Some stuff that I created";
-            dpload.DocumentPath = @"as.txt";
-            dpload.DocumentType = "CodeSnippet";
+            dpload.FileContent = "New DocumentContent";
+            dpload.DisplayString = "Some stuff that I created";
+            dpload.FileName = @"as.txt";
+            dpload.ProjectItemSubType = "CodeSnippet";
             dpload.NeedsUpload = false;
             dpload.Id = Guid.NewGuid().ToString();
 
-            AddDocumentCommand addNewDoc = new AddDocumentCommand(pload, dpload);
+            AddProjectItemCommand addNewDoc = new AddProjectItemCommand(pload, dpload);
             addNewDoc.Execute();
 
-            DeleteDocumentCommand deleteCommand = new DeleteDocumentCommand(pload, dpload);
+            DeleteProjectItemCommand deleteCommand = new DeleteProjectItemCommand(pload, dpload);
             deleteCommand.Execute();
 
             string str = pload.ReadToString();

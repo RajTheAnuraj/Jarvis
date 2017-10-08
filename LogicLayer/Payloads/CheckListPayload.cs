@@ -8,17 +8,20 @@ using System.Xml.Serialization;
 
 namespace LogicLayer.Payloads
 {
-    public class ChecklistPayload: IProjectItem
+    public class ChecklistPayload: PayloadBase
     {
-        public string Id { get; set; }
-        public string ChecklistDisplayString { get; set; }
+        public override string DisplayString { get; set; }
 
         [XmlElement(DataType = "date")]
         public DateTime ChecklistAlertDate { get; set; }
         public string ChecklistPhase { get; set; }
 
+        public ChecklistPayload()
+        {
+            NeedFileManipulation = false;
+        }
 
-        public string ProjectItemType
+        public override string ProjectItemType
         {
             get
             {
@@ -30,52 +33,36 @@ namespace LogicLayer.Payloads
             }
         }
 
-        public string ProjectItemClassName
-        {
-            get
-            {
-                return this.GetType().AssemblyQualifiedName;
-            }
-            set
-            {
-                //Do nothing. Leaving here for serialization
-            }
-        }
+        
 
-        public void CreateFromXml(string xml)
+        public override void CreateFromXml(string xml)
         {
             ChecklistPayload Retval = XmlOperations.DeserializeFromXml<ChecklistPayload>(xml);
             this.Id = Retval.Id;
-            this.ChecklistDisplayString = Retval.ChecklistDisplayString;
+            this.DisplayString = Retval.DisplayString;
             this.ChecklistAlertDate = Retval.ChecklistAlertDate;
             this.ChecklistPhase = Retval.ChecklistPhase;
 
         }
 
-        public string ReadToString()
+        public override string ReadToString()
         {
             return XmlOperations.SerializeToXml<ChecklistPayload>(this);
         }
 
-        public void UpdateFromXml(string xml)
+        public override void UpdateFromXml(string xml)
         {
             ChecklistPayload Retval = XmlOperations.DeserializeFromXml<ChecklistPayload>(xml);
-            this.ChecklistDisplayString = Retval.ChecklistDisplayString;
+            this.DisplayString = Retval.DisplayString;
             this.ChecklistAlertDate = Retval.ChecklistAlertDate;
             this.ChecklistPhase = Retval.ChecklistPhase;
         }
 
-        public void DeleteItem()
+        public override void DeleteItem()
         {
-            if (onProjectItemDeleted != null)
-                onProjectItemDeleted.Invoke(this);
+            base.InvokeDeleteItem(this);
         }
 
-        public event ProjectItemDeleted onProjectItemDeleted;
-
-        public bool Equals(IProjectItem other)
-        {
-            return other.ProjectItemType == this.ProjectItemType && other.Id == this.Id;
-        }
+       
     }
 }

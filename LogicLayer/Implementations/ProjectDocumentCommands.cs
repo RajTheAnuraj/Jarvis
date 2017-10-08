@@ -8,30 +8,30 @@ using System.Text;
 
 namespace LogicLayer.Implementations
 {
-    public class AddDocumentCommand : IUndoableCommand
+    public class AddProjectItemCommand : IUndoableCommand
     {
         public ProjectPayload Project = null;
-        public DocumentPayload DocumentToBeAdded { get; set; }
+        public PayloadBase ProjectItemToBeAdded { get; set; }
 
         Stack<IUndoableCommand> History = new Stack<IUndoableCommand>();
 
-        public AddDocumentCommand(ProjectPayload Project)
+        public AddProjectItemCommand(ProjectPayload Project)
         {
             this.Project = Project;
         }
 
-        public AddDocumentCommand(ProjectPayload Project,DocumentPayload DocumentToBeAdded)
+        public AddProjectItemCommand(ProjectPayload Project, PayloadBase ProjectItemToBeAdded)
         {
             this.Project = Project;
-            this.DocumentToBeAdded = DocumentToBeAdded;
+            this.ProjectItemToBeAdded = ProjectItemToBeAdded;
         }
 
         public void Execute()
         {
             if (Project == null) throw new ArgumentNullException("Project");
-            if (DocumentToBeAdded == null) throw new ArgumentNullException("DocumentToBeAdded");
+            if (ProjectItemToBeAdded == null) throw new ArgumentNullException("DocumentToBeAdded");
             string RootFolder = Project.ProjectFolder;
-            string thisDocumentsFolder = RootFolder + "\\" + DocumentToBeAdded.ProjectItemType + "\\" + DocumentToBeAdded.DocumentType;
+            string thisDocumentsFolder = RootFolder + "\\" + ProjectItemToBeAdded.ProjectItemType + "\\" + ProjectItemToBeAdded.ProjectItemSubType;
             if (!Directory.Exists(thisDocumentsFolder))
             {
                 DirectoryCreateRecursiveCommand createDocDirectory = new DirectoryCreateRecursiveCommand(thisDocumentsFolder);
@@ -39,26 +39,26 @@ namespace LogicLayer.Implementations
                 createDocDirectory.Execute();
             }
 
-            if (DocumentToBeAdded.NeedsUpload)
+            if (ProjectItemToBeAdded.NeedsUpload)
             {
-                DocumentToBeAdded.DocumentPath = Path.GetFileName(DocumentToBeAdded.DocumentUploadFromPath);
-                string DocumentToBeAddedDocumentPath = thisDocumentsFolder + "\\" + DocumentToBeAdded.DocumentPath;
+                ProjectItemToBeAdded.FileName = Path.GetFileName(ProjectItemToBeAdded.UploadPath);
+                string DocumentToBeAddedDocumentPath = thisDocumentsFolder + "\\" + ProjectItemToBeAdded.FileName;
                 
-                FileCopyCommand copyCommand = new FileCopyCommand(DocumentToBeAdded.DocumentUploadFromPath, DocumentToBeAddedDocumentPath);
+                FileCopyCommand copyCommand = new FileCopyCommand(ProjectItemToBeAdded.UploadPath, DocumentToBeAddedDocumentPath);
                 History.Push(copyCommand);
                 copyCommand.Execute();
             }
             else
             {
-                string DocumentToBeAddedDocumentPath = thisDocumentsFolder + "\\" + DocumentToBeAdded.DocumentPath;
+                string DocumentToBeAddedDocumentPath = thisDocumentsFolder + "\\" + ProjectItemToBeAdded.FileName;
                 if (!File.Exists(DocumentToBeAddedDocumentPath))
                 {
-                    FileCreateCommand createCommand = new FileCreateCommand(DocumentToBeAddedDocumentPath, DocumentToBeAdded.DocumentContent);
+                    FileCreateCommand createCommand = new FileCreateCommand(DocumentToBeAddedDocumentPath, ProjectItemToBeAdded.FileContent);
                     History.Push(createCommand);
                     createCommand.Execute();
                 }
             }
-            Project.AddProjectItem(DocumentToBeAdded);
+            Project.AddProjectItem(ProjectItemToBeAdded);
         }
 
         public void Undo()
@@ -68,73 +68,73 @@ namespace LogicLayer.Implementations
                 if (History.Count == 0) break;
                 History.Pop().Undo();
             }
-            DocumentToBeAdded.DeleteItem();
+            ProjectItemToBeAdded.DeleteItem();
         }
     }
 
-    public class ReadContentToDocument : ICommand
+    public class ReadContentToProjectItem : ICommand
     {
         public ProjectPayload Project = null;
-        public DocumentPayload Document { get; set; }
+        public PayloadBase ProjectItem { get; set; }
 
-        public ReadContentToDocument(ProjectPayload Project)
+        public ReadContentToProjectItem(ProjectPayload Project)
         {
             this.Project = Project;
         }
 
-        public ReadContentToDocument(ProjectPayload Project, DocumentPayload Document)
+        public ReadContentToProjectItem(ProjectPayload Project, PayloadBase ProjectItem)
         {
             this.Project = Project;
-            this.Document = Document;
+            this.ProjectItem = ProjectItem;
         }
 
         public void Execute()
         {
             if (Project == null) throw new ArgumentNullException("Project");
-            if (Document == null) throw new ArgumentNullException("DocumentToBeAdded");
+            if (ProjectItem == null) throw new ArgumentNullException("DocumentToBeAdded");
             string RootFolder = Project.ProjectFolder;
-            string thisDocumentsFolder = RootFolder + "\\" + Document.ProjectItemType + "\\" + Document.DocumentType;
+            string thisDocumentsFolder = RootFolder + "\\" + ProjectItem.ProjectItemType + "\\" + ProjectItem.ProjectItemSubType;
 
-            if (!Document.NeedsUpload)
+            if (!ProjectItem.NeedsUpload)
             {
-                string DocumentPath = thisDocumentsFolder + "\\" + Document.DocumentPath;
+                string DocumentPath = thisDocumentsFolder + "\\" + ProjectItem.FileName;
                 if (File.Exists(DocumentPath))
                 {
                     FileReadAsStringCommand createCommand = new FileReadAsStringCommand(DocumentPath);
                     createCommand.Execute();
-                    Document.DocumentContent = createCommand.ReadContent;
+                    ProjectItem.FileContent = createCommand.ReadContent;
                 }
             }
         }
     }
 
 
-    public class DeleteDocumentCommand : IUndoableCommand
+    public class DeleteProjectItemCommand : IUndoableCommand
     {
          public ProjectPayload Project = null;
-         public DocumentPayload Document { get; set; }
+         public PayloadBase ProjectItem { get; set; }
 
         Stack<IUndoableCommand> History = new Stack<IUndoableCommand>();
 
-        public DeleteDocumentCommand(ProjectPayload Project)
+        public DeleteProjectItemCommand(ProjectPayload Project)
         {
             this.Project = Project;
         }
 
-        public DeleteDocumentCommand(ProjectPayload Project, DocumentPayload Document)
+        public DeleteProjectItemCommand(ProjectPayload Project, PayloadBase ProjectItem)
         {
             this.Project = Project;
-            this.Document = Document;
+            this.ProjectItem = ProjectItem;
         }
 
         public void Execute()
         {
             if (Project == null) throw new ArgumentNullException("Project");
-            if (Document == null) throw new ArgumentNullException("DocumentToBeAdded");
+            if (ProjectItem == null) throw new ArgumentNullException("DocumentToBeAdded");
             string RootFolder = Project.ProjectFolder;
             string TrashFolder = Project.TrashFolder;
-            string thisDocumentsFolder = RootFolder + "\\" + Document.ProjectItemType + "\\" + Document.DocumentType;
-            string DocumentPath = thisDocumentsFolder + "\\" + Document.DocumentPath;
+            string thisDocumentsFolder = RootFolder + "\\" + ProjectItem.ProjectItemType + "\\" + ProjectItem.ProjectItemSubType;
+            string DocumentPath = thisDocumentsFolder + "\\" + ProjectItem.FileName;
             if (File.Exists(DocumentPath))
             {
                 if(!Directory.Exists(TrashFolder)){
@@ -147,7 +147,7 @@ namespace LogicLayer.Implementations
                 History.Push(filedeleteCommand);
                 filedeleteCommand.Execute();
             }
-            Document.DeleteItem();
+            ProjectItem.DeleteItem();
         }
 
         public void Undo()
@@ -157,7 +157,7 @@ namespace LogicLayer.Implementations
                 if (History.Count == 0) break;
                 History.Pop().Undo();
             }
-            Project.AddProjectItem(Document);
+            Project.AddProjectItem(ProjectItem);
         }
     }
 }

@@ -7,15 +7,15 @@ using LogicLayer.Common;
 
 namespace LogicLayer.Payloads
 {
-    public class CommunicationPayload: IProjectItem
+    public class CommunicationPayload: PayloadBase
     {
-        public string Id { get; set; }
-        public string CommunicationDisplayName { get; set; }
-        public string CommunicationType { get; set; }
-        public string CommunicationDetails { get; set; }
-        public string CommunicationPath { get; set; }
 
-        public string ProjectItemType
+        public CommunicationPayload()
+        {
+            NeedFileManipulation = true;
+        }
+
+        public override string ProjectItemType
         {
             get
             {
@@ -27,52 +27,36 @@ namespace LogicLayer.Payloads
             }
         }
 
-        public string ProjectItemClassName
-        {
-            get
-            {
-                return this.GetType().AssemblyQualifiedName;
-            }
-            set
-            {
-                //Do nothing. Leaving here for serialization
-            }
-        }
+        
 
-        public void CreateFromXml(string xml)
+        public override void CreateFromXml(string xml)
         {
             CommunicationPayload Retval = XmlOperations.DeserializeFromXml<CommunicationPayload>(xml);
             this.Id = Retval.Id;
-            this.CommunicationDisplayName = Retval.CommunicationDisplayName;
-            this.CommunicationType = Retval.CommunicationType;
-            this.CommunicationDetails = Retval.CommunicationDetails;
-            this.CommunicationPath = Retval.CommunicationPath;
+            this.DisplayString = Retval.DisplayString;
+            this.ProjectItemSubType = Retval.ProjectItemSubType;
+            this.FileContent = Retval.FileContent;
+            this.FileName = Retval.FileName;
         }
 
-        public string ReadToString()
+        public override string ReadToString()
         {
             return XmlOperations.SerializeToXml<CommunicationPayload>(this);
         }
 
-        public void UpdateFromXml(string xml)
+        public override void UpdateFromXml(string xml)
         {
             CommunicationPayload Retval = XmlOperations.DeserializeFromXml<CommunicationPayload>(xml);
-            this.CommunicationDisplayName = Retval.CommunicationDisplayName;
-            this.CommunicationDetails = Retval.CommunicationDetails;
-            this.CommunicationPath = Retval.CommunicationPath;
+            this.DisplayString = Retval.DisplayString;
+            this.FileContent = Retval.FileContent;
+            this.FileName = Retval.FileName;
         }
 
-        public void DeleteItem()
+        public override void DeleteItem()
         {
-            if (onProjectItemDeleted != null)
-                onProjectItemDeleted.Invoke(this);
+            base.InvokeDeleteItem(this);
         }
 
-        public event ProjectItemDeleted onProjectItemDeleted;
-
-        public bool Equals(IProjectItem other)
-        {
-            return other.ProjectItemType == this.ProjectItemType && other.Id == this.Id;
-        }
+        
     }
 }
