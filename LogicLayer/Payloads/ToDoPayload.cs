@@ -33,8 +33,7 @@ namespace LogicLayer.Payloads
         public override void CreateFromXml(string xml)
         {
             ToDoPayload Retval = XmlOperations.DeserializeFromXml<ToDoPayload>(xml);
-            this.Id = Retval.Id;
-            this.DisplayString = Retval.DisplayString;
+            base.LoadFromXml(Retval);
             this.DueDate = Retval.DueDate;
         }
 
@@ -46,7 +45,7 @@ namespace LogicLayer.Payloads
         public override void UpdateFromXml(string xml)
         {
             ToDoPayload Retval = XmlOperations.DeserializeFromXml<ToDoPayload>(xml);
-            this.DisplayString = Retval.DisplayString;
+            base.LoadFromXml(Retval);
             this.DueDate = Retval.DueDate;
         }
 

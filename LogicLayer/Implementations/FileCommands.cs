@@ -78,7 +78,7 @@ namespace LogicLayer.Implementations
         string OldContent;
 
 
-        public FileModifyContentCommand()
+        private FileModifyContentCommand()
         {
 
         }
@@ -232,11 +232,11 @@ namespace LogicLayer.Implementations
         }
     }
 
-    public class FileReadAsStringCommand : ICommand
+    public class FileReadAsStringCommand : ICommand, IReadTillEndAsString
     {
 
         public string FilePath { get; set; }
-        public string ReadContent { get; set; }
+        public string ReadTillEndAsString { get; set; }
 
         public FileReadAsStringCommand()
         {
@@ -252,7 +252,7 @@ namespace LogicLayer.Implementations
         {
             if (File.Exists(FilePath))
             {
-                ReadContent = File.ReadAllText(FilePath);
+                ReadTillEndAsString = File.ReadAllText(FilePath);
             }
         }
     }

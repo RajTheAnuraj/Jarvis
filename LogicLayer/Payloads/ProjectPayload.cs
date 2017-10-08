@@ -18,7 +18,7 @@ namespace LogicLayer.Payloads
 
         public ProjectPayload()
         {
-            Id = String.Format("Proj-{0}", new Guid());
+            Id = Guid.NewGuid().ToString();
             ProjectItems = new List<IProjectItem>();
         }
 
@@ -44,17 +44,68 @@ namespace LogicLayer.Payloads
             set
             {
                 _ProjectFolder = value;
-                if (!Directory.Exists(_ProjectFolder))
-                {
-                    DirectoryCreateRecursiveCommand createProjDirectory = new DirectoryCreateRecursiveCommand(_ProjectFolder);
-                    History.Push(createProjDirectory);
-                    createProjDirectory.Execute();
-                }
             }
         }
 
         [XmlIgnore]
-        public List<IProjectItem> ProjectItems { get; set; }
+        List<IProjectItem> ProjectItems = new List<IProjectItem>();
+
+        [XmlIgnore]
+        public int ProjectItemCount
+        {
+            get { return ProjectItems.Count; }
+        }
+
+        public IProjectItem GetProjectItem(int Index)
+        {
+            return ProjectItems[Index];
+        }
+
+        public IProjectItem GetProjectItem(string Id)
+        {
+            foreach (IProjectItem item in ProjectItems)
+            {
+                if (item.Id == Id)
+                    return item;
+            }
+            return null;
+        }
+
+        public IProjectItem GetProjectItem(string ProjectItemType, string Id)
+        {
+            foreach (IProjectItem item in ProjectItems)
+            {
+                if (item.Id == Id && item.ProjectItemType == ProjectItemType)
+                    return item;
+            }
+            return null;
+        }
+
+        public IEnumerable<IProjectItem> GetProjectItems(string Id)
+        {
+            foreach (IProjectItem item in ProjectItems)
+            {
+                if (item.Id == Id)
+                    yield return item;
+            }
+        }
+
+        public IEnumerable<IProjectItem> GetProjectItems()
+        {
+            foreach (IProjectItem item in ProjectItems)
+            {
+                yield return item;
+            }
+        }
+
+        public IEnumerable<IProjectItem> GetProjectItemsByType(string ProjectItemType)
+        {
+            foreach (IProjectItem item in ProjectItems)
+            {
+                if (item.ProjectItemType == ProjectItemType)
+                    yield return item;
+            }
+        }
 
         public string TrashFolder
         {

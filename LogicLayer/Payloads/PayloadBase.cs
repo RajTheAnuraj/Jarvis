@@ -9,6 +9,16 @@ namespace LogicLayer.Payloads
 {
     public abstract class PayloadBase : IProjectItem
     {
+        protected void LoadFromXml(PayloadBase child)
+        {
+            this.Id = child.Id;
+            this.DisplayString = child.DisplayString;
+            this.FileName = child.FileName;
+            this.NeedFileManipulation = child.NeedFileManipulation;
+            this.NeedsUpload = child.NeedsUpload;
+            this.ProjectItemSubType = child.ProjectItemSubType;
+        }
+
         public abstract string ProjectItemType { get; set; }
 
         public string ProjectItemClassName

@@ -13,8 +13,8 @@ namespace UnitTest
         public void TestInterfaceCollection()
         {
             ProjectPayload pload = new ProjectPayload();
-            pload.ProjectItems.Add(new DocumentPayload {  ProjectItemSubType = "Screenshot" });
-            pload.ProjectItems.Add(new CommunicationPayload { Id = "comin", ProjectItemSubType = "Email" });
+            pload.AddProjectItem(new DocumentPayload {  ProjectItemSubType = "Screenshot" });
+            pload.AddProjectItem(new CommunicationPayload { Id = "comin", ProjectItemSubType = "Email" });
 
             string str = pload.ReadToString();
         }
@@ -24,26 +24,30 @@ namespace UnitTest
         {
             string Input = @"
             <ProjectPayload>
-              <Id>Proj-00000000-0000-0000-0000-000000000000</Id>
+              <Id>c05f7a07-8d4d-4507-af2d-f44abf4dfb5b</Id>
               <ProjectItemClassName>LogicLayer.Payloads.ProjectPayload, LogicLayer, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null</ProjectItemClassName>
               <ProjectItemType>Project</ProjectItemType>
-              <ProjectLogText>What a log</ProjectLogText>
-              <ProjectName>Shakunthala</ProjectName>
-              <ProjectSummaryText>Summary</ProjectSummaryText>
+              <ProjectLogText>Projects Log Text</ProjectLogText>
+              <ProjectName>Anuraj</ProjectName>
+              <ProjectSummaryText> Goes live in November</ProjectSummaryText>
               <ProjectItems>
                 <DocumentPayload>
-                  <Id>ff95a455-7412-4fa9-b393-b9f8a4644e18</Id>
-                  <DocumentDisplayString>Jingalala</DocumentDisplayString>
-                  <DocumentPath>Doc path .asl</DocumentPath>
-                  <DocumentType>Screenshot</DocumentType>
                   <ProjectItemType>Document</ProjectItemType>
                   <ProjectItemClassName>LogicLayer.Payloads.DocumentPayload, LogicLayer, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null</ProjectItemClassName>
+                  <Id>adc90465-1c96-4131-b784-5410d435a3d7</Id>
+                  <NeedsUpload>false</NeedsUpload>
+                  <FileName>ADD.txt</FileName>
+                  <DisplayString>Application Design Document</DisplayString>
+                  <ProjectItemSubType>Document</ProjectItemSubType>
                 </DocumentPayload>
                 <CommunicationPayload>
-                  <Id>comin</Id>
-                  <CommunicationType>Email</CommunicationType>
                   <ProjectItemType>Communication</ProjectItemType>
                   <ProjectItemClassName>LogicLayer.Payloads.CommunicationPayload, LogicLayer, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null</ProjectItemClassName>
+                  <Id>dd2dd169-351d-4af8-88c9-7281f780890f</Id>
+                  <NeedsUpload>false</NeedsUpload>
+                  <FileName>MagaChat.txt</FileName>
+                  <DisplayString>Chat with Manager</DisplayString>
+                  <ProjectItemSubType>Chat</ProjectItemSubType>
                 </CommunicationPayload>
               </ProjectItems>
             </ProjectPayload>";
@@ -56,41 +60,46 @@ namespace UnitTest
 
             Input = @"
             <ProjectPayload>
-              <Id>Proj-00000000-0000-0000-0000-000000000000</Id>
+              <Id>c05f7a07-8d4d-4507-af2d-f44abf4dfb5b</Id>
               <ProjectItemClassName>LogicLayer.Payloads.ProjectPayload, LogicLayer, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null</ProjectItemClassName>
-              <ProjectItemType>Project Modified</ProjectItemType>
-              <ProjectLogText>What a log Modified</ProjectLogText>
-              <ProjectName>Shakunthala Modified</ProjectName>
-              <ProjectSummaryText>Summary Modified</ProjectSummaryText>
+              <ProjectItemType>Project</ProjectItemType>
+              <ProjectLogText>Projects Log Text</ProjectLogText>
+              <ProjectName>Anuraj</ProjectName>
+              <ProjectSummaryText> Goes live in November</ProjectSummaryText>
               <ProjectItems>
                 <DocumentPayload>
-                  <Id>ff95a455-7412-4fa9-b393-b9f8a4644e18</Id>
-                  <DocumentDisplayString>Jingalala Modified</DocumentDisplayString>
-                  <DocumentPath>Doc path .asl Modified</DocumentPath>
-                  <DocumentType>Screenshot Modified</DocumentType>
                   <ProjectItemType>Document</ProjectItemType>
                   <ProjectItemClassName>LogicLayer.Payloads.DocumentPayload, LogicLayer, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null</ProjectItemClassName>
+                  <Id>adc90465-1c96-4131-b784-5410d435a3d7</Id>
+                  <NeedsUpload>false</NeedsUpload>
+                  <FileName>ADD.txt</FileName>
+                  <DisplayString>Application Design Document</DisplayString>
+                  <ProjectItemSubType>Document</ProjectItemSubType>
                 </DocumentPayload>
                 <CommunicationPayload>
-                  <Id>comin</Id>
-                  <CommunicationType>Email</CommunicationType>
                   <ProjectItemType>Communication</ProjectItemType>
                   <ProjectItemClassName>LogicLayer.Payloads.CommunicationPayload, LogicLayer, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null</ProjectItemClassName>
+                  <Id>dd2dd169-351d-4af8-88c9-7281f780890f</Id>
+                  <NeedsUpload>false</NeedsUpload>
+                  <FileName>MagaChat.txt</FileName>
+                  <DisplayString>Chat with Manager</DisplayString>
+                  <ProjectItemSubType>Chat</ProjectItemSubType>
+                </CommunicationPayload>
+                <CommunicationPayload>
+                  <ProjectItemType>Communication</ProjectItemType>
+                  <ProjectItemClassName>LogicLayer.Payloads.CommunicationPayload, LogicLayer, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null</ProjectItemClassName>
+                  <Id>dd2dd169-351d-4af8-88c9-7281f780890a</Id>
+                  <NeedsUpload>true</NeedsUpload>
+                  <FileName>Em.msg</FileName>
+                  <DisplayString>Email to Jose</DisplayString>
+                  <ProjectItemSubType>Email</ProjectItemSubType>
                 </CommunicationPayload>
               </ProjectItems>
             </ProjectPayload>";
             pload.UpdateFromXml(Input);
 
-            Input=@"
-            <DocumentPayload>
-                <DocumentDisplayString>TestNameUpdated</DocumentDisplayString>
-                <DocumentPath>Clamper.docx</DocumentPath>
-            </DocumentPayload>
-            ";
-            IProjectItem nPload = ((ProjectPayload)pload).ProjectItems[0];
-            nPload.UpdateFromXml(Input);
-
-            ((ProjectPayload)pload).ProjectItems[0].DeleteItem();
+            int cnt = ((ProjectPayload)pload).ProjectItemCount;
+            Assert.AreEqual(3, cnt);
         }
 
 
@@ -190,5 +199,105 @@ namespace UnitTest
             deleteCommand.Undo();
             str = pload.ReadToString();
         }
+
+        [TestMethod]
+        public void ProjectInitializeTest()
+        {
+            ProjectPayload pload = new ProjectPayload();
+            pload.ProjectName = "Anuraj";
+
+            ProjectInitializeCommand com = new ProjectInitializeCommand(pload);
+            com.Execute();
+
+            com.Undo();
+        }
+
+        [TestMethod]
+        public void ProjectSaveTest()
+        {
+            ProjectPayload pload = new ProjectPayload();
+            pload.ProjectName = "Anuraj";
+
+            ProjectInitializeCommand com = new ProjectInitializeCommand(pload);
+            com.Execute();
+
+
+            string Input = @"
+            <ProjectPayload>
+              <Id>c05f7a07-8d4d-4507-af2d-f44abf4dfb5b</Id>
+              <ProjectItemClassName>LogicLayer.Payloads.ProjectPayload, LogicLayer, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null</ProjectItemClassName>
+              <ProjectItemType>Project</ProjectItemType>
+              <ProjectLogText>Projects Log Text</ProjectLogText>
+              <ProjectName>Anuraj</ProjectName>
+              <ProjectSummaryText> Goes live in November</ProjectSummaryText>
+              <ProjectItems>
+                <DocumentPayload>
+                  <ProjectItemType>Document</ProjectItemType>
+                  <ProjectItemClassName>LogicLayer.Payloads.DocumentPayload, LogicLayer, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null</ProjectItemClassName>
+                  <Id>adc90465-1c96-4131-b784-5410d435a3d7</Id>
+                  <NeedsUpload>false</NeedsUpload>
+                  <FileName>ADD.txt</FileName>
+                  <DisplayString>Application Design Document</DisplayString>
+                  <ProjectItemSubType>Document</ProjectItemSubType>
+                </DocumentPayload>
+                <CommunicationPayload>
+                  <ProjectItemType>Communication</ProjectItemType>
+                  <ProjectItemClassName>LogicLayer.Payloads.CommunicationPayload, LogicLayer, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null</ProjectItemClassName>
+                  <Id>dd2dd169-351d-4af8-88c9-7281f780890f</Id>
+                  <NeedsUpload>false</NeedsUpload>
+                  <FileName>MagaChat.txt</FileName>
+                  <DisplayString>Chat with Manager</DisplayString>
+                  <ProjectItemSubType>Chat</ProjectItemSubType>
+                </CommunicationPayload>
+                <CommunicationPayload>
+                  <ProjectItemType>Communication</ProjectItemType>
+                  <ProjectItemClassName>LogicLayer.Payloads.CommunicationPayload, LogicLayer, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null</ProjectItemClassName>
+                  <Id>dd2dd169-351d-4af8-88c9-7281f780890a</Id>
+                  <NeedsUpload>true</NeedsUpload>
+                  <FileName>Em.msg</FileName>
+                  <DisplayString>Email to Jose</DisplayString>
+                  <ProjectItemSubType>Email</ProjectItemSubType>
+                </CommunicationPayload>
+              </ProjectItems>
+            </ProjectPayload>";
+            pload.UpdateFromXml(Input);
+
+
+            ProjectSaveCommand save = new ProjectSaveCommand(pload);
+            save.Execute();
+
+
+            save.Undo();
+
+            com.Undo();
+        }
+
+
+        [TestMethod]
+        public void ModifyProjectItemTest()
+        {
+            ProjectPayload pload = new ProjectPayload(@"C:\Temp\NewProj");
+            DocumentPayload dpload = new DocumentPayload();
+            dpload.FileContent = "New DocumentContent";
+            dpload.DisplayString = "Some stuff that I created";
+            dpload.FileName = @"as.txt";
+            dpload.ProjectItemSubType = "CodeSnippet";
+            dpload.NeedsUpload = false;
+            dpload.Id = Guid.NewGuid().ToString();
+
+            AddProjectItemCommand addNewDoc = new AddProjectItemCommand(pload, dpload);
+            addNewDoc.Execute();
+
+            ModifyProjectItemCommand modDoc = new ModifyProjectItemCommand(pload, dpload, "FileContent", "Doctor Deena");
+            modDoc.Execute();
+
+            ModifyProjectItemCommand modDoc1 = new ModifyProjectItemCommand(pload, dpload, "FileContent", "Doctor Deena Modified the plan");
+            modDoc1.Execute();
+
+            modDoc1.Undo();
+            modDoc.Undo();
+        }
+
+
     }
 }

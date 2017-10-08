@@ -29,9 +29,7 @@ namespace LogicLayer.Payloads
         {
             DocumentPayload Retval = XmlOperations.DeserializeFromXml<DocumentPayload>(xml);
             this.Id = Retval.Id??Guid.NewGuid().ToString();
-            this.DisplayString = Retval.DisplayString;
-            this.FileName = Retval.FileName;
-            this.ProjectItemSubType = Retval.ProjectItemSubType;
+            base.LoadFromXml(Retval);
         }
 
         public override string ReadToString()
@@ -42,8 +40,7 @@ namespace LogicLayer.Payloads
         public override void UpdateFromXml(string xml)
         {
             DocumentPayload Retval = XmlOperations.DeserializeFromXml<DocumentPayload>(xml);
-            this.DisplayString = Retval.DisplayString;
-            this.FileName = Retval.FileName;
+            base.LoadFromXml(Retval);
         }
 
         public override void DeleteItem()

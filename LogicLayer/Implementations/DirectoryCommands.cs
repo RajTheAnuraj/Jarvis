@@ -29,7 +29,23 @@ namespace LogicLayer.Implementations
 
         public void Undo()
         {
-            Directory.Delete(DirectoryPath);
+            int retries = 2;
+            while (retries > 0)
+            {
+                try
+                {
+                    Directory.Delete(DirectoryPath);
+                    break;
+                }
+                catch (IOException ex)
+                {
+                    if (ex.Message != "The directory is not empty.")
+                        throw;
+
+                    System.Threading.Thread.Sleep(2000);
+                    retries--;
+                }
+            }
         }
     }
 

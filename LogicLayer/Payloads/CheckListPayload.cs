@@ -38,8 +38,7 @@ namespace LogicLayer.Payloads
         public override void CreateFromXml(string xml)
         {
             ChecklistPayload Retval = XmlOperations.DeserializeFromXml<ChecklistPayload>(xml);
-            this.Id = Retval.Id;
-            this.DisplayString = Retval.DisplayString;
+            base.LoadFromXml(Retval);
             this.ChecklistAlertDate = Retval.ChecklistAlertDate;
             this.ChecklistPhase = Retval.ChecklistPhase;
 
@@ -53,7 +52,7 @@ namespace LogicLayer.Payloads
         public override void UpdateFromXml(string xml)
         {
             ChecklistPayload Retval = XmlOperations.DeserializeFromXml<ChecklistPayload>(xml);
-            this.DisplayString = Retval.DisplayString;
+            base.LoadFromXml(Retval);
             this.ChecklistAlertDate = Retval.ChecklistAlertDate;
             this.ChecklistPhase = Retval.ChecklistPhase;
         }

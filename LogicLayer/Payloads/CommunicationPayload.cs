@@ -32,11 +32,7 @@ namespace LogicLayer.Payloads
         public override void CreateFromXml(string xml)
         {
             CommunicationPayload Retval = XmlOperations.DeserializeFromXml<CommunicationPayload>(xml);
-            this.Id = Retval.Id;
-            this.DisplayString = Retval.DisplayString;
-            this.ProjectItemSubType = Retval.ProjectItemSubType;
-            this.FileContent = Retval.FileContent;
-            this.FileName = Retval.FileName;
+            base.LoadFromXml(Retval);
         }
 
         public override string ReadToString()
@@ -47,9 +43,7 @@ namespace LogicLayer.Payloads
         public override void UpdateFromXml(string xml)
         {
             CommunicationPayload Retval = XmlOperations.DeserializeFromXml<CommunicationPayload>(xml);
-            this.DisplayString = Retval.DisplayString;
-            this.FileContent = Retval.FileContent;
-            this.FileName = Retval.FileName;
+            base.LoadFromXml(Retval);
         }
 
         public override void DeleteItem()
