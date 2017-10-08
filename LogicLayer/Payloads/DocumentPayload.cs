@@ -5,6 +5,7 @@ using System.Text;
 using LogicLayer.Interfaces;
 using LogicLayer.Common;
 using System.Xml.Serialization;
+using LogicLayer.Implementations;
 
 namespace LogicLayer.Payloads
 {
@@ -79,5 +80,7 @@ namespace LogicLayer.Payloads
         {
             return other.ProjectItemType == this.ProjectItemType && other.Id == this.Id;
         }
+
+       
     }
 }

@@ -56,6 +56,14 @@ namespace LogicLayer.Payloads
         [XmlIgnore]
         public List<IProjectItem> ProjectItems { get; set; }
 
+        public string TrashFolder
+        {
+            get
+            {
+                return _ProjectFolder + "\\Trash";
+            }
+        }
+
         public string ProjectItemType
         {
             get
@@ -111,6 +119,12 @@ namespace LogicLayer.Payloads
                 }
 
             }
+        }
+
+        public void AddProjectItem(IProjectItem item)
+        {
+            item.onProjectItemDeleted += PI_onProjectItemDeleted;
+            this.ProjectItems.Add(item);
         }
 
         void PI_onProjectItemDeleted(IProjectItem item)

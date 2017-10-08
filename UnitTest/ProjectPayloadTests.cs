@@ -127,5 +127,68 @@ namespace UnitTest
             addNewDoc2.Execute();
 
         }
+
+        [TestMethod]
+        public void DocumentUploadTest()
+        {
+            ProjectPayload pload = new ProjectPayload(@"C:\Temp\NewProj");
+            DocumentPayload dpload = new DocumentPayload();
+            dpload.DocumentContent = "New DocumentContent";
+            dpload.DocumentDisplayString = "Uploaded Doc";
+            dpload.DocumentPath = @"as.txt";
+            dpload.DocumentType = "Screenshots";
+            dpload.NeedsUpload = true;
+            dpload.DocumentUploadFromPath = @"C:\Users\Anuraj\.nbi\registry.xml";
+            dpload.Id = Guid.NewGuid().ToString();
+
+            AddDocumentCommand addNewDoc = new AddDocumentCommand(pload, dpload);
+            addNewDoc.Execute();
+
+            
+        }
+
+        [TestMethod]
+        public void DocumentReadTest()
+        {
+            ProjectPayload pload = new ProjectPayload(@"C:\Temp\NewProj");
+            DocumentPayload dpload = new DocumentPayload();
+            //dpload.DocumentContent = "New DocumentContent";
+            dpload.DocumentDisplayString = "Some stuff that I created";
+            dpload.DocumentPath = @"as.txt";
+            dpload.DocumentType = "CodeSnippet";
+            dpload.NeedsUpload = false;
+            dpload.Id = Guid.NewGuid().ToString();
+
+            AddDocumentCommand addNewDoc = new AddDocumentCommand(pload, dpload);
+            addNewDoc.Execute();
+
+            ReadContentToDocument readCommand = new ReadContentToDocument(pload, dpload);
+            readCommand.Execute();
+            var ss= dpload.DocumentContent;
+        }
+
+        [TestMethod]
+        public void DocumentDeleteTest()
+        {
+            ProjectPayload pload = new ProjectPayload(@"C:\Temp\NewProj");
+            DocumentPayload dpload = new DocumentPayload();
+            dpload.DocumentContent = "New DocumentContent";
+            dpload.DocumentDisplayString = "Some stuff that I created";
+            dpload.DocumentPath = @"as.txt";
+            dpload.DocumentType = "CodeSnippet";
+            dpload.NeedsUpload = false;
+            dpload.Id = Guid.NewGuid().ToString();
+
+            AddDocumentCommand addNewDoc = new AddDocumentCommand(pload, dpload);
+            addNewDoc.Execute();
+
+            DeleteDocumentCommand deleteCommand = new DeleteDocumentCommand(pload, dpload);
+            deleteCommand.Execute();
+
+            string str = pload.ReadToString();
+
+            deleteCommand.Undo();
+            str = pload.ReadToString();
+        }
     }
 }

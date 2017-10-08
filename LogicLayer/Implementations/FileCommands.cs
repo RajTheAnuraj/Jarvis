@@ -231,4 +231,29 @@ namespace LogicLayer.Implementations
             File.Delete(DestinationFilePath);
         }
     }
+
+    public class FileReadAsStringCommand : ICommand
+    {
+
+        public string FilePath { get; set; }
+        public string ReadContent { get; set; }
+
+        public FileReadAsStringCommand()
+        {
+
+        }
+
+        public FileReadAsStringCommand(string FilePath)
+        {
+            this.FilePath = FilePath;
+        }
+
+        public void Execute()
+        {
+            if (File.Exists(FilePath))
+            {
+                ReadContent = File.ReadAllText(FilePath);
+            }
+        }
+    }
 }
