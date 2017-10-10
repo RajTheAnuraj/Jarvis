@@ -6,7 +6,7 @@ using System.Text;
 
 namespace LogicLayer.Interfaces
 {
-    public interface ICommand
+    public interface ICustomCommand
     {
         void Execute();
     }

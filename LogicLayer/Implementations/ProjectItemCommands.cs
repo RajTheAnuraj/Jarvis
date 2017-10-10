@@ -87,7 +87,7 @@ namespace LogicLayer.Implementations
         }
     }
 
-    public class ReadContentToProjectItem : ICommand
+    public class ReadContentToProjectItem : ICustomCommand
     {
         public ProjectPayload Project = null;
         public PayloadBase ProjectItem { get; set; }
@@ -123,7 +123,7 @@ namespace LogicLayer.Implementations
                     string DocumentPath = thisDocumentsFolder + "\\" + ProjectItem.FileName;
                     if (File.Exists(DocumentPath))
                     {
-                        ICommand createCommand =  CommandProvider.GetFileReadAsStringCommand(DocumentPath);
+                        ICustomCommand createCommand =  CommandProvider.GetFileReadAsStringCommand(DocumentPath);
                         createCommand.Execute();
                         ProjectItem.FileContent = ((IReadTillEndAsString)createCommand).ReadTillEndAsString;
                     }

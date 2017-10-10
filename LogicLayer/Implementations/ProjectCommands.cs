@@ -63,7 +63,7 @@ namespace LogicLayer.Implementations
                 createProjectFile.Execute();
             }else //if file exists load it to project
             {
-                ICommand fileReadCommand = CommandProvider.GetFileReadAsStringCommand(projectXml);
+                ICustomCommand fileReadCommand = CommandProvider.GetFileReadAsStringCommand(projectXml);
                 fileReadCommand.Execute();
                 string fileContent = ((IReadTillEndAsString)fileReadCommand).ReadTillEndAsString;
                 Project.UpdateFromXml(fileContent);

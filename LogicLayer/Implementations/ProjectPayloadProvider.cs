@@ -80,12 +80,12 @@ namespace LogicLayer.Implementations
             return new ProjectSaveCommand(Project);
         }
 
-        public ICommand GetFileReadAsStringCommand(string FilePath)
+        public ICustomCommand GetFileReadAsStringCommand(string FilePath)
         {
             return new FileReadAsStringCommand(FilePath);
         }
 
-        public ICommand GetReadContentToProjectItem(ProjectPayload Project, PayloadBase ProjectItem)
+        public ICustomCommand GetReadContentToProjectItem(ProjectPayload Project, PayloadBase ProjectItem)
         {
             return new ReadContentToProjectItem(Project, ProjectItem);
         }

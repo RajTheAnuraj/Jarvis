@@ -28,7 +28,7 @@ namespace LogicLayer.Interfaces
         IUndoableCommand GetProjectSaveCommand(ProjectPayload Project);
 
 
-        ICommand GetFileReadAsStringCommand(string FilePath);
-        ICommand GetReadContentToProjectItem(ProjectPayload Project, PayloadBase ProjectItem);
+        ICustomCommand GetFileReadAsStringCommand(string FilePath);
+        ICustomCommand GetReadContentToProjectItem(ProjectPayload Project, PayloadBase ProjectItem);
     }
 }

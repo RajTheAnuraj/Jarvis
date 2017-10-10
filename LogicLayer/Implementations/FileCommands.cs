@@ -7,7 +7,7 @@ using System.Text;
 
 namespace LogicLayer.Implementations
 {
-    public class FileCreateCommand:IUndoableCommand, ICommand
+    public class FileCreateCommand:IUndoableCommand, ICustomCommand
     {
         public string FilePath { get; set; }
         public FileStream fileStream { get; set; }
@@ -71,7 +71,7 @@ namespace LogicLayer.Implementations
     }
 
 
-    public class FileModifyContentCommand : IUndoableCommand, ICommand
+    public class FileModifyContentCommand : IUndoableCommand, ICustomCommand
     {
         public string FilePath { get; set; }
         public string Content { get; set; }
@@ -120,7 +120,7 @@ namespace LogicLayer.Implementations
         }
     }
 
-    public class FileDeleteWithHistoryCommand:IUndoableCommand,ICommand
+    public class FileDeleteWithHistoryCommand:IUndoableCommand,ICustomCommand
     {
         public string FilePath { get; set; }
         public string TrashDirectoryPath { get; set; }
@@ -164,7 +164,7 @@ namespace LogicLayer.Implementations
         }
     }
 
-    public class FileMoveCommand : IUndoableCommand, ICommand
+    public class FileMoveCommand : IUndoableCommand, ICustomCommand
     {
         public string SourceFilePath { get; set; }
         public string DestinationFilePath { get; set; }
@@ -198,7 +198,7 @@ namespace LogicLayer.Implementations
         }
     }
 
-    public class FileCopyCommand : IUndoableCommand, ICommand
+    public class FileCopyCommand : IUndoableCommand, ICustomCommand
     {
         public string SourceFilePath { get; set; }
         public string DestinationFilePath { get; set; }
@@ -232,7 +232,7 @@ namespace LogicLayer.Implementations
         }
     }
 
-    public class FileReadAsStringCommand : ICommand, IReadTillEndAsString
+    public class FileReadAsStringCommand : ICustomCommand, IReadTillEndAsString
     {
 
         public string FilePath { get; set; }

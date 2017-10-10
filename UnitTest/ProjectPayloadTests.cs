@@ -212,7 +212,7 @@ namespace UnitTest
             com.Execute();
 
             PayloadBase pb = ((PayloadBase)(pload.GetProjectItem(0)));
-            ICommand bb = new ReadContentToProjectItem(pload, pb);
+            ICustomCommand bb = new ReadContentToProjectItem(pload, pb);
             bb.Execute();
 
 
