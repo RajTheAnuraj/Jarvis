@@ -11,6 +11,7 @@ namespace LogicLayer.Implementations
     public class ProjectPayloadProvider: IResourceProvider
     {
         string _rootFolder;
+        
 
         public string GetProjectsRootFolder()
         {
@@ -77,6 +78,11 @@ namespace LogicLayer.Implementations
             return new DeleteProjectItemCommand(Project, ProjectItem);
         }
 
+        public IUndoableCommand GetModifyProjectItemCommand(ProjectPayload Project, PayloadBase ProjectItem, string FieldName, string FieldValue)
+        {
+            return new ModifyProjectItemCommand(Project, ProjectItem, FieldName, FieldValue);
+        }
+
         public IUndoableCommand GetProjectInitializeCommand(ProjectPayload Project)
         {
             return new ProjectInitializeCommand(Project);
@@ -121,6 +127,7 @@ namespace LogicLayer.Implementations
 
 
 
-       
+
+
     }
 }

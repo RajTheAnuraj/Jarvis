@@ -54,6 +54,10 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Page Include="Common\BindableRichTextBox.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Communication\CommunicationView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -73,6 +77,9 @@
     <Compile Include="ApplicationViewModel.cs" />
     <Compile Include="Behaviours\MvvMBehaviours.cs" />
     <Compile Include="Common\BindableBase.cs" />
+    <Compile Include="Common\BindableRichTextBox.xaml.cs">
+      <DependentUpon>BindableRichTextBox.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Common\RelayCommand.cs" />
     <Compile Include="Communication\CommunicationView.xaml.cs">
       <DependentUpon>CommunicationView.xaml</DependentUpon>
@@ -80,6 +87,8 @@
     <Compile Include="Communication\CommunicationViewModel.cs" />
     <Compile Include="Converters\BooleanToProjectTypeConverter.cs" />
     <Compile Include="Converters\BooleanToToolTipTextProjectTypeConverter.cs" />
+    <Compile Include="Converters\NegateBooleanConverter.cs" />
+    <Compile Include="Converters\RichTextboxHelper.cs" />
     <Compile Include="Document\DocumentView.xaml.cs">
       <DependentUpon>DocumentView.xaml</DependentUpon>
     </Compile>

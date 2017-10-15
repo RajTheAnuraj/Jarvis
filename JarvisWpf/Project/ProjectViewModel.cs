@@ -108,8 +108,15 @@ namespace JarvisWpf.Project
             get { return _SelectedItemViewModel; }
             set
             {
+                if (_SelectedItemViewModel != null)
+                    _SelectedItemViewModel.UnBindBigDataNow = true;
                 _SelectedItemViewModel = value;
                 NotifyPropertyChanged("SelectedItemViewModel");
+                if (_SelectedItemViewModel != null)
+                {
+                    _SelectedItemViewModel.BindBigDataNow = true;
+                    _SelectedItemViewModel.isEditMode = true;
+                }
             }
         }
 
@@ -127,6 +134,7 @@ namespace JarvisWpf.Project
 
 
         public RelayCommand<object> CloseCommand { get; set; }
+        public RelayCommand<object> CreateDocumentCommand { get; set; }
 
         public ProjectPayload projectPayLoad { get; set; }
         IResourceProvider CommandProvider = ProviderFactory.GetCurrentProvider();
@@ -134,7 +142,19 @@ namespace JarvisWpf.Project
         public ProjectViewModel()
         {
             CloseCommand = new RelayCommand<object>(CloseProject);
+            CreateDocumentCommand = new RelayCommand<object>(CreateDocument);
             
+        }
+
+        private void CreateDocument(object obj)
+        {
+            DocumentPayload doc = new DocumentPayload();
+            DocumentViewModel DVM = new DocumentViewModel();
+            DVM.isEditMode = false;
+            DVM.setDocument(doc, projectPayLoad);
+            DVM.ChildChanged += ProjectItemChanged;
+            _SelectedItemViewModel = DVM;
+            NotifyPropertyChanged("SelectedItemViewModel");
         }
 
         public void LoadedMethod()
@@ -176,16 +196,31 @@ namespace JarvisWpf.Project
                             DocumentPayload doc = ((DocumentPayload)projItem);
                             DocumentViewModel DVM = new DocumentViewModel();
                             DVM.setDocument(doc,pl);
+                            DVM.ChildChanged += ProjectItemChanged;
                             Documents.Add(DVM);
                             break;
                         case "Communication":
                             CommunicationPayload com = ((CommunicationPayload)projItem);
                             CommunicationViewModel CVM = new CommunicationViewModel();
                             CVM.setCommunication(com);
+                            CVM.ChildChanged += ProjectItemChanged;
                             Communications.Add(CVM);
                             break;
                     }
                 }
+            }
+        }
+
+        private void ProjectItemChanged(string ProjectItemName, object Parameter)
+        {
+            switch (ProjectItemName)
+            {
+                case  "DocumentAdded":
+                this.Documents.Add((DocumentViewModel)Parameter);
+                    break;
+                case "DocumentDeleted":
+                    this.Documents.Remove((DocumentViewModel)Parameter);
+                    break;
             }
         }
 

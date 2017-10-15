@@ -3,7 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:App="clr-namespace:JarvisWpf"
         xmlns:Project="clr-namespace:JarvisWpf.Project"
-        Title="MainWindow" Height="700" Width="1000">
+        Title="MainWindow" Height="900" Width="1000">
     <Window.DataContext>
         <App:ApplicationViewModel></App:ApplicationViewModel>
     </Window.DataContext>

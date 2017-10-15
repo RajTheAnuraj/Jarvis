@@ -47,5 +47,29 @@ namespace LogicLayer.Payloads
             InvokeDeleteItem(this);
         }
 
+        static List<string> _DocumentSubTypes = new List<string>{
+            "File",
+            "Code Snippet",
+            "Link"
+        };
+
+        public static List<string> GetDocumentSubTypes()
+        {
+            return _DocumentSubTypes;
+        }
+
+        public static bool ConvertSubTypeToNeedsUpload(string DocumentSubType)
+        {
+            if (DocumentSubType == "File")
+                return true;
+            return false;
+        }
+
+        public static bool ConvertSubTypeToNeedsFileManipulation(string DocumentSubType)
+        {
+            if (DocumentSubType == "File" || DocumentSubType == "Code Snippet")
+                return true;
+            return false;
+        }
     }
 }

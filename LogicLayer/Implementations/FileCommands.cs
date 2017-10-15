@@ -141,7 +141,7 @@ namespace LogicLayer.Implementations
         {
             get
             {
-                return String.Format(@"{0}\{1}", TrashDirectoryPath, Path.GetFileName(FilePath));
+                return String.Format(@"{0}\{1}.{2}", TrashDirectoryPath, Path.GetFileName(FilePath),Guid.NewGuid());
             }
         }
 
@@ -221,7 +221,7 @@ namespace LogicLayer.Implementations
         {
             if (!Directory.Exists(directoryDest))
                 throw new IOException("The Destination Folder is not valid");
-            File.Copy(SourceFilePath, DestinationFilePath);
+            File.Copy(SourceFilePath, DestinationFilePath,true);
         }
 
         public void Undo()

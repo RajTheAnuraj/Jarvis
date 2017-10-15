@@ -36,5 +36,33 @@ namespace JarvisWpf.Behaviours
             };
         }
 
+
+
+
+        //DataContext Changed Event Wire Up
+
+
+
+        public static string GetDataContextChanged(DependencyObject obj)
+        {
+            return (string)obj.GetValue(DataContextChangedProperty);
+        }
+
+        public static void SetDataContextChanged(DependencyObject obj, string value)
+        {
+            obj.SetValue(DataContextChangedProperty, value);
+        }
+
+        // Using a DependencyProperty as the backing store for DataContextChanged.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty DataContextChangedProperty =
+            DependencyProperty.RegisterAttached("DataContextChanged", typeof(string), typeof(MvvmBehaviours), new PropertyMetadata(new PropertyChangedCallback(DataContextChanged)));
+
+        private static void DataContextChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+           
+        }
+
+
+
     }
 }

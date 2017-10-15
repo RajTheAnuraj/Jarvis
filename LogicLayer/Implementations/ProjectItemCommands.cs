@@ -175,14 +175,16 @@ namespace LogicLayer.Implementations
 
                 if (ProjectItem.NeedsUpload)
                 {
-                    if (FieldName == "FileName")
+                    //If the document wantes to point to a new file, 
+                    //Archive the old file, Upload the new file
+                    if (FieldName == "UploadPath")
                     {
-                        IUndoableCommand fileMoveCommand = CommandProvider.GetFileMoveCommand(DocumentPath, Project.TrashFolder + "\\" + ProjectItem.FileName);
+                        IUndoableCommand fileMoveCommand = CommandProvider.GetFileMoveCommand(DocumentPath, Project.TrashFolder + "\\" + ProjectItem.FileName + "." + Guid.NewGuid());
                         History.Push(fileMoveCommand);
                         fileMoveCommand.Execute();
 
                         
-                        DocumentPath = thisDocumentsFolder + "\\" + FieldValue;
+                        DocumentPath = thisDocumentsFolder + "\\" + Path.GetFileName(FieldValue);
                         IUndoableCommand fileCopyCommand = CommandProvider.GetFileCopyCommand(FieldValue, DocumentPath);
                         History.Push(fileCopyCommand);
                         fileCopyCommand.Execute();

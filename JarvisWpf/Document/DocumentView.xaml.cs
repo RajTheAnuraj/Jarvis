@@ -22,6 +22,7 @@ namespace JarvisWpf.Document
         public DocumentView()
         {
             InitializeComponent();
+            
         }
 
         

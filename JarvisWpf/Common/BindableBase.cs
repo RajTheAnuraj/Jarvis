@@ -17,6 +17,13 @@ namespace JarvisWpf.Common
         protected Action CanExecuteChangedContainer = delegate { };
         public event Navigate onNavigate;
         public event Action onGoBackInHistory;
+        public event Action<string, object> ChildChanged;
+
+        protected void RaiseChildChangedEvent(string Invoker, object parameter)
+        {
+            if (ChildChanged != null)
+                ChildChanged.Invoke(Invoker, parameter);
+        }
 
         private bool _isValid;
 
@@ -25,6 +32,9 @@ namespace JarvisWpf.Common
             get { return _isValid; }
             set { _isValid = value; CanExecuteChangedContainer(); }
         }
+
+        bool _isEditMode;
+        public bool isEditMode { get { return _isEditMode; } set { _isEditMode = value; NotifyPropertyChanged("isEditMode"); } }
 
         public bool IsValidationOn { get; set; }
 
@@ -41,6 +51,23 @@ namespace JarvisWpf.Common
             }
         }
 
+        //Lazy Loading
+        //We do not want huge string in the files to be fetched and stored in memory.
+        //That should only be done when it is really absolutely necessary
+        //Once the data context is set, set this property to call the overriden function BindBigData in child class.
+        public bool BindBigDataNow
+        {
+            set
+            {
+                BindBigData();
+            }
+        }
+
+
+        public bool UnBindBigDataNow { set { UnBindBigData(); } }
+
+        protected virtual void BindBigData() { }
+        protected virtual void UnBindBigData() { }
 
         public BindableBase()
         {

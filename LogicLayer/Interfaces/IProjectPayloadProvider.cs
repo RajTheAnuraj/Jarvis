@@ -12,7 +12,7 @@ namespace LogicLayer.Interfaces
         string GetProjectsRootFolder();
         string GetSystemFolder();
         void setRootFolder(string rootFolder);
-
+        
 
         //Commands
         IUndoableCommand GetDirectoryCreateRecursiveCommand(string DirectoryPath);
@@ -27,6 +27,7 @@ namespace LogicLayer.Interfaces
 
         IUndoableCommand GetProjectInitializeCommand(ProjectPayload Project);
         IUndoableCommand GetProjectSaveCommand(ProjectPayload Project);
+        IUndoableCommand GetModifyProjectItemCommand(ProjectPayload Project, PayloadBase ProjectItem, string FieldName, string FieldValue);
         ICustomCommand GetRetrieveProjectListCommand(ref ProjectListPayload projectListPayload);
 
         IUndoableCommand GetApplicationInitializeCommand();
