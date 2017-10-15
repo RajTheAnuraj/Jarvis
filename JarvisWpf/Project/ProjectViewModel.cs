@@ -10,6 +10,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Collections.ObjectModel;
+using JarvisWpf.Document;
+using JarvisWpf.Communication;
 
 namespace JarvisWpf.Project
 {
@@ -80,6 +83,49 @@ namespace JarvisWpf.Project
             set { _ProjectSummaryText = value; NotifyPropertyChanged("ProjectSummaryText"); }
         }
 
+
+        private ObservableCollection<DocumentViewModel> _Documents;
+
+        public ObservableCollection<DocumentViewModel> Documents
+        {
+            get { return _Documents; }
+            set { _Documents = value; NotifyPropertyChanged("Documents"); }
+        }
+
+        private ObservableCollection<CommunicationViewModel> _Communications;
+
+        public ObservableCollection<CommunicationViewModel> Communications
+        {
+            get { return _Communications; }
+            set { _Communications = value; NotifyPropertyChanged("Communications"); }
+        }
+
+
+        private BindableBase _SelectedItemViewModel;
+
+        public BindableBase SelectedItemViewModel
+        {
+            get { return _SelectedItemViewModel; }
+            set
+            {
+                _SelectedItemViewModel = value;
+                NotifyPropertyChanged("SelectedItemViewModel");
+            }
+        }
+
+        private int _SelectedTabIndex;
+
+        public int SelectedTabIndex
+        {
+            get { return _SelectedTabIndex; }
+            set
+            {
+                _SelectedTabIndex = value;
+                SelectedItemViewModel = null;
+            }
+        }
+
+
         public RelayCommand<object> CloseCommand { get; set; }
 
         public ProjectPayload projectPayLoad { get; set; }
@@ -113,6 +159,34 @@ namespace JarvisWpf.Project
             this.ProjectSummaryText = pl.ProjectSummaryText;
             this.RemoteServerRoot = pl.RemoteServerRoot;
             this.projectPayLoad = pl;
+            this.Documents = new ObservableCollection<DocumentViewModel>();
+            this.Communications = new ObservableCollection<CommunicationViewModel>();
+            CopyProjectItems(pl);
+        }
+
+        private void CopyProjectItems(ProjectPayload pl)
+        {
+            if (pl.ProjectItemCount > 0)
+            {
+                foreach (IProjectItem projItem in pl.GetProjectItems())
+                {
+                    switch (projItem.ProjectItemType)
+                    {
+                        case "Document":
+                            DocumentPayload doc = ((DocumentPayload)projItem);
+                            DocumentViewModel DVM = new DocumentViewModel();
+                            DVM.setDocument(doc,pl);
+                            Documents.Add(DVM);
+                            break;
+                        case "Communication":
+                            CommunicationPayload com = ((CommunicationPayload)projItem);
+                            CommunicationViewModel CVM = new CommunicationViewModel();
+                            CVM.setCommunication(com);
+                            Communications.Add(CVM);
+                            break;
+                    }
+                }
+            }
         }
 
         private void CloseProject(object obj)

@@ -313,7 +313,8 @@ namespace UnitTest
 
             try
             {
-                ProjectPayload PPload = new ProjectPayload("Manjari");
+                CommandProvider.setRootFolder(@"C:\Temp");
+                ProjectPayload PPload = new ProjectPayload("Raj");
                 
                 IUndoableCommand projectInitialize = CommandProvider.GetProjectInitializeCommand(PPload);
                 History.Push(projectInitialize);

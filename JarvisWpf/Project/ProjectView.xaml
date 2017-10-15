@@ -5,12 +5,22 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              mc:Ignorable="d" 
              xmlns:Behaviour="clr-namespace:JarvisWpf.Behaviours"
+             xmlns:Document="clr-namespace:JarvisWpf.Document"
+             xmlns:Communication="clr-namespace:JarvisWpf.Communication"
              Behaviour:MvvmBehaviours.LoadedMethodName="LoadedMethod"
              d:DesignHeight="300" d:DesignWidth="300">
+    <UserControl.Resources>
+        <DataTemplate DataType="{x:Type Document:DocumentViewModel}">
+            <Document:DocumentView></Document:DocumentView>
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type Communication:CommunicationViewModel}">
+            <Communication:CommunicationView></Communication:CommunicationView>
+        </DataTemplate>
+    </UserControl.Resources>
     <Grid>
         <Grid.RowDefinitions>
+            <RowDefinition Height="200"></RowDefinition>
             <RowDefinition Height="300"></RowDefinition>
-            <RowDefinition Height="*"></RowDefinition>
             <RowDefinition Height="500"></RowDefinition>
         </Grid.RowDefinitions>
         <StackPanel Grid.Column="0" Grid.Row="0">
@@ -43,5 +53,41 @@
             </StackPanel>
             
         </StackPanel>
+        <TabControl Grid.Row="1" SelectedIndex="{Binding SelectedTabIndex}">
+            <TabItem Header="Documents">
+                <ListView ItemsSource="{Binding Documents}" SelectedItem="{Binding SelectedItemViewModel}" Tag="{Binding}">
+                    <ListView.ItemTemplate>
+                        <DataTemplate>
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock Text="{Binding DisplayString}" Width="200"></TextBlock>
+                                <TextBlock Text="{Binding ProjectItemSubType}" Width="100"></TextBlock>
+                            </StackPanel>
+                        </DataTemplate>
+                    </ListView.ItemTemplate>
+                </ListView>
+            </TabItem>
+            <TabItem Header="Communication">
+                <ListView ItemsSource="{Binding Communications}" SelectedItem="{Binding SelectedItemViewModel}">
+                    <ListView.ItemTemplate>
+                        <DataTemplate>
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock Text="{Binding DisplayString}" Width="200"></TextBlock>
+                                <TextBlock Text="{Binding ProjectItemSubType}" Width="100"></TextBlock>
+                            </StackPanel>
+                        </DataTemplate>
+                    </ListView.ItemTemplate>
+                </ListView>
+            </TabItem>
+            <TabItem Header="Source Control">
+                <TextBlock>Source Control</TextBlock>
+            </TabItem>
+            <TabItem Header="To Do">
+                <TextBlock>To Do</TextBlock>
+            </TabItem>
+            <TabItem Header="Checklist">
+                <TextBlock>Checklist</TextBlock>
+            </TabItem>
+        </TabControl>
+        <ContentControl Content="{Binding SelectedItemViewModel}" Grid.Row="2"></ContentControl>
     </Grid>
 </UserControl>

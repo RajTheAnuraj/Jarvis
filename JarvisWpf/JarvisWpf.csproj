@@ -54,6 +54,14 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Page Include="Communication\CommunicationView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Document\DocumentView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -66,8 +74,16 @@
     <Compile Include="Behaviours\MvvMBehaviours.cs" />
     <Compile Include="Common\BindableBase.cs" />
     <Compile Include="Common\RelayCommand.cs" />
+    <Compile Include="Communication\CommunicationView.xaml.cs">
+      <DependentUpon>CommunicationView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Communication\CommunicationViewModel.cs" />
     <Compile Include="Converters\BooleanToProjectTypeConverter.cs" />
     <Compile Include="Converters\BooleanToToolTipTextProjectTypeConverter.cs" />
+    <Compile Include="Document\DocumentView.xaml.cs">
+      <DependentUpon>DocumentView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Document\DocumentViewModel.cs" />
     <Compile Include="MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
@@ -110,6 +126,7 @@
     <None Include="Configuration.Jarvis">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Include="Properties\DataSources\JarvisWpf.Document.DocumentViewModel.datasource" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
