@@ -256,4 +256,36 @@ namespace LogicLayer.Implementations
             }
         }
     }
+
+    public class FileReadAsStreamCommand : ICustomCommand
+    {
+
+        public string FilePath { get; set; }
+        public string ReadTillEndAsString { get; set; }
+        public Stream fileStream { get; set; }
+
+        public FileReadAsStreamCommand()
+        {
+
+        }
+
+        public FileReadAsStreamCommand(string FilePath)
+        {
+            this.FilePath = FilePath;
+        }
+
+        public FileReadAsStreamCommand(string FilePath, ref Stream stream)
+        {
+            this.FilePath = FilePath;
+            this.fileStream = stream;
+        }
+
+        public void Execute()
+        {
+            if (File.Exists(FilePath))
+            {
+                this.fileStream = new StreamReader(FilePath).BaseStream;
+            }
+        }
+    }
 }

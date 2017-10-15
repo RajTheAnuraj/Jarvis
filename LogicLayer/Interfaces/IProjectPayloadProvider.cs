@@ -1,16 +1,17 @@
 ﻿using LogicLayer.Payloads;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 
 namespace LogicLayer.Interfaces
 {
-    public interface IProjectPayloadProvider
+    public interface IResourceProvider
     {
         string GetProjectsRootFolder();
         string GetSystemFolder();
-
+        void setRootFolder(string rootFolder);
 
 
         //Commands
@@ -26,9 +27,14 @@ namespace LogicLayer.Interfaces
 
         IUndoableCommand GetProjectInitializeCommand(ProjectPayload Project);
         IUndoableCommand GetProjectSaveCommand(ProjectPayload Project);
+        ICustomCommand GetRetrieveProjectListCommand(ref ProjectListPayload projectListPayload);
+
+        IUndoableCommand GetApplicationInitializeCommand();
 
 
         ICustomCommand GetFileReadAsStringCommand(string FilePath);
+        ICustomCommand GetFileReadAsStreamCommand(string FilePath, ref Stream stream);
         ICustomCommand GetReadContentToProjectItem(ProjectPayload Project, PayloadBase ProjectItem);
+        
     }
 }

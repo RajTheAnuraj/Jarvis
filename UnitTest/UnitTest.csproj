@@ -57,6 +57,7 @@
     <Compile Include="ImplementationTests\FileCommandImplemetationCollectionTest.cs" />
     <Compile Include="ProjectItemTestsBaseClass.cs" />
     <Compile Include="ProjectPayloadTests.cs" />
+    <Compile Include="ApplicationCommandsTest.cs" />
     <Compile Include="XMLDALTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -66,7 +67,9 @@
       <Name>LogicLayer</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <None Include="App.config" />
+  </ItemGroup>
   <ItemGroup>
     <Content Include="TestFiles\System\Projects.xml" />
   </ItemGroup>

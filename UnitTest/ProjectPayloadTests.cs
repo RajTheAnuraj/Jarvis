@@ -309,7 +309,7 @@ namespace UnitTest
         public void FullConsoleTest()
         {
             Stack<IUndoableCommand> History = new Stack<IUndoableCommand>();
-            IProjectPayloadProvider CommandProvider = ProviderFactory.GetCurrentProvider();
+            IResourceProvider CommandProvider = ProviderFactory.GetCurrentProvider();
 
             try
             {
@@ -391,7 +391,7 @@ namespace UnitTest
         public void ProjectInitializeFullTest()
         {
             Stack<IUndoableCommand> History = new Stack<IUndoableCommand>();
-            IProjectPayloadProvider CommandProvider = ProviderFactory.GetCurrentProvider();
+            IResourceProvider CommandProvider = ProviderFactory.GetCurrentProvider();
 
             ProjectPayload pl = new ProjectPayload("Manjari");
             IUndoableCommand initProjCommand = CommandProvider.GetProjectInitializeCommand(pl);

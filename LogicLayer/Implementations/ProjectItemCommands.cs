@@ -16,7 +16,7 @@ namespace LogicLayer.Implementations
         public PayloadBase ProjectItemToBeAdded { get; set; }
 
         Stack<IUndoableCommand> History = new Stack<IUndoableCommand>();
-        IProjectPayloadProvider CommandProvider = null;
+        IResourceProvider CommandProvider = null;
 
         private AddProjectItemCommand()
         {
@@ -92,7 +92,7 @@ namespace LogicLayer.Implementations
         public ProjectPayload Project = null;
         public PayloadBase ProjectItem { get; set; }
 
-        IProjectPayloadProvider CommandProvider = null;
+        IResourceProvider CommandProvider = null;
 
         private ReadContentToProjectItem()
         {
@@ -139,7 +139,7 @@ namespace LogicLayer.Implementations
         string OldProjectItem { get; set; }
         public string FieldName { get; set; }
         public string FieldValue { get; set; }
-         IProjectPayloadProvider CommandProvider = null;
+         IResourceProvider CommandProvider = null;
 
         Stack<IUndoableCommand> History = new Stack<IUndoableCommand>();
 
@@ -220,7 +220,7 @@ namespace LogicLayer.Implementations
     {
          public ProjectPayload Project = null;
          public PayloadBase ProjectItem { get; set; }
-         IProjectPayloadProvider CommandProvider = null;
+         IResourceProvider CommandProvider = null;
 
         Stack<IUndoableCommand> History = new Stack<IUndoableCommand>();
 

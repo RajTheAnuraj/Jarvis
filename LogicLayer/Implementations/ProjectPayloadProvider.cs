@@ -2,16 +2,19 @@
 using LogicLayer.Payloads;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 
 namespace LogicLayer.Implementations
 {
-    public class ProjectPayloadProvider: IProjectPayloadProvider
+    public class ProjectPayloadProvider: IResourceProvider
     {
+        string _rootFolder;
+
         public string GetProjectsRootFolder()
         {
-            return @"C:\Temp";
+            return _rootFolder;
         }
 
         public string GetSystemFolder()
@@ -19,6 +22,10 @@ namespace LogicLayer.Implementations
             return GetProjectsRootFolder() + "\\System";
         }
 
+        public void setRootFolder(string rootFolder)
+        {
+            _rootFolder = rootFolder;
+        }
 
         public IUndoableCommand GetDirectoryCreateRecursiveCommand(string DirectoryPath)
         {
@@ -80,15 +87,38 @@ namespace LogicLayer.Implementations
             return new ProjectSaveCommand(Project);
         }
 
+        public ICustomCommand GetRetrieveProjectListCommand(ref ProjectListPayload projectListPayload)
+        {
+            return new RetrieveProjectListCommand(ref projectListPayload);
+        }
+
+
+        public IUndoableCommand GetApplicationInitializeCommand()
+        {
+            return new ApplicationInitializeCommand();
+        }
+
+
         public ICustomCommand GetFileReadAsStringCommand(string FilePath)
         {
             return new FileReadAsStringCommand(FilePath);
+        }
+
+        public ICustomCommand GetFileReadAsStreamCommand(string FilePath, ref Stream stream)
+        {
+            return new FileReadAsStreamCommand(FilePath,ref stream);
         }
 
         public ICustomCommand GetReadContentToProjectItem(ProjectPayload Project, PayloadBase ProjectItem)
         {
             return new ReadContentToProjectItem(Project, ProjectItem);
         }
+
+
+
+
+
+
 
 
        

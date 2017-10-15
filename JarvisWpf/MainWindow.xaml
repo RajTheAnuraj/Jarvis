@@ -1,0 +1,21 @@
+﻿<Window x:Class="JarvisWpf.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:App="clr-namespace:JarvisWpf"
+        xmlns:Project="clr-namespace:JarvisWpf.Project"
+        Title="MainWindow" Height="700" Width="1000">
+    <Window.DataContext>
+        <App:ApplicationViewModel></App:ApplicationViewModel>
+    </Window.DataContext>
+    <Window.Resources>
+        <DataTemplate DataType="{x:Type Project:ProjectListViewModel}">
+            <Project:ProjectListView></Project:ProjectListView>
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type Project:ProjectViewModel}">
+            <Project:ProjectView></Project:ProjectView>
+        </DataTemplate>
+    </Window.Resources>
+    <Grid>
+        <ContentControl Content="{Binding CurrentViewModel}"></ContentControl>
+    </Grid>
+</Window>

@@ -42,6 +42,7 @@
     <Compile Include="Common\XmlOperations.cs" />
     <Compile Include="Factories\ProviderFactory.cs" />
     <Compile Include="HouseKeeping.cs" />
+    <Compile Include="Implementations\ApplicationCommands.cs" />
     <Compile Include="Implementations\DirectoryCommands.cs" />
     <Compile Include="Implementations\FileCommands.cs" />
     <Compile Include="Implementations\ProjectCommands.cs" />
@@ -56,6 +57,7 @@
     <Compile Include="Payloads\CommunicationPayload.cs" />
     <Compile Include="Payloads\DocumentPayload.cs" />
     <Compile Include="Payloads\PayloadBase.cs" />
+    <Compile Include="Payloads\ProjectListPayload.cs" />
     <Compile Include="Payloads\ProjectPayload.cs" />
     <Compile Include="Payloads\SourceControlPayload.cs" />
     <Compile Include="Payloads\ToDoPayload.cs" />

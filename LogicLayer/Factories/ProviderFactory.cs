@@ -11,9 +11,9 @@ namespace LogicLayer.Factories
     {
         static object CurrentProviderLocker = new object();
 
-        private static IProjectPayloadProvider _CurrentProvider;
+        private static IResourceProvider _CurrentProvider;
 
-        private static IProjectPayloadProvider CurrentProvider
+        private static IResourceProvider CurrentProvider
         {
             get
             {
@@ -27,7 +27,7 @@ namespace LogicLayer.Factories
 
         }
 
-        public static IProjectPayloadProvider GetCurrentProvider()
+        public static IResourceProvider GetCurrentProvider()
         {
             return CurrentProvider;
         }

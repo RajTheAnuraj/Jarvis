@@ -31,12 +31,15 @@ namespace LogicLayer.Payloads
         }
 
         Stack<IUndoableCommand> History = new Stack<IUndoableCommand>();
-        IProjectPayloadProvider CommandProvider = null;
+        IResourceProvider CommandProvider = null;
 
         public string Id { get; set; }
+        public string ProjectIdentifier { get; set; }
         public string ProjectName { get; set; }
         public string ProjectLogText { get; set; }
         public string ProjectSummaryText { get; set; }
+        public bool isRemoteProject { get; set; }
+        public string RemoteServerRoot { get; set; }
 
         public string ProjectFolder
         {
@@ -149,6 +152,8 @@ namespace LogicLayer.Payloads
             this.ProjectLogText = Retval.ProjectLogText;
             this.ProjectName = Retval.ProjectName;
             this.ProjectSummaryText = Retval.ProjectSummaryText;
+            this.isRemoteProject = Retval.isRemoteProject;
+            this.RemoteServerRoot = Retval.RemoteServerRoot;
             CreateProjectItems(xml, this);
         }
 
@@ -210,6 +215,10 @@ namespace LogicLayer.Payloads
             sb.Append(ProjectItemType);
             sb.Append("</ProjectItemType>");
 
+            sb.Append("<ProjectItemType>");
+            sb.Append(ProjectIdentifier);
+            sb.Append("</ProjectItemType>");
+
             sb.Append("<ProjectLogText>");
             sb.Append(ProjectLogText);
             sb.Append("</ProjectLogText>");
@@ -218,6 +227,14 @@ namespace LogicLayer.Payloads
             sb.Append(ProjectName);
             sb.Append("</ProjectName>");
 
+            sb.Append("<isRemoteProject>");
+            sb.Append(XmlConvert.ToString(isRemoteProject));
+            sb.Append("</isRemoteProject>");
+
+            sb.Append("<RemoteServerRoot>");
+            sb.Append(RemoteServerRoot);
+            sb.Append("</RemoteServerRoot>");
+            
             sb.Append("<ProjectSummaryText>");
             sb.Append(ProjectSummaryText);
             sb.Append("</ProjectSummaryText>");
@@ -241,6 +258,8 @@ namespace LogicLayer.Payloads
             ProjectPayload Retval = XmlOperations.DeserializeFromXml<ProjectPayload>(xml);
             this.ProjectLogText = Retval.ProjectLogText;
             this.ProjectSummaryText = Retval.ProjectSummaryText;
+            this.isRemoteProject = Retval.isRemoteProject;
+            this.RemoteServerRoot = RemoteServerRoot;
             this.ProjectItems.Clear();
             CreateProjectItems(xml, this);
         }

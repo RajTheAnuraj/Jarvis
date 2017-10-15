@@ -6,13 +6,14 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Xml;
 
 namespace LogicLayer.Implementations
 {
     public class ProjectInitializeCommand: IUndoableCommand
     {
         public ProjectPayload Project { get; set; }
-        public IProjectPayloadProvider CommandProvider { get; set; }
+        public IResourceProvider CommandProvider { get; set; }
 
         Stack<IUndoableCommand> History = new Stack<IUndoableCommand>();
 
@@ -26,7 +27,7 @@ namespace LogicLayer.Implementations
             this.Project = Project;
             
         }
-       
+
 
         public void Execute()
         {
@@ -34,7 +35,10 @@ namespace LogicLayer.Implementations
             if (Project == null) throw new ArgumentNullException("Project");
 
             //Set the ProjectFolder
-            Project.ProjectFolder = CommandProvider.GetProjectsRootFolder() + "\\" + Project.ProjectName;
+            if (!Project.isRemoteProject)
+                Project.ProjectFolder = CommandProvider.GetProjectsRootFolder() + "\\" + Project.ProjectName;
+            else
+                Project.ProjectFolder = Project.RemoteServerRoot + "\\" + Project.ProjectName;
 
             //Create Folders if necesary
             //Project Root Folder
@@ -61,14 +65,15 @@ namespace LogicLayer.Implementations
                 IUndoableCommand createProjectFile = CommandProvider.GetFileCreateCommand(Project.ProjectFolder + "\\Project.Jarvis", Content);
                 History.Push(createProjectFile);
                 createProjectFile.Execute();
-            }else //if file exists load it to project
+            }
+            else //if file exists load it to project
             {
                 ICustomCommand fileReadCommand = CommandProvider.GetFileReadAsStringCommand(projectXml);
                 fileReadCommand.Execute();
                 string fileContent = ((IReadTillEndAsString)fileReadCommand).ReadTillEndAsString;
                 Project.UpdateFromXml(fileContent);
             }
-            
+
         }
 
         public void Undo()
@@ -85,7 +90,7 @@ namespace LogicLayer.Implementations
     public class ProjectSaveCommand : IUndoableCommand
     {
         public ProjectPayload Project { get; set; }
-        public IProjectPayloadProvider CommandProvider { get; set; }
+        public IResourceProvider CommandProvider { get; set; }
         Stack<IUndoableCommand> History = new Stack<IUndoableCommand>();
 
         private ProjectSaveCommand()
@@ -129,6 +134,42 @@ namespace LogicLayer.Implementations
             {
                 if (History.Count == 0) break;
                 History.Pop().Undo();
+            }
+        }
+    }
+
+
+    public class RetrieveProjectListCommand:ICustomCommand
+    {
+        IResourceProvider ResourceProvider = null;
+        public ProjectListPayload projectList { get; set; }
+
+        public RetrieveProjectListCommand()
+        {
+            ResourceProvider = ProviderFactory.GetCurrentProvider();
+        }
+
+        public RetrieveProjectListCommand(ref ProjectListPayload ProjectList)
+            : this()
+        {
+            projectList = ProjectList;
+        }
+
+        public void Execute()
+        {
+           //The assumption is this call wil be made only after applicationInitialize is called
+            //else this will error out
+            if (projectList == null)
+                projectList = new ProjectListPayload();
+            string ProjectsFilePath = ResourceProvider.GetSystemFolder() + "\\Projects.Jarvis";
+            ICustomCommand fileReadCommand = ResourceProvider.GetFileReadAsStringCommand(ProjectsFilePath);
+            fileReadCommand.Execute();
+            string xml = ((IReadTillEndAsString)fileReadCommand).ReadTillEndAsString;
+            XmlDocument xdoc = new XmlDocument();
+            xdoc.LoadXml(xml);
+            foreach (XmlNode Xn in xdoc.DocumentElement.SelectNodes("Project"))
+            {
+                projectList.Add(Xn);
             }
         }
     }

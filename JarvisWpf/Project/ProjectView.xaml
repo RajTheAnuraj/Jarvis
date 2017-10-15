@@ -1,0 +1,47 @@
+﻿<UserControl x:Class="JarvisWpf.Project.ProjectView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             mc:Ignorable="d" 
+             xmlns:Behaviour="clr-namespace:JarvisWpf.Behaviours"
+             Behaviour:MvvmBehaviours.LoadedMethodName="LoadedMethod"
+             d:DesignHeight="300" d:DesignWidth="300">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="300"></RowDefinition>
+            <RowDefinition Height="*"></RowDefinition>
+            <RowDefinition Height="500"></RowDefinition>
+        </Grid.RowDefinitions>
+        <StackPanel Grid.Column="0" Grid.Row="0">
+            <StackPanel Orientation="Horizontal">
+                <Button Content="Close" Command="{Binding CloseCommand}"></Button>
+            </StackPanel>
+            <StackPanel Orientation="Horizontal">
+                <Label Width="200">Project Id</Label>
+                <TextBlock Text="{Binding ProjectId}"></TextBlock>
+            </StackPanel>
+            <StackPanel Orientation="Horizontal">
+                <Label Width="200">Project Name</Label>
+                <TextBlock Text="{Binding ProjectName}"></TextBlock>
+            </StackPanel>
+            <StackPanel Orientation="Horizontal">
+                <Label Width="200">Is Remote Project</Label>
+                <CheckBox IsChecked="{Binding isRemoteProject}"></CheckBox>
+            </StackPanel>
+            <StackPanel Orientation="Horizontal">
+                <Label Width="200">Project Root Folder</Label>
+                <TextBlock Text="{Binding ProjectFolder}"></TextBlock>
+            </StackPanel>
+            <StackPanel Orientation="Horizontal">
+                <Label Width="200">Project Summary</Label>
+                <TextBox Text="{Binding ProjectSummaryText}"></TextBox>
+            </StackPanel>
+            <StackPanel Orientation="Horizontal">
+                <Label Width="200">Project Log</Label>
+                <TextBox Text="{Binding ProjectLogText}"></TextBox>
+            </StackPanel>
+            
+        </StackPanel>
+    </Grid>
+</UserControl>
