@@ -290,5 +290,11 @@ namespace LogicLayer.Payloads
         {
             return other.ProjectItemType == this.ProjectItemType && other.Id == this.Id;
         }
+
+
+        public string GetProcessArgument()
+        {
+            return null;
+        }
     }
 }

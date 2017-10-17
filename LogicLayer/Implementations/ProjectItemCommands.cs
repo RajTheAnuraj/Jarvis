@@ -62,6 +62,10 @@ namespace LogicLayer.Implementations
 
                     string documentPath = thisDocumentsFolder + "\\" + ProjectItemToBeAdded.FileName;
                 }
+                else if (ProjectItemToBeAdded.isUrl)
+                {
+                    //Do nothing
+                }
                 else
                 {
                     string DocumentToBeAddedDocumentPath = thisDocumentsFolder + "\\" + ProjectItemToBeAdded.FileName;

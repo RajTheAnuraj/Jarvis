@@ -116,6 +116,27 @@ namespace JarvisWpf.Document
             set { _UploadPath = value; NotifyPropertyChanged("UploadPath"); }
         }
 
+        public string ThumbnailPath
+        {
+            get
+            {
+                return GetProjectItemProcessArgument();
+            }
+        }
+
+        private string GetProjectItemProcessArgument()
+        {
+            string ret = this.Document.GetProcessArgument();
+            if (ret != null)
+            {
+                if (ret.Contains("{0}"))
+                {
+                    ret = string.Format(ret, this.project.ProjectFolder);
+                }
+            }
+            return ret;
+        }
+
         private string _FileContent;
 
         public string FileContent
@@ -129,17 +150,30 @@ namespace JarvisWpf.Document
         public RelayCommand<object> SaveDocumentCommand { get; set; }
         public RelayCommand<object> DeleteDocumentCommand { get; set; }
         public RelayCommand<object> FileBrowseCommand { get; set; }
+        public RelayCommand<DocumentViewModel> OpenDocumentCommand { get; set; }
 
         public DocumentViewModel()
         {
             SaveDocumentCommand = new RelayCommand<object>(SaveDocument, CanSaveDocument);
             DeleteDocumentCommand = new RelayCommand<object>(DeleteDocument, CanDeleteDocument);
             FileBrowseCommand = new RelayCommand<object>(FileBrowse);
+            OpenDocumentCommand = new RelayCommand<DocumentViewModel>(OpenDocument, CanOpenDocument);
             IsValidationOn = true;
             CanExecuteChangedContainer += SaveDocumentCommand.RaiseCanExecuteChanged;
+            CanExecuteChangedContainer += OpenDocumentCommand.RaiseCanExecuteChanged;
         }
 
-        
+        private bool CanOpenDocument()
+        {
+            return GetProjectItemProcessArgument() != null;
+        }
+
+        private void OpenDocument(DocumentViewModel parameter)
+        {
+            string Args = GetProjectItemProcessArgument();
+            ICustomCommand openCommand = provider.GetStartProcessCommand(Args);
+            openCommand.Execute();
+        }
 
         private bool CanDeleteDocument()
         {

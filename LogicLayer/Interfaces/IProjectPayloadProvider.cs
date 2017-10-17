@@ -40,5 +40,7 @@ namespace LogicLayer.Interfaces
 
         ICustomCommand<bool> GetCanCreateFromClipboardCommand();
         IUndoableCommand GetCreateFromClipboardCommand(ProjectPayload Project);
+
+        ICustomCommand GetStartProcessCommand(string Argument);
     }
 }

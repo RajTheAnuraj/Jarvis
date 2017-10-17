@@ -70,7 +70,10 @@
                                 <StackPanel Orientation="Horizontal">
                                     <TextBlock Text="{Binding DisplayString}" Width="600"></TextBlock>
                                     <TextBlock Text="{Binding ProjectItemSubType}" Width="100"></TextBlock>
-                                    <Button Content="Open" Margin="10,0" Padding="20,0"  Command="{Binding CreateDocumentCommand}"></Button>
+                                    <Button Content="Open" Margin="10,0" Padding="20,0"  
+                                            Command="{Binding OpenDocumentCommand}"
+                                            CommandParameter="{Binding}"
+                                            ></Button>
                                 </StackPanel>
                             </DataTemplate>
                         </ListView.ItemTemplate>

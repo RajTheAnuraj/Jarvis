@@ -60,6 +60,27 @@ namespace LogicLayer.Payloads
             return _DocumentSubTypes;
         }
 
+        public override bool isUrl
+        {
+            get
+            {
+                return (this.ProjectItemSubType == "Link");
+            }
+            set
+            {
+                base.isUrl = value;
+            }
+        }
+
+        public override string GetProcessArgument()
+        {
+            if (this.ProjectItemSubType == "Link")
+                return this.FileName;
+            if (this.ProjectItemSubType == "File" || this.ProjectItemSubType == "Screenshot")
+                return "{0}\\Document\\" + this.FileName;
+            return null;
+        }
+
         public static bool ConvertSubTypeToNeedsUpload(string DocumentSubType)
         {
             if (DocumentSubType == "File" || DocumentSubType == "Screenshot")

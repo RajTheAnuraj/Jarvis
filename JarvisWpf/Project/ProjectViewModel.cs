@@ -138,6 +138,7 @@ namespace JarvisWpf.Project
         public RelayCommand<object> CreateFromClipboardCommand { get; set; }
         public RelayCommand<object> SaveCommand { get; set; }
 
+
         public ProjectPayload projectPayLoad { get; set; }
         IResourceProvider CommandProvider = ProviderFactory.GetCurrentProvider();
 
@@ -148,6 +149,8 @@ namespace JarvisWpf.Project
             CreateFromClipboardCommand = new RelayCommand<object>(CreateFromClipboard);
             SaveCommand = new RelayCommand<object>(Save);
         }
+
+        
 
         private void Save(object obj)
         {

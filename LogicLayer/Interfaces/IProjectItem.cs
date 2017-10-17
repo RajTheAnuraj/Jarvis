@@ -13,6 +13,9 @@ namespace LogicLayer.Interfaces
         string ProjectItemClassName { get; set; }
         string Id { get; set; }
 
+
+        string GetProcessArgument();
+
         void CreateFromXml(string xml);
         string ReadToString();
         void UpdateFromXml(string xml);

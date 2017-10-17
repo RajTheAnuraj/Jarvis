@@ -58,9 +58,16 @@ namespace JarvisWpf.Common
             MemoryStream ms = new MemoryStream();
             ms.Write(by, 0, by.Length);
             ms.Position = 0;
-            if (content.CanLoad(DataFormats.Rtf))
+            try
             {
-                content.Load(ms, DataFormats.Rtf);
+                if (content.CanLoad(DataFormats.Rtf))
+                {
+                    content.Load(ms, DataFormats.Rtf);
+                }
+            }
+            catch(Exception)
+            {
+                //Swallow this
             }
             ms.Close();
             ms.Dispose();

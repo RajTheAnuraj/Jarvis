@@ -46,6 +46,7 @@
     <Compile Include="HouseKeeping.cs" />
     <Compile Include="Implementations\ApplicationCommands.cs" />
     <Compile Include="Implementations\ClipboardCommands.cs" />
+    <Compile Include="Implementations\DiagnosticProcessCommands.cs" />
     <Compile Include="Implementations\DirectoryCommands.cs" />
     <Compile Include="Implementations\FileCommands.cs" />
     <Compile Include="Implementations\ProjectCommands.cs" />

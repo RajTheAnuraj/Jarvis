@@ -57,7 +57,12 @@ namespace LogicLayer.Payloads
 
         public virtual string ProjectItemSubType { get; set; }
 
+        public virtual bool isUrl { get; set; }
 
+        public virtual string GetProcessArgument()
+        {
+            return this.FileName;
+        }
 
         public abstract void CreateFromXml(string xml);
         public abstract string ReadToString();

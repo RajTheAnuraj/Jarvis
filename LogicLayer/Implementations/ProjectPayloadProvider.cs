@@ -143,5 +143,10 @@ namespace LogicLayer.Implementations
         {
             return new CreateFromClipboardCommand(Project);
         }
+
+        public ICustomCommand GetStartProcessCommand(string Argument)
+        {
+            return new StartProcessCommand(Argument);
+        }
     }
 }
