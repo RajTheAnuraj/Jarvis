@@ -14,6 +14,7 @@ namespace LogicLayer.Payloads
         public DocumentPayload()
         {
             NeedFileManipulation = true;
+            FileName = Guid.NewGuid().ToString() + ".rtf";
         }
 
         public override string ProjectItemType
@@ -50,7 +51,8 @@ namespace LogicLayer.Payloads
         static List<string> _DocumentSubTypes = new List<string>{
             "File",
             "Code Snippet",
-            "Link"
+            "Link",
+            "Screenshot"
         };
 
         public static List<string> GetDocumentSubTypes()
@@ -60,14 +62,21 @@ namespace LogicLayer.Payloads
 
         public static bool ConvertSubTypeToNeedsUpload(string DocumentSubType)
         {
-            if (DocumentSubType == "File")
+            if (DocumentSubType == "File" || DocumentSubType == "Screenshot")
                 return true;
             return false;
         }
 
         public static bool ConvertSubTypeToNeedsFileManipulation(string DocumentSubType)
         {
-            if (DocumentSubType == "File" || DocumentSubType == "Code Snippet")
+            if (DocumentSubType == "File" || DocumentSubType == "Code Snippet" || DocumentSubType == "Screenshot")
+                return true;
+            return false;
+        }
+
+        public static bool ConvertSubTypeToNeedsRtf(string DocumentSubType)
+        {
+            if (DocumentSubType == "Code Snippet")
                 return true;
             return false;
         }

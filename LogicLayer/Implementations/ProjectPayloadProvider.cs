@@ -39,6 +39,10 @@ namespace LogicLayer.Implementations
             return new FileCreateCommand(FilePath, FileContent);
         }
 
+        public IUndoableCommand GetFileCreateFromStreamCommand(string FilePath, MemoryStream fileStream)
+        {
+            return new FileCreateFromStreamCommand(FilePath, fileStream);
+        }
 
         public IUndoableCommand GetFileModifyContentCommand(string FilePath, string NewContent)
         {
@@ -129,5 +133,15 @@ namespace LogicLayer.Implementations
 
 
 
+
+        public ICustomCommand<bool> GetCanCreateFromClipboardCommand()
+        {
+            return new CanCreateFromClipboardCommand();
+        }
+
+        public IUndoableCommand GetCreateFromClipboardCommand(ProjectPayload Project)
+        {
+            return new CreateFromClipboardCommand(Project);
+        }
     }
 }

@@ -43,9 +43,16 @@ namespace JarvisWpf.Common
             }
         }
 
+        bool setOnce;
+
         public void LoadRtfToTxtBox()
         {
             var content = new TextRange(RTB.Document.ContentStart, RTB.Document.ContentEnd);
+            if (Rtf == null)
+            {
+                RTB.Document = new FlowDocument();
+                return;
+            }
 
             byte[] by = System.Text.Encoding.Default.GetBytes(Rtf);
             MemoryStream ms = new MemoryStream();
@@ -66,7 +73,6 @@ namespace JarvisWpf.Common
 
 
 
-        string _Rtf;
 
         public string Rtf
         {
@@ -77,7 +83,6 @@ namespace JarvisWpf.Common
             set
             {
                 SetValue(RtfProperty, value);
-                _Rtf = value;
                 if (PropertyChanged != null)
                     PropertyChanged.Invoke(this, new PropertyChangedEventArgs("Rtf"));
             }

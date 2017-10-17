@@ -135,6 +135,7 @@ namespace JarvisWpf.Project
 
         public RelayCommand<object> CloseCommand { get; set; }
         public RelayCommand<object> CreateDocumentCommand { get; set; }
+        public RelayCommand<object> CreateFromClipboardCommand { get; set; }
 
         public ProjectPayload projectPayLoad { get; set; }
         IResourceProvider CommandProvider = ProviderFactory.GetCurrentProvider();
@@ -143,7 +144,22 @@ namespace JarvisWpf.Project
         {
             CloseCommand = new RelayCommand<object>(CloseProject);
             CreateDocumentCommand = new RelayCommand<object>(CreateDocument);
-            
+            CreateFromClipboardCommand = new RelayCommand<object>(CreateFromClipboard);
+           
+        }
+
+        
+
+        private void CreateFromClipboard(object obj)
+        {
+            ICustomCommand<bool> command = CommandProvider.GetCanCreateFromClipboardCommand();
+            if (command.Execute())
+            {
+                IUndoableCommand clipbrdCommand = CommandProvider.GetCreateFromClipboardCommand(this.projectPayLoad);
+                History.Push(clipbrdCommand);
+                clipbrdCommand.Execute();
+                CopyToViewModel(this.projectPayLoad);
+            }
         }
 
         private void CreateDocument(object obj)
@@ -216,10 +232,14 @@ namespace JarvisWpf.Project
             switch (ProjectItemName)
             {
                 case  "DocumentAdded":
-                this.Documents.Add((DocumentViewModel)Parameter);
+                    this.Documents.Add((DocumentViewModel)Parameter);
+                    SelectedItemViewModel = null;
                     break;
                 case "DocumentDeleted":
                     this.Documents.Remove((DocumentViewModel)Parameter);
+                    break;
+                case "DocumentModified":
+                    SelectedItemViewModel = null;
                     break;
             }
         }

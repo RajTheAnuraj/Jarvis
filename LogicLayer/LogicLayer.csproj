@@ -32,6 +32,8 @@
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -43,6 +45,7 @@
     <Compile Include="Factories\ProviderFactory.cs" />
     <Compile Include="HouseKeeping.cs" />
     <Compile Include="Implementations\ApplicationCommands.cs" />
+    <Compile Include="Implementations\ClipboardCommands.cs" />
     <Compile Include="Implementations\DirectoryCommands.cs" />
     <Compile Include="Implementations\FileCommands.cs" />
     <Compile Include="Implementations\ProjectCommands.cs" />

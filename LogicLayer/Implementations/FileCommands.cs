@@ -70,6 +70,58 @@ namespace LogicLayer.Implementations
         }
     }
 
+    public class FileCreateFromStreamCommand : IUndoableCommand, ICustomCommand
+    {
+        public string FilePath { get; set; }
+        public MemoryStream fileStream { get; set; }
+
+        public FileCreateFromStreamCommand()
+        {
+
+        }
+
+        public FileCreateFromStreamCommand(string FilePath)
+        {
+            this.FilePath = FilePath;
+        }
+
+        public FileCreateFromStreamCommand(string FilePath, MemoryStream fileStream)
+        {
+            this.FilePath = FilePath;
+            this.fileStream = fileStream;
+        }
+
+
+        public void Execute()
+        {
+            if (File.Exists(FilePath))
+            {
+                throw new IOException("The file exists and Cannot be overwritten by this command. Use FileOverWriteCommand");
+            }
+            if (!Directory.Exists(Path.GetDirectoryName(FilePath)))
+                throw new IOException("The File Path is not valid. Directory Doesnt exist");
+
+            if (fileStream == null)
+                throw new IOException("The Stream is empty");
+
+            FileStream fs = new FileStream(FilePath, FileMode.Create);
+            fileStream.Position = 0;
+            fileStream.CopyTo(fs);
+
+            fs.Flush();
+            fs.Close();
+            fs.Dispose();
+
+            fileStream.Close();
+            fileStream.Dispose();
+        }
+
+        public void Undo()
+        {
+            if (File.Exists(FilePath))
+                File.Delete(FilePath);
+        }
+    }
 
     public class FileModifyContentCommand : IUndoableCommand, ICustomCommand
     {

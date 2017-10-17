@@ -58,6 +58,7 @@
     <Compile Include="ProjectItemTestsBaseClass.cs" />
     <Compile Include="ProjectPayloadTests.cs" />
     <Compile Include="ApplicationCommandsTest.cs" />
+    <Compile Include="ClipboardTests.cs" />
     <Compile Include="XMLDALTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

@@ -43,8 +43,10 @@
                 
                 <Label VerticalAlignment="Center" Grid.Row="1" Margin="3" HorizontalAlignment="Left" Grid.Column="0" Content="Display String:"/>
                 <TextBox x:Name="displayStringTextBox" Width="600" VerticalAlignment="Center" Text="{Binding DisplayString}" Grid.Row="1" Margin="3" Height="23" HorizontalAlignment="Left" Grid.Column="1"/>
-                <Label VerticalAlignment="Center" Grid.Row="2" Margin="3" HorizontalAlignment="Left" Grid.Column="0" Content="File Name:"/>
-                <TextBox x:Name="fileNameTextBox" Width="600" VerticalAlignment="Center" Text="{Binding FileName}" Grid.Row="2" Margin="3" Height="23" HorizontalAlignment="Left" Grid.Column="1"/>
+                <Label VerticalAlignment="Center" Grid.Row="2" Margin="3" HorizontalAlignment="Left" Grid.Column="0" Content="File Name:"
+                      />
+                <TextBox x:Name="fileNameTextBox" Width="600" VerticalAlignment="Center" Text="{Binding FileName}" Grid.Row="2" Margin="3" 
+                         Height="23" HorizontalAlignment="Left" Grid.Column="1"/>
                 <Label VerticalAlignment="Center" Grid.Row="3" Margin="3" HorizontalAlignment="Left" Grid.Column="0" Content="Project Item Sub Type:"/>
                 <ComboBox x:Name="projectItemSubTypeComboBox" Width="300" VerticalAlignment="Center" Grid.Row="3" Margin="3" Height="Auto" 
                       HorizontalAlignment="Left" SelectedItem="{Binding ProjectItemSubType}" ItemsSource="{Binding DocumentSubTypes}"
@@ -59,12 +61,11 @@
                         Visibility="{Binding NeedsUpload,Converter={StaticResource BoolToVisibilityConverter}}"
                         Height="23" Margin="3" Padding="3" />
                 </StackPanel>
-                <Label VerticalAlignment="Center" Grid.Row="5" Margin="3" HorizontalAlignment="Left" Grid.Column="0" Content="Content:"/>
-                <!--<RichTextBox Width="600" VerticalAlignment="Center" 
-				 Document ="{Binding FileContent, Converter={StaticResource rtfToFlowDocumentConverter}}" 
-				Grid.Row="5" Margin="3" Height="300"  HorizontalAlignment="Left" Grid.Column="1"/>-->
+                <Label VerticalAlignment="Center" Grid.Row="5" Margin="3" HorizontalAlignment="Left" Grid.Column="0" Content="Content:"
+                       Visibility="{Binding ShowRichTextBox,Converter={StaticResource BoolToVisibilityConverter}}"/>
                 <Common:BindableRichTextBox Grid.Row="5" Margin="3" Height="300" Grid.Column="1"
-                  Rtf="{Binding FileContent}" ></Common:BindableRichTextBox>
+                  Rtf="{Binding FileContent, Mode=TwoWay}" 
+                  Visibility="{Binding ShowRichTextBox,Converter={StaticResource BoolToVisibilityConverter}}"></Common:BindableRichTextBox>
                 
             </Grid>
         </Grid>

@@ -86,9 +86,27 @@ namespace JarvisWpf.Document
                 _ProjectItemSubType = value;
                 NeedsUpload = DocumentPayload.ConvertSubTypeToNeedsUpload(value);
                 NeedFileManipulation = DocumentPayload.ConvertSubTypeToNeedsFileManipulation(value);
+                ShowRichTextBox = DocumentPayload.ConvertSubTypeToNeedsRtf(value);
                 NotifyPropertyChanged("ProjectItemSubType");
             }
         }
+
+        private bool _ShowRichTextBox;
+
+        public bool ShowRichTextBox
+        {
+            get
+            {
+                return _ShowRichTextBox;
+            }
+            set
+            {
+                _ShowRichTextBox = value;
+                NotifyPropertyChanged("ShowRichTextBox");
+            }
+        }
+
+
 
         private string _UploadPath;
 
@@ -103,10 +121,7 @@ namespace JarvisWpf.Document
         public string FileContent
         {
             get {
-                return @"{\rtf1\ansi\ansicpg1252\uc1\htmautsp\deff2{\fonttbl{\f0\fcharset0 Times New Roman;}{\f2\fcharset0 Segoe UI;}{\f3\fcharset0 Menlo-Regular;}}{\colortbl\red0\green0\blue0;\red255\green255\blue255;\red13\green0\blue129;\red235\green236\blue237;\red36\green38\blue41;\red37\green127\blue159;}\loch\hich\dbch\pard\plain\ltrpar\itap0{\lang1033\fs18\f2\cf0 \cf0\ql{\fs26\f3 {\cf2\highlight3\ltrch var}{\cf4\highlight3\ltrch  content = }{\cf2\highlight3\ltrch new}{\cf4\highlight3\ltrch  }{\cf5\highlight3\ltrch TextRange}{\cf4\highlight3\ltrch (doc.}{\cf5\highlight3\ltrch ContentStart}{\cf4\highlight3\ltrch , doc.}{\cf5\highlight3\ltrch ContentEnd}{\cf4\highlight3\ltrch );}{\cf4\ltrch \line }{\cf4\ltrch \line }{\cf2\highlight3\ltrch if}{\cf4\highlight3\ltrch  (content.}{\cf5\highlight3\ltrch CanLoad}{\cf4\highlight3\ltrch (}{\cf5\highlight3\ltrch DataFormats}{\cf4\highlight3\ltrch .}{\cf5\highlight3\ltrch Rtf}{\cf4\highlight3\ltrch ))}{\cf4\ltrch \line }{\cf4\highlight3\ltrch \{}{\cf4\ltrch \line }{\cf4\highlight3\ltrch     content.}{\cf5\highlight3\ltrch Load}{\cf4\highlight3\ltrch (stream, }{\cf5\highlight3\ltrch DataFormats}{\cf4\highlight3\ltrch .}{\cf5\highlight3\ltrch Rtf}{\cf4\highlight3\ltrch );}{\cf4\ltrch \line }{\cf4\highlight3\ltrch \}}\li0\ri0\sa0\sb0\fi0\ql\par}
-}
-}";
-                //return _FileContent; 
+                return _FileContent; 
             }
             set { _FileContent = value; NotifyPropertyChanged("FileContent"); }
         }
@@ -123,6 +138,8 @@ namespace JarvisWpf.Document
             IsValidationOn = true;
             CanExecuteChangedContainer += SaveDocumentCommand.RaiseCanExecuteChanged;
         }
+
+        
 
         private bool CanDeleteDocument()
         {
@@ -203,7 +220,7 @@ namespace JarvisWpf.Document
             IUndoableCommand saveProjectCommand = provider.GetProjectSaveCommand(this.project);
             saveProjectCommand.Execute();
             RaiseChildChangedEvent(ActionToInvoke, this);
-
+            
         }
 
         private void CopyViewModelToDocument()

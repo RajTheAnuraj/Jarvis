@@ -16,4 +16,9 @@ namespace LogicLayer.Interfaces
         void Execute();
         void Undo();
     }
+
+    public interface ICustomCommand<T>
+    {
+        T Execute();
+    }
 }
