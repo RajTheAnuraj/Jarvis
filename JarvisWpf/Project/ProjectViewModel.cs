@@ -136,6 +136,7 @@ namespace JarvisWpf.Project
         public RelayCommand<object> CloseCommand { get; set; }
         public RelayCommand<object> CreateDocumentCommand { get; set; }
         public RelayCommand<object> CreateFromClipboardCommand { get; set; }
+        public RelayCommand<object> SaveCommand { get; set; }
 
         public ProjectPayload projectPayLoad { get; set; }
         IResourceProvider CommandProvider = ProviderFactory.GetCurrentProvider();
@@ -145,9 +146,14 @@ namespace JarvisWpf.Project
             CloseCommand = new RelayCommand<object>(CloseProject);
             CreateDocumentCommand = new RelayCommand<object>(CreateDocument);
             CreateFromClipboardCommand = new RelayCommand<object>(CreateFromClipboard);
-           
+            SaveCommand = new RelayCommand<object>(Save);
         }
 
+        private void Save(object obj)
+        {
+            IUndoableCommand saveProjectCommand = CommandProvider.GetProjectSaveCommand(this.projectPayLoad);
+            saveProjectCommand.Execute();
+        }
         
 
         private void CreateFromClipboard(object obj)
@@ -160,6 +166,9 @@ namespace JarvisWpf.Project
                 clipbrdCommand.Execute();
                 CopyToViewModel(this.projectPayLoad);
             }
+            
+            IUndoableCommand saveProjectCommand = CommandProvider.GetProjectSaveCommand(this.projectPayLoad);
+            saveProjectCommand.Execute();
         }
 
         private void CreateDocument(object obj)

@@ -28,6 +28,7 @@
             <StackPanel Orientation="Horizontal">
                 <Button Content="Close" Command="{Binding CloseCommand}"></Button>
                 <Button Content="Create From Clipboard" Margin="10,0" Padding="20,0" Height="30" Command="{Binding CreateFromClipboardCommand}"></Button>
+                <Button Content="Save" Margin="10,0" Padding="20,0" Height="30" Command="{Binding SaveCommand}"></Button>
             </StackPanel>
             <StackPanel Orientation="Horizontal">
                 <Label Width="200">Project Id</Label>
