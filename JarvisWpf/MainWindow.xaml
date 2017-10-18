@@ -5,8 +5,15 @@
         xmlns:App="clr-namespace:JarvisWpf"
         xmlns:Project="clr-namespace:JarvisWpf.Project"
         Title="Jarvis : The Helper" Height="900" Width="1000"
-        ShowIconOnTitleBar="True"                      
+        ShowIconOnTitleBar="True"  
+                      BorderThickness="0" 
+                      GlowBrush="Black"
+                      ResizeMode="CanResizeWithGrip"
+
+                      WindowTransitionsEnabled="False"
+                      WindowStartupLocation="CenterScreen"
                       >
+
     <Window.DataContext>
         <App:ApplicationViewModel></App:ApplicationViewModel>
     </Window.DataContext>

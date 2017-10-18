@@ -27,7 +27,7 @@
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="200"></RowDefinition>
-            <RowDefinition Height="200"></RowDefinition>
+            <RowDefinition Height="300"></RowDefinition>
             <RowDefinition Height="500"></RowDefinition>
         </Grid.RowDefinitions>
         <StackPanel Grid.Column="0" Grid.Row="0">
@@ -64,26 +64,27 @@
         </StackPanel>
         <TabControl Grid.Row="1" SelectedIndex="{Binding SelectedTabIndex}">
             <TabItem Header="Documents">
-                <StackPanel ScrollViewer.CanContentScroll="False" ScrollViewer.VerticalScrollBarVisibility="Visible" Height="180">
+                <StackPanel ScrollViewer.CanContentScroll="False" ScrollViewer.VerticalScrollBarVisibility="Visible">
                     <StackPanel Orientation="Horizontal" Margin="0,5">
                         <Button Content="Add" Margin="10,0" Padding="20,0" Height="30" Command="{Binding CreateDocumentCommand}"></Button>
                     </StackPanel>
-                    <ListView ItemsSource="{Binding Documents}" SelectedItem="{Binding SelectedItemViewModel}" Tag="{Binding}"
-                              ScrollViewer.VerticalScrollBarVisibility="Visible" ScrollViewer.CanContentScroll="False"
-                              VerticalContentAlignment="Top" Height="180">
-                        <ListView.ItemTemplate>
-                            <DataTemplate>
-                                <StackPanel Orientation="Horizontal">
-                                    <TextBlock Text="{Binding DisplayString}" Width="600"></TextBlock>
-                                    <TextBlock Text="{Binding ProjectItemSubType}" Width="100"></TextBlock>
-                                    <Button Content="Open" Margin="10,0" Padding="20,0"  
+                    <Grid>
+                        <ListView ItemsSource="{Binding Documents}" SelectedItem="{Binding SelectedItemViewModel}" Tag="{Binding}"
+                              VerticalContentAlignment="Top" Margin="0,0,10,0" Height="200">
+                            <ListView.ItemTemplate>
+                                <DataTemplate>
+                                    <StackPanel Orientation="Horizontal">
+                                        <TextBlock Text="{Binding DisplayString}" Width="600"></TextBlock>
+                                        <TextBlock Text="{Binding ProjectItemSubType}" Width="100"></TextBlock>
+                                        <Button Content="Open" Margin="10,0" Padding="20,0"  
                                             Command="{Binding OpenDocumentCommand}"
                                             CommandParameter="{Binding}"
                                             ></Button>
-                                </StackPanel>
-                            </DataTemplate>
-                        </ListView.ItemTemplate>
-                    </ListView>
+                                    </StackPanel>
+                                </DataTemplate>
+                            </ListView.ItemTemplate>
+                        </ListView>
+                    </Grid>
                 </StackPanel>
             </TabItem>
             <TabItem Header="Communication">
@@ -108,16 +109,18 @@
                     <StackPanel Orientation="Horizontal" Margin="0,5">
                         <Button Content="Add" Margin="10,0" Padding="20,0" Height="30" Command="{Binding CreateSourceControlCommand}"></Button>
                     </StackPanel>
-                    <ListView ItemsSource="{Binding SourceControls}" SelectedItem="{Binding SelectedItemViewModel}">
-                        <ListView.ItemTemplate>
-                            <DataTemplate>
-                                <StackPanel Orientation="Horizontal" Background="{Binding ProjectItemSubType, Converter={StaticResource SourceControlTypeToBrush}}" HorizontalAlignment="Stretch">
-                                    <TextBlock Text="{Binding DisplayString}" Width="200"></TextBlock>
-                                    <TextBlock Text="{Binding ProjectItemSubType}" Width="100"></TextBlock>
-                                </StackPanel>
-                            </DataTemplate>
-                        </ListView.ItemTemplate>
-                    </ListView>
+                    <Grid>
+                        <ListView ItemsSource="{Binding SourceControls}" SelectedItem="{Binding SelectedItemViewModel}" Height="200" Margin="10">
+                            <ListView.ItemTemplate>
+                                <DataTemplate>
+                                    <StackPanel Orientation="Horizontal" Background="{Binding ProjectItemSubType, Converter={StaticResource SourceControlTypeToBrush}}" HorizontalAlignment="Stretch">
+                                        <TextBlock Text="{Binding DisplayString}" Width="200"></TextBlock>
+                                        <TextBlock Text="{Binding ProjectItemSubType}" Width="100"></TextBlock>
+                                    </StackPanel>
+                                </DataTemplate>
+                            </ListView.ItemTemplate>
+                        </ListView>
+                    </Grid>
                 </StackPanel>
             </TabItem>
             <TabItem Header="To Do">

@@ -63,8 +63,8 @@
                 </StackPanel>
                 <Label VerticalAlignment="Center" Grid.Row="5" Margin="3" HorizontalAlignment="Left" Grid.Column="0" Content="Content:"
                        Visibility="{Binding ShowRichTextBox,Converter={StaticResource BoolToVisibilityConverter}}"/>
-                <Common:BindableRichTextBox Grid.Row="5" Margin="3" Height="300" Grid.Column="1"
-                  Rtf="{Binding FileContent, Mode=TwoWay}" 
+                <Common:BindableRichTextBox Grid.Row="5" Margin="3" Height="200" Grid.Column="1"
+                  Rtf="{Binding FileContent, Mode=TwoWay}"  Width="800"
                   Visibility="{Binding ShowRichTextBox,Converter={StaticResource BoolToVisibilityConverter}}"></Common:BindableRichTextBox>
                     <Image Source="{Binding ThumbnailPath}" Grid.Column="1" Grid.Row="5"  Width="200" Height="200"></Image>
             </Grid>
