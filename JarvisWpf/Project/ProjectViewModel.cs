@@ -13,6 +13,7 @@ using System.Text;
 using System.Collections.ObjectModel;
 using JarvisWpf.Document;
 using JarvisWpf.Communication;
+using JarvisWpf.SourceControl;
 
 namespace JarvisWpf.Project
 {
@@ -100,6 +101,13 @@ namespace JarvisWpf.Project
             set { _Communications = value; NotifyPropertyChanged("Communications"); }
         }
 
+        private ObservableCollection<SourceControlViewModel> _SourceControls;
+
+        public ObservableCollection<SourceControlViewModel> SourceControls
+        {
+            get { return _SourceControls; }
+            set { _SourceControls = value; NotifyPropertyChanged("SourceControls"); }
+        }
 
         private BindableBase _SelectedItemViewModel;
 
@@ -137,7 +145,7 @@ namespace JarvisWpf.Project
         public RelayCommand<object> CreateDocumentCommand { get; set; }
         public RelayCommand<object> CreateFromClipboardCommand { get; set; }
         public RelayCommand<object> SaveCommand { get; set; }
-
+        public RelayCommand<object> CreateSourceControlCommand { get; set; }
 
         public ProjectPayload projectPayLoad { get; set; }
         IResourceProvider CommandProvider = ProviderFactory.GetCurrentProvider();
@@ -148,6 +156,7 @@ namespace JarvisWpf.Project
             CreateDocumentCommand = new RelayCommand<object>(CreateDocument);
             CreateFromClipboardCommand = new RelayCommand<object>(CreateFromClipboard);
             SaveCommand = new RelayCommand<object>(Save);
+            CreateSourceControlCommand = new RelayCommand<object>(CreateSourceControl);
         }
 
         
@@ -185,6 +194,19 @@ namespace JarvisWpf.Project
             NotifyPropertyChanged("SelectedItemViewModel");
         }
 
+        private void CreateSourceControl(object obj)
+        {
+            SourceControlPayload sc = new SourceControlPayload();
+            SourceControlViewModel SVM = new SourceControlViewModel();
+            sc.SourceControlDateTime = DateTime.Now;
+            sc.ProjectItemSubType = "Changeset";
+            SVM.isEditMode = false;
+            SVM.setSourceControl(sc, projectPayLoad);
+            SVM.ChildChanged += ProjectItemChanged;
+            _SelectedItemViewModel = SVM;
+            NotifyPropertyChanged("SelectedItemViewModel");
+        }
+        
         public void LoadedMethod()
         {
             ProjectPayload pl = new ProjectPayload(_ProjectName);
@@ -209,6 +231,7 @@ namespace JarvisWpf.Project
             this.projectPayLoad = pl;
             this.Documents = new ObservableCollection<DocumentViewModel>();
             this.Communications = new ObservableCollection<CommunicationViewModel>();
+            this.SourceControls = new ObservableCollection<SourceControlViewModel>();
             CopyProjectItems(pl);
         }
 
@@ -234,6 +257,14 @@ namespace JarvisWpf.Project
                             CVM.ChildChanged += ProjectItemChanged;
                             Communications.Add(CVM);
                             break;
+                        case "Source Control":
+                            SourceControlPayload sc = ((SourceControlPayload)projItem);
+                            SourceControlViewModel SVM = new SourceControlViewModel();
+                            SVM.setSourceControl(sc, pl);
+                            SVM.ChildChanged += ProjectItemChanged;
+                            SourceControls.Add(SVM);
+                            break;
+
                     }
                 }
             }
@@ -251,6 +282,16 @@ namespace JarvisWpf.Project
                     this.Documents.Remove((DocumentViewModel)Parameter);
                     break;
                 case "DocumentModified":
+                    SelectedItemViewModel = null;
+                    break;
+                case "SourceControlAdded":
+                    this.SourceControls.Add((SourceControlViewModel)Parameter);
+                    SelectedItemViewModel = null;
+                    break;
+                case "SourceControlDeleted":
+                    this.SourceControls.Remove((SourceControlViewModel)Parameter);
+                    break;
+                case "SourceControlModified":
                     SelectedItemViewModel = null;
                     break;
             }

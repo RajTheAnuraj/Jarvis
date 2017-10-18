@@ -19,7 +19,11 @@ namespace JarvisWpf.Document
 {
     public class DocumentViewModel : BindableBase
     {
+        #region Properties
+        IResourceProvider ResourceProvider = null;
+        public DocumentPayload Document { get; set; }
         public ProjectPayload project { get; set; }
+
 
         public List<string> DocumentSubTypes
         {
@@ -30,7 +34,6 @@ namespace JarvisWpf.Document
         }
 
         private string _DisplayString;
-
         [Required]
         public string DisplayString
         {
@@ -43,7 +46,6 @@ namespace JarvisWpf.Document
         }
 
         private string _FileName;
-
         [Required]
         public string FileName
         {
@@ -52,7 +54,6 @@ namespace JarvisWpf.Document
         }
 
         private string _Id;
-
         public string Id
         {
             get { return _Id; }
@@ -60,7 +61,6 @@ namespace JarvisWpf.Document
         }
 
         private bool _NeedFileManipulation;
-
         public bool NeedFileManipulation
         {
             get { return _NeedFileManipulation; }
@@ -68,7 +68,6 @@ namespace JarvisWpf.Document
         }
 
         private bool _NeedsUpload;
-
         public bool NeedsUpload
         {
             get { return _NeedsUpload; }
@@ -76,7 +75,6 @@ namespace JarvisWpf.Document
         }
 
         private string _ProjectItemSubType;
-
         [Required]
         public string ProjectItemSubType
         {
@@ -92,7 +90,6 @@ namespace JarvisWpf.Document
         }
 
         private bool _ShowRichTextBox;
-
         public bool ShowRichTextBox
         {
             get
@@ -106,10 +103,7 @@ namespace JarvisWpf.Document
             }
         }
 
-
-
         private string _UploadPath;
-
         public string UploadPath
         {
             get { return _UploadPath; }
@@ -138,22 +132,22 @@ namespace JarvisWpf.Document
         }
 
         private string _FileContent;
-
         public string FileContent
         {
-            get {
-                return _FileContent; 
+            get
+            {
+                return _FileContent;
             }
             set { _FileContent = value; NotifyPropertyChanged("FileContent"); }
         }
 
-        public RelayCommand<object> SaveDocumentCommand { get; set; }
-        public RelayCommand<object> DeleteDocumentCommand { get; set; }
-        public RelayCommand<object> FileBrowseCommand { get; set; }
-        public RelayCommand<DocumentViewModel> OpenDocumentCommand { get; set; }
+        #endregion
+
+        #region Constructor
 
         public DocumentViewModel()
         {
+            ResourceProvider = ProviderFactory.GetCurrentProvider();
             SaveDocumentCommand = new RelayCommand<object>(SaveDocument, CanSaveDocument);
             DeleteDocumentCommand = new RelayCommand<object>(DeleteDocument, CanDeleteDocument);
             FileBrowseCommand = new RelayCommand<object>(FileBrowse);
@@ -163,6 +157,19 @@ namespace JarvisWpf.Document
             CanExecuteChangedContainer += OpenDocumentCommand.RaiseCanExecuteChanged;
         }
 
+        #endregion
+
+        #region Commands
+
+        public RelayCommand<object> SaveDocumentCommand { get; set; }
+        public RelayCommand<object> DeleteDocumentCommand { get; set; }
+        public RelayCommand<object> FileBrowseCommand { get; set; }
+        public RelayCommand<DocumentViewModel> OpenDocumentCommand { get; set; }
+
+        #endregion
+
+        #region Command Callbacks
+
         private bool CanOpenDocument()
         {
             return GetProjectItemProcessArgument() != null;
@@ -171,7 +178,7 @@ namespace JarvisWpf.Document
         private void OpenDocument(DocumentViewModel parameter)
         {
             string Args = GetProjectItemProcessArgument();
-            ICustomCommand openCommand = provider.GetStartProcessCommand(Args);
+            ICustomCommand openCommand = ResourceProvider.GetStartProcessCommand(Args);
             openCommand.Execute();
         }
 
@@ -182,10 +189,10 @@ namespace JarvisWpf.Document
 
         private void DeleteDocument(object obj)
         {
-            IUndoableCommand deleteProjectItemCommand = provider.GetDeleteProjectItemCommand(this.project, this.Document as PayloadBase);
+            IUndoableCommand deleteProjectItemCommand = ResourceProvider.GetDeleteProjectItemCommand(this.project, this.Document as PayloadBase);
             deleteProjectItemCommand.Execute();
             RaiseChildChangedEvent("DocumentDeleted", this);
-            IUndoableCommand saveProjectCommand = provider.GetProjectSaveCommand(this.project);
+            IUndoableCommand saveProjectCommand = ResourceProvider.GetProjectSaveCommand(this.project);
             saveProjectCommand.Execute();
         }
 
@@ -212,33 +219,33 @@ namespace JarvisWpf.Document
             {
                 IUndoableCommand documentModifyCommand = null;
                 string fieldName = null, fieldValue = null;
-                
+
                 if (Document.FileContent != this.FileContent)
                 {
                     fieldName = "FileContent";
                     fieldValue = this.FileContent;
-                    documentModifyCommand = provider.GetModifyProjectItemCommand(this.project, this.Document as PayloadBase, fieldName, fieldValue);
+                    documentModifyCommand = ResourceProvider.GetModifyProjectItemCommand(this.project, this.Document as PayloadBase, fieldName, fieldValue);
                     documentModifyCommand.Execute();
                 }
                 if (Document.DisplayString != this.DisplayString)
                 {
                     fieldName = "DisplayString";
                     fieldValue = this.DisplayString;
-                    documentModifyCommand = provider.GetModifyProjectItemCommand(this.project, this.Document as PayloadBase, fieldName, fieldValue);
+                    documentModifyCommand = ResourceProvider.GetModifyProjectItemCommand(this.project, this.Document as PayloadBase, fieldName, fieldValue);
                     documentModifyCommand.Execute();
                 }
                 if (Document.UploadPath != this.UploadPath)
                 {
                     fieldName = "UploadPath";
                     fieldValue = this.UploadPath;
-                    documentModifyCommand = provider.GetModifyProjectItemCommand(this.project, this.Document as PayloadBase, fieldName, fieldValue);
+                    documentModifyCommand = ResourceProvider.GetModifyProjectItemCommand(this.project, this.Document as PayloadBase, fieldName, fieldValue);
                     documentModifyCommand.Execute();
                 }
                 if (Document.FileName != this.FileName)
                 {
                     fieldName = "FileName";
                     fieldValue = this.FileName;
-                    documentModifyCommand = provider.GetModifyProjectItemCommand(this.project, this.Document as PayloadBase, fieldName, fieldValue);
+                    documentModifyCommand = ResourceProvider.GetModifyProjectItemCommand(this.project, this.Document as PayloadBase, fieldName, fieldValue);
                     documentModifyCommand.Execute();
                 }
                 ActionToInvoke = "DocumentModified";
@@ -246,17 +253,19 @@ namespace JarvisWpf.Document
             else
             {
                 CopyViewModelToDocument();
-                IUndoableCommand AddItemToProjCommand = provider.GetAddProjectItemCommand(this.project, (PayloadBase)this.Document);
+                IUndoableCommand AddItemToProjCommand = ResourceProvider.GetAddProjectItemCommand(this.project, (PayloadBase)this.Document);
                 AddItemToProjCommand.Execute();
                 ActionToInvoke = "DocumentAdded";
             }
-            
-            IUndoableCommand saveProjectCommand = provider.GetProjectSaveCommand(this.project);
+
+            IUndoableCommand saveProjectCommand = ResourceProvider.GetProjectSaveCommand(this.project);
             saveProjectCommand.Execute();
             RaiseChildChangedEvent(ActionToInvoke, this);
-            
-        }
 
+        }
+        #endregion
+
+        #region Methods
         private void CopyViewModelToDocument()
         {
             this.Document.DisplayString = this.DisplayString;
@@ -268,7 +277,6 @@ namespace JarvisWpf.Document
             this.Document.UploadPath = this.UploadPath;
         }
 
-        public DocumentPayload Document { get; set; }
 
         public void setDocument(DocumentPayload doc, ProjectPayload Project)
         {
@@ -281,16 +289,17 @@ namespace JarvisWpf.Document
             this.UploadPath = doc.UploadPath;
             this.project = Project;
             this.Document = doc;
-           
-        }
 
-        IResourceProvider provider = ProviderFactory.GetCurrentProvider();
+        }
+        #endregion
+
+        #region BindableBase Overrides
 
         protected override void BindBigData()
         {
             if (this.NeedFileManipulation && this.NeedsUpload == false)
             {
-                ICustomCommand readCommand = provider.GetReadContentToProjectItem(this.project, this.Document as PayloadBase);
+                ICustomCommand readCommand = ResourceProvider.GetReadContentToProjectItem(this.project, this.Document as PayloadBase);
                 readCommand.Execute();
                 FileContent = Document.FileContent;
             }
@@ -303,11 +312,7 @@ namespace JarvisWpf.Document
             setDocument(this.Document, this.project);
         }
 
-        public void LoadedMethod()
-        {
-            
-        }
-
+        #endregion
        
     }
 }

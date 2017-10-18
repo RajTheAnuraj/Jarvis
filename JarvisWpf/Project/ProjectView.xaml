@@ -7,15 +7,21 @@
              xmlns:Behaviour="clr-namespace:JarvisWpf.Behaviours"
              xmlns:Document="clr-namespace:JarvisWpf.Document"
              xmlns:Communication="clr-namespace:JarvisWpf.Communication"
+             xmlns:SourceControl="clr-namespace:JarvisWpf.SourceControl"
+             xmlns:Converter="clr-namespace:JarvisWpf.Converters"
              Behaviour:MvvmBehaviours.LoadedMethodName="LoadedMethod"
              d:DesignHeight="300" d:DesignWidth="300"
              >
     <UserControl.Resources>
+        <Converter:SourceControlTypeToBrush x:Key="SourceControlTypeToBrush"></Converter:SourceControlTypeToBrush>
         <DataTemplate DataType="{x:Type Document:DocumentViewModel}">
             <Document:DocumentView></Document:DocumentView>
         </DataTemplate>
         <DataTemplate DataType="{x:Type Communication:CommunicationViewModel}">
             <Communication:CommunicationView></Communication:CommunicationView>
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type SourceControl:SourceControlViewModel}">
+            <SourceControl:SourceControlView></SourceControl:SourceControlView>
         </DataTemplate>
     </UserControl.Resources>
     <Grid>
@@ -98,7 +104,21 @@
                 </StackPanel>
             </TabItem>
             <TabItem Header="Source Control">
-                <TextBlock>Source Control</TextBlock>
+                <StackPanel>
+                    <StackPanel Orientation="Horizontal" Margin="0,5">
+                        <Button Content="Add" Margin="10,0" Padding="20,0" Height="30" Command="{Binding CreateSourceControlCommand}"></Button>
+                    </StackPanel>
+                    <ListView ItemsSource="{Binding SourceControls}" SelectedItem="{Binding SelectedItemViewModel}">
+                        <ListView.ItemTemplate>
+                            <DataTemplate>
+                                <StackPanel Orientation="Horizontal" Background="{Binding ProjectItemSubType, Converter={StaticResource SourceControlTypeToBrush}}" HorizontalAlignment="Stretch">
+                                    <TextBlock Text="{Binding DisplayString}" Width="200"></TextBlock>
+                                    <TextBlock Text="{Binding ProjectItemSubType}" Width="100"></TextBlock>
+                                </StackPanel>
+                            </DataTemplate>
+                        </ListView.ItemTemplate>
+                    </ListView>
+                </StackPanel>
             </TabItem>
             <TabItem Header="To Do">
                 <TextBlock>To Do</TextBlock>

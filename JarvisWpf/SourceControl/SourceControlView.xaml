@@ -1,0 +1,57 @@
+﻿<UserControl x:Class="JarvisWpf.SourceControl.SourceControlView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             mc:Ignorable="d" 
+             xmlns:Converter="clr-namespace:JarvisWpf.Converters"
+            xmlns:Common="clr-namespace:JarvisWpf.Common"
+             d:DesignHeight="300" d:DesignWidth="300">
+    <UserControl.Resources>
+        <Converter:NegateBooleanConverter x:Key="NegateBooleanConverter"></Converter:NegateBooleanConverter>
+        <BooleanToVisibilityConverter x:Key="BoolToVisibilityConverter"></BooleanToVisibilityConverter>
+        <Converter:RtfToFlowDocumentConverter x:Key="rtfToFlowDocumentConverter"></Converter:RtfToFlowDocumentConverter>
+    </UserControl.Resources>
+    <StackPanel>
+        <StackPanel Orientation="Horizontal" Margin="0,5">
+            <Button Content="Save" Margin="10,0" Padding="20,0" Height="30" Command="{Binding SaveSourceControlCommand}"></Button>
+            <Button Content="Delete" Margin="10,0" Padding="20,0" Height="30" Command="{Binding DeleteSourceControlCommand}"></Button>
+        </StackPanel>
+        <Grid VerticalAlignment="Top" Margin="22,12,0,0" HorizontalAlignment="Left" >
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+
+            <TextBlock x:Name="validationErrorsTextBox" Width="Auto" VerticalAlignment="Center" Text="{Binding ValidationErrors}" 
+                         Grid.Row="0" 
+                         Margin="3" Height="Auto" HorizontalAlignment="Left" Grid.Column="0" Grid.ColumnSpan="2"/>
+
+            <Label VerticalAlignment="Center" Grid.Row="1" Margin="3" HorizontalAlignment="Left" Grid.Column="0" Content="Display String:"/>
+            <TextBox x:Name="displayStringTextBox" Width="600" VerticalAlignment="Center" Text="{Binding DisplayString}" Grid.Row="1" Margin="3" Height="23" HorizontalAlignment="Left" Grid.Column="1"/>
+            <Label VerticalAlignment="Center" Grid.Row="2" Margin="3" HorizontalAlignment="Left" Grid.Column="0" Content="Source Control Detail:"
+                      />
+            <TextBox  Width="600" VerticalAlignment="Center" Text="{Binding SourceControlDetail}" Grid.Row="2" Margin="3" 
+                         Height="23" HorizontalAlignment="Left" Grid.Column="1"/>
+            <Label VerticalAlignment="Center" Grid.Row="3" Margin="3" HorizontalAlignment="Left" Grid.Column="0" Content="Project Item Sub Type:"/>
+            <ComboBox  Width="300" VerticalAlignment="Center" Grid.Row="3" Margin="3" Height="Auto" 
+                      HorizontalAlignment="Left" SelectedItem="{Binding ProjectItemSubType}" ItemsSource="{Binding SourceControlSubTypes}"
+                      IsEnabled="{Binding isEditMode,Converter={StaticResource NegateBooleanConverter}}"
+                      Grid.Column="1">
+            </ComboBox>
+            <Label VerticalAlignment="Center" Grid.Row="4" Margin="3" HorizontalAlignment="Left" Grid.Column="0" Content="Added/Modifed On:" Visibility="{Binding NeedsUpload,Converter={StaticResource BoolToVisibilityConverter}}"/>
+                <TextBox Width="500" VerticalAlignment="Center" Text="{Binding SourceControlDateTime}" Margin="3" 
+                         Grid.Row="4" Grid.Column="1"
+                         Height="23" HorizontalAlignment="Left" />
+                
+        </Grid>
+    </StackPanel>
+</UserControl>

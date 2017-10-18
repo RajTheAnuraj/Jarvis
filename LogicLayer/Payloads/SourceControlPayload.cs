@@ -51,6 +51,14 @@ namespace LogicLayer.Payloads
             base.InvokeDeleteItem(this);
         }
 
-        
+
+        public static List<string> GetSourceControlSubTypes()
+        {
+            return new List<string>
+            {
+                "Changeset",
+                "Merge Request"
+            };
+        }
     }
 }
