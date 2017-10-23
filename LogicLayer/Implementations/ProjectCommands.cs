@@ -74,6 +74,22 @@ namespace LogicLayer.Implementations
                 Project.UpdateFromXml(fileContent);
             }
 
+            string projectLogPath = Project.ProjectFolder + "\\Log.rtf";
+            if (File.Exists(projectLogPath))
+            {
+                ICustomCommand fileReadLogCommand = CommandProvider.GetFileReadAsStringCommand(projectLogPath);
+                fileReadLogCommand.Execute();
+                Project.ProjectLogText = ((IReadTillEndAsString)fileReadLogCommand).ReadTillEndAsString;
+            }
+
+
+            string projectSummaryPath = Project.ProjectFolder + "\\Summary.rtf";
+            if (File.Exists(projectSummaryPath))
+            {
+                ICustomCommand fileReadSummaryCommand = CommandProvider.GetFileReadAsStringCommand(projectSummaryPath);
+                fileReadSummaryCommand.Execute();
+                Project.ProjectSummaryText = ((IReadTillEndAsString)fileReadSummaryCommand).ReadTillEndAsString;
+            }
         }
 
         public void Undo()
@@ -110,10 +126,43 @@ namespace LogicLayer.Implementations
             //Check for null
             if (Project == null) throw new ArgumentNullException("Project");
 
+
+            //Save the log
+            string ProjectLogPath = Project.ProjectFolder + "\\Log.rtf";
+            string NewContent = Project.ProjectLogText;
+            if (File.Exists(ProjectLogPath))
+            {
+                IUndoableCommand fileModifyCommand = CommandProvider.GetFileModifyContentCommand(ProjectLogPath, NewContent);
+                History.Push(fileModifyCommand);
+                fileModifyCommand.Execute();
+            }
+            else
+            {
+                IUndoableCommand fileCreateCommand = CommandProvider.GetFileCreateCommand(ProjectLogPath, NewContent);
+                History.Push(fileCreateCommand);
+                fileCreateCommand.Execute();
+            }
+
+            //Save the Summary
+            string ProjectSummaryPath = Project.ProjectFolder + "\\Summary.rtf";
+            NewContent = Project.ProjectSummaryText;
+            if (File.Exists(ProjectSummaryPath))
+            {
+                IUndoableCommand fileModifyCommand = CommandProvider.GetFileModifyContentCommand(ProjectSummaryPath, NewContent);
+                History.Push(fileModifyCommand);
+                fileModifyCommand.Execute();
+            }
+            else
+            {
+                IUndoableCommand fileCreateCommand = CommandProvider.GetFileCreateCommand(ProjectSummaryPath, NewContent);
+                History.Push(fileCreateCommand);
+                fileCreateCommand.Execute();
+            }
+
             //Save the current content in Project.Jarvis to the state variable OldContent
             //Read the xml on payload and save it back to Project.Jarvis
             string ProjectXmlPath = Project.ProjectFolder + "\\Project.Jarvis";
-            string NewContent = Project.ReadToString();
+            NewContent = Project.ReadToString();
             if (File.Exists(ProjectXmlPath))
             {
                 IUndoableCommand fileModifyCommand = CommandProvider.GetFileModifyContentCommand(ProjectXmlPath, NewContent);

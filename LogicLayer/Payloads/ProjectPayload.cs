@@ -36,8 +36,13 @@ namespace LogicLayer.Payloads
         public string Id { get; set; }
         public string ProjectIdentifier { get; set; }
         public string ProjectName { get; set; }
+
+        [XmlIgnore]
         public string ProjectLogText { get; set; }
+
+        [XmlIgnore]
         public string ProjectSummaryText { get; set; }
+        
         public bool isRemoteProject { get; set; }
         public string RemoteServerRoot { get; set; }
 
@@ -149,9 +154,9 @@ namespace LogicLayer.Payloads
         {
             ProjectPayload Retval = XmlOperations.DeserializeFromXml<ProjectPayload>(xml);
             this.Id = Retval.Id;
-            this.ProjectLogText = Retval.ProjectLogText;
+            //this.ProjectLogText = Retval.ProjectLogText;
             this.ProjectName = Retval.ProjectName;
-            this.ProjectSummaryText = Retval.ProjectSummaryText;
+            //this.ProjectSummaryText = Retval.ProjectSummaryText;
             this.isRemoteProject = Retval.isRemoteProject;
             this.RemoteServerRoot = Retval.RemoteServerRoot;
             CreateProjectItems(xml, this);
@@ -219,10 +224,6 @@ namespace LogicLayer.Payloads
             sb.Append(ProjectIdentifier);
             sb.Append("</ProjectItemType>");
 
-            sb.Append("<ProjectLogText>");
-            sb.Append(ProjectLogText);
-            sb.Append("</ProjectLogText>");
-
             sb.Append("<ProjectName>");
             sb.Append(ProjectName);
             sb.Append("</ProjectName>");
@@ -235,10 +236,6 @@ namespace LogicLayer.Payloads
             sb.Append(RemoteServerRoot);
             sb.Append("</RemoteServerRoot>");
             
-            sb.Append("<ProjectSummaryText>");
-            sb.Append(ProjectSummaryText);
-            sb.Append("</ProjectSummaryText>");
-
             sb.Append("<ProjectItems>");
             foreach (IProjectItem projectItem in ProjectItems)
             {

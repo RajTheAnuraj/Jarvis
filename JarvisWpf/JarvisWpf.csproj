@@ -60,16 +60,23 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="AddProjectWindow.xaml.cs">
+      <DependentUpon>AddProjectWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Common\StatusBarViewModel.cs" />
     <Compile Include="Converters\SourceControlTypeToBrush.cs" />
+    <Compile Include="SettingsView.xaml.cs">
+      <DependentUpon>SettingsView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="SourceControl\SourceControlView.xaml.cs">
       <DependentUpon>SourceControlView.xaml</DependentUpon>
     </Compile>
     <Compile Include="SourceControl\SourceControlViewModel.cs" />
-    <Page Include="Common\BindableRichTextBox.xaml">
+    <Page Include="AddProjectWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Communication\CommunicationView.xaml">
+    <Page Include="Common\BindableRichTextBox.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -92,10 +99,6 @@
       <DependentUpon>BindableRichTextBox.xaml</DependentUpon>
     </Compile>
     <Compile Include="Common\RelayCommand.cs" />
-    <Compile Include="Communication\CommunicationView.xaml.cs">
-      <DependentUpon>CommunicationView.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Communication\CommunicationViewModel.cs" />
     <Compile Include="Converters\BooleanToProjectTypeConverter.cs" />
     <Compile Include="Converters\BooleanToToolTipTextProjectTypeConverter.cs" />
     <Compile Include="Converters\NegateBooleanConverter.cs" />
@@ -113,6 +116,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Project\ProjectView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="SettingsView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -147,6 +154,7 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
+    <None Include="app.config" />
     <None Include="Configuration.Jarvis">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>

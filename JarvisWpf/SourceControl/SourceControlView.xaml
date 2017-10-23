@@ -35,18 +35,21 @@
                          Grid.Row="0" 
                          Margin="3" Height="Auto" HorizontalAlignment="Left" Grid.Column="0" Grid.ColumnSpan="2"/>
 
-            <Label VerticalAlignment="Center" Grid.Row="1" Margin="3" HorizontalAlignment="Left" Grid.Column="0" Content="Display String:"/>
+            <Label VerticalAlignment="Center" Grid.Row="1" Margin="3" HorizontalAlignment="Left" Grid.Column="0" Content="ChangeSet # (Comma separated):"/>
             <TextBox x:Name="displayStringTextBox" Width="600" VerticalAlignment="Center" Text="{Binding DisplayString}" Grid.Row="1" Margin="3" Height="23" HorizontalAlignment="Left" Grid.Column="1"/>
-            <Label VerticalAlignment="Center" Grid.Row="2" Margin="3" HorizontalAlignment="Left" Grid.Column="0" Content="Source Control Detail:"
+            
+            <Label VerticalAlignment="Center" Grid.Row="2" Margin="3" HorizontalAlignment="Left" Grid.Column="0" Content="Special Notes:"
                       />
             <TextBox  Width="600" VerticalAlignment="Center" Text="{Binding SourceControlDetail}" Grid.Row="2" Margin="3" 
                          Height="23" HorizontalAlignment="Left" Grid.Column="1"/>
-            <Label VerticalAlignment="Center" Grid.Row="3" Margin="3" HorizontalAlignment="Left" Grid.Column="0" Content="Project Item Sub Type:"/>
+            
+            <Label VerticalAlignment="Center" Grid.Row="3" Margin="3" HorizontalAlignment="Left" Grid.Column="0" Content="SourceControl Type:"/>
             <ComboBox  Width="300" VerticalAlignment="Center" Grid.Row="3" Margin="3" Height="Auto" 
                       HorizontalAlignment="Left" SelectedItem="{Binding ProjectItemSubType}" ItemsSource="{Binding SourceControlSubTypes}"
                       IsEnabled="{Binding isEditMode,Converter={StaticResource NegateBooleanConverter}}"
                       Grid.Column="1">
             </ComboBox>
+            
             <Label VerticalAlignment="Center" Grid.Row="4" Margin="3" HorizontalAlignment="Left" Grid.Column="0" Content="Added/Modifed On:" Visibility="{Binding NeedsUpload,Converter={StaticResource BoolToVisibilityConverter}}"/>
                 <TextBox Width="500" VerticalAlignment="Center" Text="{Binding SourceControlDateTime}" Margin="3" 
                          Grid.Row="4" Grid.Column="1"

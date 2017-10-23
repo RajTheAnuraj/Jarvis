@@ -4,15 +4,33 @@
         xmlns:Controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
         xmlns:App="clr-namespace:JarvisWpf"
         xmlns:Project="clr-namespace:JarvisWpf.Project"
+        xmlns:local="clr-namespace:JarvisWpf"
+                      xmlns:Dialog="clr-namespace:MahApps.Metro.Controls.Dialogs;assembly=MahApps.Metro"
         Title="Jarvis : The Helper" Height="900" Width="1000"
         ShowIconOnTitleBar="True"  
+                      TitleCaps="False"
                       BorderThickness="0" 
                       GlowBrush="Black"
                       ResizeMode="CanResizeWithGrip"
-
                       WindowTransitionsEnabled="False"
                       WindowStartupLocation="CenterScreen"
+                    Dialog:DialogParticipation.Register="{Binding}"  
                       >
+    <Controls:MetroWindow.RightWindowCommands>
+        <Controls:WindowCommands ShowLastSeparator="False">
+            <ToggleButton Content="Settings" IsChecked="{Binding ElementName=SettingsFlyout, Path=IsOpen}" Cursor="Hand"/>
+        </Controls:WindowCommands>
+    </Controls:MetroWindow.RightWindowCommands>
+
+    <Controls:MetroWindow.Flyouts>
+        <Controls:FlyoutsControl >
+            <Controls:Flyout x:Name="SettingsFlyout" Header="Settings" Position="Right" 
+                             Width="{Binding Path=ActualWidth, RelativeSource={RelativeSource AncestorType={x:Type Window}}, Mode=OneWay}"
+                             Theme="Inverse">
+                <local:SettingsView></local:SettingsView>
+            </Controls:Flyout>
+        </Controls:FlyoutsControl>
+    </Controls:MetroWindow.Flyouts>
 
     <Window.DataContext>
         <App:ApplicationViewModel></App:ApplicationViewModel>
@@ -25,7 +43,14 @@
             <Project:ProjectView></Project:ProjectView>
         </DataTemplate>
     </Window.Resources>
-    <Grid>
-        <ContentControl Content="{Binding CurrentViewModel}" ></ContentControl>
+    <Grid DockPanel.Dock="Top">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"></RowDefinition>
+            <RowDefinition Height="25"></RowDefinition>
+        </Grid.RowDefinitions>
+        <ContentControl Content="{Binding CurrentViewModel, Mode=TwoWay}" Grid.Row="0"></ContentControl>
+        <StatusBar Grid.Row="1">
+            <StatusBarItem Content="{Binding statusBarData.StatusText}"></StatusBarItem>
+        </StatusBar>
     </Grid>
 </Controls:MetroWindow>

@@ -12,7 +12,6 @@ using System.Linq;
 using System.Text;
 using System.Collections.ObjectModel;
 using JarvisWpf.Document;
-using JarvisWpf.Communication;
 using JarvisWpf.SourceControl;
 
 namespace JarvisWpf.Project
@@ -84,21 +83,39 @@ namespace JarvisWpf.Project
             set { _ProjectSummaryText = value; NotifyPropertyChanged("ProjectSummaryText"); }
         }
 
+        private string _DocumentFilter;
 
-        private ObservableCollection<DocumentViewModel> _Documents;
+        public string DocumentFilter
+        {
+            get { return _DocumentFilter; }
+            set
+            {
+                _DocumentFilter = value;
+                NotifyPropertyChanged("DocumentFilter");
+                NotifyPropertyChanged("Documents");
+            }
+        }
+
+        public List<DocumentViewModel> _Documents { get; set; }
 
         public ObservableCollection<DocumentViewModel> Documents
         {
-            get { return _Documents; }
-            set { _Documents = value; NotifyPropertyChanged("Documents"); }
-        }
+            get
+            {
+                if (String.IsNullOrWhiteSpace(DocumentFilter))
+                    return new ObservableCollection<DocumentViewModel>(_Documents);
 
-        private ObservableCollection<CommunicationViewModel> _Communications;
-
-        public ObservableCollection<CommunicationViewModel> Communications
-        {
-            get { return _Communications; }
-            set { _Communications = value; NotifyPropertyChanged("Communications"); }
+                return new ObservableCollection<DocumentViewModel>(_Documents
+                    .Where(c=>
+                        c.DisplayString.ToLower().Contains(DocumentFilter.ToLower()) ||
+                        c.ProjectItemSubType.ToLower().Contains(DocumentFilter.ToLower()) 
+                        ));
+            }
+            set
+            {
+                _Documents = value.ToList();
+                NotifyPropertyChanged("Documents");
+            }
         }
 
         private ObservableCollection<SourceControlViewModel> _SourceControls;
@@ -106,8 +123,49 @@ namespace JarvisWpf.Project
         public ObservableCollection<SourceControlViewModel> SourceControls
         {
             get { return _SourceControls; }
-            set { _SourceControls = value; NotifyPropertyChanged("SourceControls"); }
+            set
+            {
+                _SourceControls = value;
+                NotifyPropertyChanged("SourceControls");
+                NotifyPropertyChanged("SourceControlCopyOptions");
+            }
         }
+
+        public ObservableCollection<string> SourceControlCopyOptions
+        {
+            get
+            {
+                ObservableCollection<string> retval = new ObservableCollection<string>();
+                if (SourceControls != null)
+                {
+                    if (SourceControls.Count > 0)
+                    {
+                        retval = new ObservableCollection<string>(
+                            SourceControls
+                            .Where(c => c.ProjectItemSubType == "Merge Request")
+                            .Select(c => "After Merge Request On : " + c.SourceControlDateTime));
+                    }
+                   
+                }
+                retval.Add("All");
+                return retval;
+            }
+        }
+
+
+        private string _SourceControlCopySelectedOption;
+
+        public string SourceControlCopySelectedOption
+        {
+            get { return _SourceControlCopySelectedOption; }
+            set
+            {
+                _SourceControlCopySelectedOption = value;
+                NotifyPropertyChanged("SourceControlCopySelectedOption");
+                CopySourceControlItemsCommand.RaiseCanExecuteChanged();
+            }
+        }
+
 
         private BindableBase _SelectedItemViewModel;
 
@@ -136,6 +194,7 @@ namespace JarvisWpf.Project
             set
             {
                 _SelectedTabIndex = value;
+                WindowStatusText = _ProjectName;
                 SelectedItemViewModel = null;
             }
         }
@@ -146,6 +205,7 @@ namespace JarvisWpf.Project
         public RelayCommand<object> CreateFromClipboardCommand { get; set; }
         public RelayCommand<object> SaveCommand { get; set; }
         public RelayCommand<object> CreateSourceControlCommand { get; set; }
+        public RelayCommand<object> CopySourceControlItemsCommand { get; set; }
 
         public ProjectPayload projectPayLoad { get; set; }
         IResourceProvider CommandProvider = ProviderFactory.GetCurrentProvider();
@@ -157,14 +217,79 @@ namespace JarvisWpf.Project
             CreateFromClipboardCommand = new RelayCommand<object>(CreateFromClipboard);
             SaveCommand = new RelayCommand<object>(Save);
             CreateSourceControlCommand = new RelayCommand<object>(CreateSourceControl);
+            CopySourceControlItemsCommand = new RelayCommand<object>(CopySourceControlItems, CanCopySourceControlItems);
+           
+            _Documents = new List<DocumentViewModel>();
+            
+        }
+
+        private bool CanCopySourceControlItems()
+        {
+            return !String.IsNullOrWhiteSpace(SourceControlCopySelectedOption) && SourceControls.Count > 0;
+        }
+
+        private void CopySourceControlItems(object obj)
+        {
+            IEnumerable<string> fin = null;
+            string copiedChangesets = "";
+            if (SourceControlCopySelectedOption == "All")
+            {
+                var test = SourceControls.Where(c => c.ProjectItemSubType != "Merge Request")
+                    .GroupBy(c => c.ProjectItemSubType)
+                    .Select(c => new { Ids = c.Select(x => x.DisplayString), Key = c.Key });
+                
+                foreach (var item in test)
+                {
+                    copiedChangesets += item.Key;
+                    copiedChangesets += String.Join(",", item.Ids);
+                    copiedChangesets += Environment.NewLine;
+                }
+            }
+            else
+            {
+                if (SourceControlCopySelectedOption.IndexOf("On : ") > 0)
+                {
+                    string DateStr = SourceControlCopySelectedOption.Substring(SourceControlCopySelectedOption.IndexOf("On : ") + 5, SourceControlCopySelectedOption.Length - SourceControlCopySelectedOption.IndexOf("On : ") - 5);
+                    DateTime dt = Convert.ToDateTime(DateStr);
+                    var test = SourceControls
+                        .Where(c => c.ProjectItemSubType != "Merge Request" && c.SourceControlDateTime > dt)
+                        .GroupBy(c => c.ProjectItemSubType)
+                        .Select(c => new { Ids = c.Select(x => x.DisplayString), Key = c.Key });
+
+                    foreach (var item in test)
+                    {
+                        copiedChangesets += item.Key + " : ";
+                        copiedChangesets += String.Join(",", item.Ids);
+                        copiedChangesets += Environment.NewLine;
+                    }
+                }
+            }
+            System.Windows.Clipboard.SetText(copiedChangesets);
+        }
+
+        void SourceControls_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
+        {
+            NotifyPropertyChanged("SourceControls");
+            NotifyPropertyChanged("SourceControlCopyOptions");
         }
 
         
 
         private void Save(object obj)
         {
+            CopyFromViewModelToProjectPayload();
             IUndoableCommand saveProjectCommand = CommandProvider.GetProjectSaveCommand(this.projectPayLoad);
             saveProjectCommand.Execute();
+        }
+
+        private void CopyFromViewModelToProjectPayload()
+        {
+            if (this.projectPayLoad != null)
+            {
+                this.projectPayLoad.ProjectSummaryText = this.ProjectSummaryText;
+                this.projectPayLoad.ProjectLogText = this.ProjectLogText;
+                
+            }
         }
         
 
@@ -216,6 +341,7 @@ namespace JarvisWpf.Project
             History.Push(initProjCommand);
             initProjCommand.Execute();
             CopyToViewModel(pl);
+            WindowStatusText = _ProjectName;
         }
 
         private void CopyToViewModel(ProjectPayload pl)
@@ -229,9 +355,10 @@ namespace JarvisWpf.Project
             this.ProjectSummaryText = pl.ProjectSummaryText;
             this.RemoteServerRoot = pl.RemoteServerRoot;
             this.projectPayLoad = pl;
+            this._Documents = new List<DocumentViewModel>();
             this.Documents = new ObservableCollection<DocumentViewModel>();
-            this.Communications = new ObservableCollection<CommunicationViewModel>();
             this.SourceControls = new ObservableCollection<SourceControlViewModel>();
+            SourceControls.CollectionChanged += SourceControls_CollectionChanged;
             CopyProjectItems(pl);
         }
 
@@ -248,14 +375,9 @@ namespace JarvisWpf.Project
                             DocumentViewModel DVM = new DocumentViewModel();
                             DVM.setDocument(doc,pl);
                             DVM.ChildChanged += ProjectItemChanged;
-                            Documents.Add(DVM);
-                            break;
-                        case "Communication":
-                            CommunicationPayload com = ((CommunicationPayload)projItem);
-                            CommunicationViewModel CVM = new CommunicationViewModel();
-                            CVM.setCommunication(com);
-                            CVM.ChildChanged += ProjectItemChanged;
-                            Communications.Add(CVM);
+                            DVM.statusBarData = statusBarData;
+                            _Documents.Add(DVM);
+                            NotifyPropertyChanged("Documents");
                             break;
                         case "Source Control":
                             SourceControlPayload sc = ((SourceControlPayload)projItem);
@@ -275,14 +397,18 @@ namespace JarvisWpf.Project
             switch (ProjectItemName)
             {
                 case  "DocumentAdded":
-                    this.Documents.Add((DocumentViewModel)Parameter);
+                    this._Documents.Add((DocumentViewModel)Parameter);
+                    NotifyPropertyChanged("Documents");
                     SelectedItemViewModel = null;
                     break;
                 case "DocumentDeleted":
                     this.Documents.Remove((DocumentViewModel)Parameter);
+                    this._Documents.Remove((DocumentViewModel)Parameter);
+                    NotifyPropertyChanged("Documents");
                     break;
                 case "DocumentModified":
                     SelectedItemViewModel = null;
+                    NotifyPropertyChanged("Documents");
                     break;
                 case "SourceControlAdded":
                     this.SourceControls.Add((SourceControlViewModel)Parameter);

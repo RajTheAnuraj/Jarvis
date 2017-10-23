@@ -76,6 +76,23 @@ namespace JarvisWpf.Common
             IsValidationOn = false;
         }
 
+        public StatusBarViewModel statusBarData { get; set; }
+        
+        string _WindowStatusText;
+        public string WindowStatusText
+        {
+            get
+            {
+                return _WindowStatusText;
+            }
+            set
+            {
+                _WindowStatusText = value;
+                if (statusBarData != null)
+                    statusBarData.StatusText = value;
+            }
+        }
+
         protected virtual void NavigateToView(BindableBase newViewModel)
         {
             if (onNavigate != null)

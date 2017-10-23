@@ -6,9 +6,10 @@
              mc:Ignorable="d" 
              xmlns:Behaviour="clr-namespace:JarvisWpf.Behaviours"
              xmlns:Document="clr-namespace:JarvisWpf.Document"
-             xmlns:Communication="clr-namespace:JarvisWpf.Communication"
              xmlns:SourceControl="clr-namespace:JarvisWpf.SourceControl"
              xmlns:Converter="clr-namespace:JarvisWpf.Converters"
+             xmlns:Controls="http://metro.mahapps.com/winfx/xaml/controls"
+             xmlns:Common="clr-namespace:JarvisWpf.Common"
              Behaviour:MvvmBehaviours.LoadedMethodName="LoadedMethod"
              d:DesignHeight="300" d:DesignWidth="300"
              >
@@ -17,56 +18,81 @@
         <DataTemplate DataType="{x:Type Document:DocumentViewModel}">
             <Document:DocumentView></Document:DocumentView>
         </DataTemplate>
-        <DataTemplate DataType="{x:Type Communication:CommunicationViewModel}">
-            <Communication:CommunicationView></Communication:CommunicationView>
-        </DataTemplate>
         <DataTemplate DataType="{x:Type SourceControl:SourceControlViewModel}">
             <SourceControl:SourceControlView></SourceControl:SourceControlView>
         </DataTemplate>
+        <Style x:Key="VerticalSeparatorStyle" 
+       TargetType="{x:Type Separator}"
+       BasedOn="{StaticResource {x:Type Separator}}">
+            <Setter Property="Margin" Value="6,0,6,0"/>
+            <Setter Property="LayoutTransform">
+                <Setter.Value>
+                    <TransformGroup>
+                        <TransformGroup.Children>
+                            <TransformCollection>
+                                <RotateTransform Angle="90"/>
+                            </TransformCollection>
+                        </TransformGroup.Children>
+                    </TransformGroup>
+                </Setter.Value>
+            </Setter>
+        </Style>
     </UserControl.Resources>
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="200"></RowDefinition>
+            <RowDefinition Height="90"></RowDefinition>
             <RowDefinition Height="300"></RowDefinition>
-            <RowDefinition Height="500"></RowDefinition>
+            <RowDefinition Height="490"></RowDefinition>
         </Grid.RowDefinitions>
         <StackPanel Grid.Column="0" Grid.Row="0">
-            <StackPanel Orientation="Horizontal">
-                <Button Content="Close" Command="{Binding CloseCommand}"></Button>
-                <Button Content="Create From Clipboard" Margin="10,0" Padding="20,0" Height="30" Command="{Binding CreateFromClipboardCommand}"></Button>
-                <Button Content="Save" Margin="10,0" Padding="20,0" Height="30" Command="{Binding SaveCommand}"></Button>
-            </StackPanel>
-            <StackPanel Orientation="Horizontal">
-                <Label Width="200">Project Id</Label>
-                <TextBlock Text="{Binding ProjectId}"></TextBlock>
-            </StackPanel>
-            <StackPanel Orientation="Horizontal">
-                <Label Width="200">Project Name</Label>
-                <TextBlock Text="{Binding ProjectName}"></TextBlock>
-            </StackPanel>
-            <StackPanel Orientation="Horizontal">
-                <Label Width="200">Is Remote Project</Label>
-                <CheckBox IsChecked="{Binding isRemoteProject}"></CheckBox>
-            </StackPanel>
-            <StackPanel Orientation="Horizontal">
-                <Label Width="200">Project Root Folder</Label>
-                <TextBlock Text="{Binding ProjectFolder}"></TextBlock>
-            </StackPanel>
-            <StackPanel Orientation="Horizontal">
-                <Label Width="200">Project Summary</Label>
-                <TextBox Text="{Binding ProjectSummaryText}"></TextBox>
-            </StackPanel>
-            <StackPanel Orientation="Horizontal">
-                <Label Width="200">Project Log</Label>
-                <TextBox Text="{Binding ProjectLogText}"></TextBox>
-            </StackPanel>
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"></ColumnDefinition>
+                    <ColumnDefinition Width="*"></ColumnDefinition>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition></RowDefinition>
+                    <RowDefinition></RowDefinition>
+                    <RowDefinition></RowDefinition>
+                    <RowDefinition></RowDefinition>
+                </Grid.RowDefinitions>
+                <StackPanel Orientation="Horizontal" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Margin="10,5" >
+                    <Button Content="Close" Margin="10,0"  Command="{Binding CloseCommand}"></Button>
+                    <Button Content="Save" Margin="10,0" Padding="20,0" Height="30" Command="{Binding SaveCommand}"></Button>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal" Grid.Row="1" Grid.Column="0">
+                    <Label Width="200">Project Name</Label>
+                    <TextBlock Text="{Binding ProjectName}"></TextBlock>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal" Grid.Row="1" Grid.Column="1">
+                    <Label Width="200">Project Id</Label>
+                    <TextBlock Text="{Binding ProjectId}"></TextBlock>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal" Grid.Row="2" Grid.Column="0">
+                    <Label Width="200">Is Remote Project</Label>
+                    <CheckBox IsChecked="{Binding isRemoteProject}"></CheckBox>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal" Grid.Row="2" Grid.Column="1">
+                    <Label Width="200">Project Root Folder</Label>
+                    <TextBlock Text="{Binding ProjectFolder}"></TextBlock>
+                </StackPanel>
+
+            </Grid>
 
         </StackPanel>
         <TabControl Grid.Row="1" SelectedIndex="{Binding SelectedTabIndex}">
             <TabItem Header="Documents">
                 <StackPanel ScrollViewer.CanContentScroll="False" ScrollViewer.VerticalScrollBarVisibility="Visible">
                     <StackPanel Orientation="Horizontal" Margin="0,5">
+                        <TextBox HorizontalAlignment="Right" Width="400"
+                                 Controls:TextBoxHelper.Watermark="Search by Type / Name (ex :screenshot)" 
+                                 Controls:TextBoxHelper.ClearTextButton="True"
+                                 VerticalAlignment="Center"
+                                 Text="{Binding DocumentFilter, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                 >
+                        </TextBox>
                         <Button Content="Add" Margin="10,0" Padding="20,0" Height="30" Command="{Binding CreateDocumentCommand}"></Button>
+                        <Button Content="Create From Clipboard" Margin="10,0" Padding="20,0" Height="30" Command="{Binding CreateFromClipboardCommand}"></Button>
                     </StackPanel>
                     <Grid>
                         <ListView ItemsSource="{Binding Documents}" SelectedItem="{Binding SelectedItemViewModel}" Tag="{Binding}"
@@ -75,6 +101,7 @@
                                 <DataTemplate>
                                     <StackPanel Orientation="Horizontal">
                                         <TextBlock Text="{Binding DisplayString}" Width="600"></TextBlock>
+                                        <Separator Style="{DynamicResource VerticalSeparatorStyle}" />
                                         <TextBlock Text="{Binding ProjectItemSubType}" Width="100"></TextBlock>
                                         <Button Content="Open" Margin="10,0" Padding="20,0"  
                                             Command="{Binding OpenDocumentCommand}"
@@ -87,27 +114,12 @@
                     </Grid>
                 </StackPanel>
             </TabItem>
-            <TabItem Header="Communication">
-                <StackPanel>
-                    <StackPanel Orientation="Horizontal">
-                        <Button Content="Add" Margin="3,0,0,10" Height="30"></Button>
-                    </StackPanel>
-                    <ListView ItemsSource="{Binding Communications}" SelectedItem="{Binding SelectedItemViewModel}">
-                        <ListView.ItemTemplate>
-                            <DataTemplate>
-                                <StackPanel Orientation="Horizontal">
-                                    <TextBlock Text="{Binding DisplayString}" Width="200"></TextBlock>
-                                    <TextBlock Text="{Binding ProjectItemSubType}" Width="100"></TextBlock>
-                                </StackPanel>
-                            </DataTemplate>
-                        </ListView.ItemTemplate>
-                    </ListView>
-                </StackPanel>
-            </TabItem>
             <TabItem Header="Source Control">
                 <StackPanel>
                     <StackPanel Orientation="Horizontal" Margin="0,5">
                         <Button Content="Add" Margin="10,0" Padding="20,0" Height="30" Command="{Binding CreateSourceControlCommand}"></Button>
+                        <ComboBox ItemsSource="{Binding SourceControlCopyOptions}" Margin="10,0" Width="300" SelectedItem="{Binding SourceControlCopySelectedOption}"></ComboBox>
+                        <Button Content="Copy" Margin="10,0" Padding="20,0" Height="30" Command="{Binding CopySourceControlItemsCommand}"></Button>
                     </StackPanel>
                     <Grid>
                         <ListView ItemsSource="{Binding SourceControls}" SelectedItem="{Binding SelectedItemViewModel}" Height="200" Margin="10">
@@ -115,7 +127,8 @@
                                 <DataTemplate>
                                     <StackPanel Orientation="Horizontal" Background="{Binding ProjectItemSubType, Converter={StaticResource SourceControlTypeToBrush}}" HorizontalAlignment="Stretch">
                                         <TextBlock Text="{Binding DisplayString}" Width="200"></TextBlock>
-                                        <TextBlock Text="{Binding ProjectItemSubType}" Width="100"></TextBlock>
+                                        <TextBlock Text="{Binding ProjectItemSubType}" Width="150"></TextBlock>
+                                        <TextBlock Text="{Binding SourceControlDateTime}" Width="200"></TextBlock>
                                     </StackPanel>
                                 </DataTemplate>
                             </ListView.ItemTemplate>
@@ -126,8 +139,21 @@
             <TabItem Header="To Do">
                 <TextBlock>To Do</TextBlock>
             </TabItem>
-            <TabItem Header="Checklist">
-                <TextBlock>Checklist</TextBlock>
+            <TabItem Header="Project Details">
+                <StackPanel>
+                    <Label Width="200">Project Summary</Label>
+                    <Common:BindableRichTextBox Margin="3" Height="200" 
+                        Rtf="{Binding ProjectSummaryText, Mode=TwoWay}"  Width="800">
+                    </Common:BindableRichTextBox>
+                </StackPanel>
+            </TabItem>
+            <TabItem Header="Project Log">
+                <StackPanel>
+                    <Label Width="200">Project Log</Label>
+                    <Common:BindableRichTextBox Margin="3" Height="200" 
+                        Rtf="{Binding ProjectLogText, Mode=TwoWay}"  Width="800">
+                    </Common:BindableRichTextBox>
+                </StackPanel>
             </TabItem>
         </TabControl>
         <ContentControl Content="{Binding SelectedItemViewModel,Mode=TwoWay}" Grid.Row="2"></ContentControl>

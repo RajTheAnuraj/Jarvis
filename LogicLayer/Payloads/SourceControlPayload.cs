@@ -57,7 +57,8 @@ namespace LogicLayer.Payloads
             return new List<string>
             {
                 "Changeset",
-                "Merge Request"
+                "Merge Request",
+                "DB CR"
             };
         }
     }

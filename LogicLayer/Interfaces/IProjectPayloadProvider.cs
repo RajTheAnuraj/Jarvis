@@ -22,9 +22,11 @@ namespace LogicLayer.Interfaces
         IUndoableCommand GetFileDeleteWithHistoryCommand(string FilePath, string TrashDirectory);
         IUndoableCommand GetFileMoveCommand(string SourceFilePath, string DestinationFilePath);
         IUndoableCommand GetFileCopyCommand(string SourceFilePath, string DestinationFilePath);
+        ICustomCommand<MemoryStream> GetThumbnailStream(string FilePath);
         IUndoableCommand GetDirectoryCreateCommand(string DirectoryPath);
         IUndoableCommand GetAddProjectItemCommand(ProjectPayload Project, PayloadBase ProjectItemToBeAdded);
         IUndoableCommand GetDeleteProjectItemCommand(ProjectPayload Project, PayloadBase ProjectItem);
+
 
         IUndoableCommand GetProjectInitializeCommand(ProjectPayload Project);
         IUndoableCommand GetProjectSaveCommand(ProjectPayload Project);

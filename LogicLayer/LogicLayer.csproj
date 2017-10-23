@@ -58,7 +58,7 @@
     <Compile Include="Interfaces\IReadTillEndAsString.cs" />
     <Compile Include="Interfaces\IXmlLoadable.cs" />
     <Compile Include="Payloads\CheckListPayload.cs" />
-    <Compile Include="Payloads\CommunicationPayload.cs" />
+    <None Include="Payloads\CommunicationPayload.cs" />
     <Compile Include="Payloads\DocumentPayload.cs" />
     <Compile Include="Payloads\PayloadBase.cs" />
     <Compile Include="Payloads\ProjectListPayload.cs" />

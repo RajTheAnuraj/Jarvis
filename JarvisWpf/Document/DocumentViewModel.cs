@@ -14,6 +14,7 @@ using System.Text;
 using System.ComponentModel.DataAnnotations;
 using Microsoft.Win32;
 using System.IO;
+using System.Windows.Media.Imaging;
 
 namespace JarvisWpf.Document
 {
@@ -85,6 +86,9 @@ namespace JarvisWpf.Document
                 NeedsUpload = DocumentPayload.ConvertSubTypeToNeedsUpload(value);
                 NeedFileManipulation = DocumentPayload.ConvertSubTypeToNeedsFileManipulation(value);
                 ShowRichTextBox = DocumentPayload.ConvertSubTypeToNeedsRtf(value);
+                ShowThumbNail = DocumentPayload.ConvertSubTypeToShowThumbNail(value);
+                DocumentFileNameLabelText = value == "Link" ? "Url / File Path" : "File Saved as :";
+                DocumentFileNameTextboxEnabled = value == "Link";
                 NotifyPropertyChanged("ProjectItemSubType");
             }
         }
@@ -103,6 +107,20 @@ namespace JarvisWpf.Document
             }
         }
 
+        private bool _ShowThumbNail;
+        public bool ShowThumbNail
+        {
+            get
+            {
+                return _ShowThumbNail;
+            }
+            set
+            {
+                _ShowThumbNail = value;
+                NotifyPropertyChanged("ShowThumbNail");
+            }
+        }
+
         private string _UploadPath;
         public string UploadPath
         {
@@ -110,11 +128,33 @@ namespace JarvisWpf.Document
             set { _UploadPath = value; NotifyPropertyChanged("UploadPath"); }
         }
 
-        public string ThumbnailPath
+        public BitmapImage ThumbnailPath
         {
             get
             {
-                return GetProjectItemProcessArgument();
+                if (!this.ShowThumbNail) return null;
+                string path = GetProjectItemProcessArgument();
+                ICustomCommand<MemoryStream> readThumbnail = ResourceProvider.GetThumbnailStream(path);
+                MemoryStream ms = readThumbnail.Execute();
+
+                BitmapImage bi = new BitmapImage();
+                if (ms != null)
+                {
+                    if (ms.Length > 0)
+                    {
+                        try
+                        {
+                            bi.BeginInit();
+                            bi.StreamSource = ms;
+                            bi.EndInit();
+                        }
+                        catch (Exception)
+                        {
+
+                        }
+                    }
+                }
+                return bi;
             }
         }
 
@@ -141,6 +181,31 @@ namespace JarvisWpf.Document
             set { _FileContent = value; NotifyPropertyChanged("FileContent"); }
         }
 
+        private string _DocumentFileNameLabelText;
+
+        public string DocumentFileNameLabelText
+        {
+            get { return _DocumentFileNameLabelText; }
+            set
+            {
+                _DocumentFileNameLabelText = value;
+                NotifyPropertyChanged("DocumentFileNameLabelText");
+            }
+        }
+
+        private bool _DocumentFileNameTextboxEnabled;
+
+        public bool DocumentFileNameTextboxEnabled
+        {
+            get { return _DocumentFileNameTextboxEnabled; }
+            set
+            {
+                _DocumentFileNameTextboxEnabled = value;
+                NotifyPropertyChanged("DocumentFileNameTextboxEnabled");
+            }
+        }
+
+
         #endregion
 
         #region Constructor
@@ -155,6 +220,7 @@ namespace JarvisWpf.Document
             IsValidationOn = true;
             CanExecuteChangedContainer += SaveDocumentCommand.RaiseCanExecuteChanged;
             CanExecuteChangedContainer += OpenDocumentCommand.RaiseCanExecuteChanged;
+            CanExecuteChangedContainer += DeleteDocumentCommand.RaiseCanExecuteChanged;
         }
 
         #endregion
@@ -184,7 +250,7 @@ namespace JarvisWpf.Document
 
         private bool CanDeleteDocument()
         {
-            return true;
+            return isEditMode;
         }
 
         private void DeleteDocument(object obj)
@@ -289,7 +355,7 @@ namespace JarvisWpf.Document
             this.UploadPath = doc.UploadPath;
             this.project = Project;
             this.Document = doc;
-
+            WindowStatusText = String.Format("{0} - Document - {1} - {2}", Project.ProjectName, isEditMode == true ? "Editing" : "", doc.DisplayString);
         }
         #endregion
 

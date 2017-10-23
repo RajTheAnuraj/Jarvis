@@ -20,6 +20,23 @@ namespace JarvisWpf
     {
         Stack<BindableBase> _History = null;
         BindableBase _CurrentViewModel;
+        
+        ProjectListViewModel _ProjectList;
+
+        public ProjectListViewModel ProjectList
+        {
+            get
+            {
+                return _ProjectList;
+            }
+            set
+            {
+                _ProjectList = value;
+                PropertyChanged.Invoke(this, new PropertyChangedEventArgs("ProjectList"));
+            }
+        }
+
+        public StatusBarViewModel statusBarData { get; set; }
 
         public Stack<BindableBase> History
         {
@@ -47,7 +64,10 @@ namespace JarvisWpf
         {
             if (DesignerProperties.GetIsInDesignMode(new DependencyObject())) return;
             History = new Stack<BindableBase>();
-            NavigateToView(new ProjectListViewModel());
+            ProjectList = new ProjectListViewModel();
+            statusBarData = new StatusBarViewModel();
+            ProjectList.statusBarData = statusBarData;
+            NavigateToView(ProjectList);
         }
 
         private bool ShowHistory()
@@ -64,7 +84,6 @@ namespace JarvisWpf
             newViewModel.onNavigate += NavigateToView;
         }
 
-        
 
         public event PropertyChangedEventHandler PropertyChanged = delegate { };
     }

@@ -101,5 +101,12 @@ namespace LogicLayer.Payloads
                 return true;
             return false;
         }
+
+        public static bool ConvertSubTypeToShowThumbNail(string DocumentSubType)
+        {
+            if (DocumentSubType == "Screenshot")
+                return true;
+            return false;
+        }
     }
 }

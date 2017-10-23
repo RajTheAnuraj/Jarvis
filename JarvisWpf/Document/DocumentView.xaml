@@ -13,7 +13,7 @@
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300">
     <UserControl.Resources>
-        <Converter:NegateBooleanConverter x:Key="NegateBooleanConverter"></Converter:NegateBooleanConverter> 
+        <Converter:NegateBooleanConverter x:Key="NegateBooleanConverter"></Converter:NegateBooleanConverter>
         <BooleanToVisibilityConverter x:Key="BoolToVisibilityConverter"></BooleanToVisibilityConverter>
         <Converter:RtfToFlowDocumentConverter x:Key="rtfToFlowDocumentConverter"></Converter:RtfToFlowDocumentConverter>
     </UserControl.Resources>
@@ -36,37 +36,54 @@
                     <ColumnDefinition Width="Auto"/>
                     <ColumnDefinition Width="Auto"/>
                 </Grid.ColumnDefinitions>
-                
+
                 <TextBlock x:Name="validationErrorsTextBox" Width="Auto" VerticalAlignment="Center" Text="{Binding ValidationErrors}" 
                          Grid.Row="0" 
                          Margin="3" Height="Auto" HorizontalAlignment="Left" Grid.Column="0" Grid.ColumnSpan="2"/>
+
                 
-                <Label VerticalAlignment="Center" Grid.Row="1" Margin="3" HorizontalAlignment="Left" Grid.Column="0" Content="Display String:"/>
+                <Label VerticalAlignment="Center" Grid.Row="1" Margin="3" HorizontalAlignment="Left" Grid.Column="0" Content="Document Name:"/>
                 <TextBox x:Name="displayStringTextBox" Width="600" VerticalAlignment="Center" Text="{Binding DisplayString}" Grid.Row="1" Margin="3" Height="23" HorizontalAlignment="Left" Grid.Column="1"/>
-                <Label VerticalAlignment="Center" Grid.Row="2" Margin="3" HorizontalAlignment="Left" Grid.Column="0" Content="File Name:"
-                      />
-                <TextBox x:Name="fileNameTextBox" Width="600" VerticalAlignment="Center" Text="{Binding FileName}" Grid.Row="2" Margin="3" 
+
+                <Label VerticalAlignment="Center" Grid.Row="2" Margin="3" HorizontalAlignment="Left" Grid.Column="0" Content="{Binding DocumentFileNameLabelText}"/>
+                <TextBox x:Name="fileNameTextBox" Width="600" VerticalAlignment="Center" Text="{Binding FileName}" Grid.Row="2" Margin="3"
+                         IsEnabled="{Binding DocumentFileNameTextboxEnabled}"
                          Height="23" HorizontalAlignment="Left" Grid.Column="1"/>
-                <Label VerticalAlignment="Center" Grid.Row="3" Margin="3" HorizontalAlignment="Left" Grid.Column="0" Content="Project Item Sub Type:"/>
+                
+                
+                <Label VerticalAlignment="Center" Grid.Row="3" Margin="3" HorizontalAlignment="Left" Grid.Column="0" Content="Document Type:"/>
                 <ComboBox x:Name="projectItemSubTypeComboBox" Width="300" VerticalAlignment="Center" Grid.Row="3" Margin="3" Height="Auto" 
                       HorizontalAlignment="Left" SelectedItem="{Binding ProjectItemSubType}" ItemsSource="{Binding DocumentSubTypes}"
                       IsEnabled="{Binding isEditMode,Converter={StaticResource NegateBooleanConverter}}"
                       Grid.Column="1">
                 </ComboBox>
-                <Label VerticalAlignment="Center" Grid.Row="4" Margin="3" HorizontalAlignment="Left" Grid.Column="0" Content="Upload Path:" Visibility="{Binding NeedsUpload,Converter={StaticResource BoolToVisibilityConverter}}"/>
+                
+                
+                <Label VerticalAlignment="Center" Grid.Row="4" Margin="3" HorizontalAlignment="Left" Grid.Column="0" 
+                       Content="Upload Path:" Visibility="{Binding NeedsUpload,Converter={StaticResource BoolToVisibilityConverter}}"/>
                 <StackPanel Orientation="Horizontal" Grid.Row="4" Grid.Column="1">
-                <TextBox x:Name="uploadPathTextBox" Width="500" VerticalAlignment="Center" Text="{Binding UploadPath}" Margin="3" 
-                         Height="23" HorizontalAlignment="Left" Visibility="{Binding NeedsUpload,Converter={StaticResource BoolToVisibilityConverter}}"/>
-                <Button Content="Browse" Command="{Binding FileBrowseCommand}" 
+                    <TextBox x:Name="uploadPathTextBox" Width="500" VerticalAlignment="Center" Text="{Binding UploadPath}" Margin="3" 
+                            Height="23" HorizontalAlignment="Left" 
+                             Visibility="{Binding NeedsUpload,Converter={StaticResource BoolToVisibilityConverter}}"/>
+                    <Button Content="Browse" Command="{Binding FileBrowseCommand}" 
                         Visibility="{Binding NeedsUpload,Converter={StaticResource BoolToVisibilityConverter}}"
                         Height="23" Margin="3" Padding="3" />
                 </StackPanel>
+                
+                
                 <Label VerticalAlignment="Center" Grid.Row="5" Margin="3" HorizontalAlignment="Left" Grid.Column="0" Content="Content:"
                        Visibility="{Binding ShowRichTextBox,Converter={StaticResource BoolToVisibilityConverter}}"/>
                 <Common:BindableRichTextBox Grid.Row="5" Margin="3" Height="200" Grid.Column="1"
                   Rtf="{Binding FileContent, Mode=TwoWay}"  Width="800"
-                  Visibility="{Binding ShowRichTextBox,Converter={StaticResource BoolToVisibilityConverter}}"></Common:BindableRichTextBox>
-                    <Image Source="{Binding ThumbnailPath}" Grid.Column="1" Grid.Row="5"  Width="200" Height="200"></Image>
+                  Visibility="{Binding ShowRichTextBox,Converter={StaticResource BoolToVisibilityConverter}}">
+                </Common:BindableRichTextBox>
+                
+                
+                <Image Source="{Binding ThumbnailPath}" Grid.Column="1" Grid.Row="5"  Width="200" Height="200"
+                           Visibility="{Binding ShowThumbNail, Converter={StaticResource BoolToVisibilityConverter}}">
+                </Image>
+            
+            
             </Grid>
         </Grid>
     </StackPanel>

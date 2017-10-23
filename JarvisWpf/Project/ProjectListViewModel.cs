@@ -11,6 +11,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Collections.ObjectModel;
+using MahApps.Metro.Controls;
+using MahApps.Metro.Controls.Dialogs;
 
 namespace JarvisWpf.Project
 {
@@ -28,12 +30,19 @@ namespace JarvisWpf.Project
         }
 
         public RelayCommand<ProjectListItem> ProjectSelectedCommand { get; set; }
+        public RelayCommand<object> ProjectAddCommand { get; set; }
 
         public ProjectListViewModel()
         {
             ProjectSelectedCommand = new RelayCommand<ProjectListItem>(ShowSelectedProject);
-            
+            ProjectAddCommand = new RelayCommand<object>(ProjectAdd);
         }
+
+        private void ProjectAdd(object obj)
+        {
+            AddProjectWindow ap = new AddProjectWindow();
+            ap.ShowDialog();
+        }   
 
         public void LoadedMethod()
         {
@@ -44,6 +53,7 @@ namespace JarvisWpf.Project
             {
                 Projects = new ObservableCollection<ProjectListItem>(plPload);
             }
+            WindowStatusText = "Project List";
         }
 
         private void ShowSelectedProject(ProjectListItem obj)
@@ -53,6 +63,7 @@ namespace JarvisWpf.Project
             projectViewModel.ProjectName = obj.ProjectName;
             projectViewModel.RemoteServerRoot = obj.ProjectRelativePath;
             projectViewModel.isRemoteProject = obj.isRemoteProject;
+            projectViewModel.statusBarData = statusBarData;
             NavigateToView(projectViewModel as BindableBase);
         }
     }

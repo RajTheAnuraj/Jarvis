@@ -6,7 +6,8 @@
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300">
     <Grid Name="RTBContainer">
-        <RichTextBox Width="{Binding Path=ActualWidth, ElementName=RTBContainer, Mode=OneWay}" x:Name="RTB" LostFocus="RTB_LostFocus" >
+        <RichTextBox Width="{Binding Path=ActualWidth, ElementName=RTBContainer, Mode=OneWay}" x:Name="RTB" LostFocus="RTB_LostFocus"
+                     ScrollViewer.CanContentScroll="False" ScrollViewer.HorizontalScrollBarVisibility="Auto" ScrollViewer.VerticalScrollBarVisibility="Auto">
             <FlowDocument ColumnWidth="9999">
                 
             </FlowDocument>

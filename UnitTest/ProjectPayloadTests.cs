@@ -17,7 +17,6 @@ namespace UnitTest
         {
             ProjectPayload pload = new ProjectPayload("Raj");
             pload.AddProjectItem(new DocumentPayload {  ProjectItemSubType = "Screenshot" });
-            pload.AddProjectItem(new CommunicationPayload { Id = "comin", ProjectItemSubType = "Email" });
 
             string str = pload.ReadToString();
         }
@@ -338,16 +337,6 @@ namespace UnitTest
                 IUndoableCommand addDocSnippetCommand = CommandProvider.GetAddProjectItemCommand(PPload, DplCodeSnippet);
                 History.Push(addDocSnippetCommand);
                 addDocSnippetCommand.Execute();
-
-                CommunicationPayload cpl = new CommunicationPayload();
-                cpl.DisplayString = "Email With Peopls";
-                cpl.FileContent = "Hi How are you";
-                cpl.FileName = "EmailWithPeeps.txt";
-                cpl.NeedsUpload = false;
-                cpl.ProjectItemSubType = "Email";
-                IUndoableCommand addComCommand = CommandProvider.GetAddProjectItemCommand(PPload, cpl);
-                History.Push(addComCommand);
-                addComCommand.Execute();
 
                 ToDoPayload tdpl = new ToDoPayload();
                 tdpl.DisplayString = "Get the stuff done man";

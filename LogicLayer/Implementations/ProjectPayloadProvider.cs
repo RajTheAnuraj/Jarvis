@@ -148,5 +148,11 @@ namespace LogicLayer.Implementations
         {
             return new StartProcessCommand(Argument);
         }
+
+
+        public ICustomCommand<MemoryStream> GetThumbnailStream(string FilePath)
+        {
+            return new ThumbnailStreamCommand(FilePath);
+        }
     }
 }

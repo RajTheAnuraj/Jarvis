@@ -340,4 +340,29 @@ namespace LogicLayer.Implementations
             }
         }
     }
+
+    public class ThumbnailStreamCommand : ICustomCommand<MemoryStream>
+    {
+        string FilePath;
+
+        public ThumbnailStreamCommand(string FilePath)
+        {
+            this.FilePath = FilePath;
+        }
+
+        public MemoryStream Execute()
+        {
+            MemoryStream st = new MemoryStream();
+            if (!String.IsNullOrWhiteSpace(FilePath))
+            {
+                if (File.Exists(FilePath))
+                {
+                    byte[] by = File.ReadAllBytes(FilePath);
+                    st.Write(by, 0, by.Length);
+                    st.Position = 0;
+                }
+            }
+            return st;
+        }
+    }
 }
