@@ -14,8 +14,8 @@
         <Converter:BooleanToToolTipTextProjectTypeConverter x:Key="BoolToToolTipTextProjectTypeConverter"></Converter:BooleanToToolTipTextProjectTypeConverter>
         <DataTemplate x:Key="ProjectList">
             <StackPanel Orientation="Horizontal">
-                <TextBlock Text="{Binding ProjectName}" Width="300"></TextBlock>
-                <Image Source="{Binding isRemoteProject, Converter={StaticResource BoolToProjectTypeConverter}}" >
+                <TextBlock Text="{Binding ProjectName}" Width="400" Margin="20,0" VerticalAlignment="Center"></TextBlock>
+                <Image Source="{Binding isRemoteProject, Converter={StaticResource BoolToProjectTypeConverter}}"  Margin="20,0">
                     <Image.ToolTip>
                         <ToolTip Background="LightBlue">
                             <TextBlock Width="200" TextWrapping="WrapWithOverflow">
@@ -26,16 +26,22 @@
                         </ToolTip>
                     </Image.ToolTip>
                 </Image>
-                <Button Content="Show" 
+                <Button Content="Show"  Margin="20,0,5,0"
                         Command="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type UserControl}}, Path=DataContext.ProjectSelectedCommand}"
                         CommandParameter="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ListViewItem}}, Path=DataContext}">
                 </Button>
+
+                <Button Content="Delete" 
+                        Command="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type UserControl}}, Path=DataContext.ProjectDeletedCommand}"
+                        CommandParameter="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ListViewItem}}, Path=DataContext}">
+                </Button>
+                
             </StackPanel>
         </DataTemplate>
     </UserControl.Resources>
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="50"></RowDefinition>
+            <RowDefinition Height="30"></RowDefinition>
             <RowDefinition Height="40"></RowDefinition>
             <RowDefinition Height="*"></RowDefinition>
         </Grid.RowDefinitions>

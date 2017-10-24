@@ -5,6 +5,7 @@
         xmlns:App="clr-namespace:JarvisWpf"
         xmlns:Project="clr-namespace:JarvisWpf.Project"
         xmlns:local="clr-namespace:JarvisWpf"
+        xmlns:Common="clr-namespace:JarvisWpf.Common"
                       xmlns:Dialog="clr-namespace:MahApps.Metro.Controls.Dialogs;assembly=MahApps.Metro"
         Title="Jarvis : The Helper" Height="900" Width="1000"
         ShowIconOnTitleBar="True"  
@@ -31,7 +32,17 @@
             </Controls:Flyout>
         </Controls:FlyoutsControl>
     </Controls:MetroWindow.Flyouts>
-
+    <Window.ContextMenu>
+        <ContextMenu ItemsSource="{Binding ApplicationContextMenu}">
+            <ContextMenu.ItemContainerStyle>
+                <Style TargetType="MenuItem">
+                    <Setter Property="ItemsSource" Value="{Binding innerMenu}"></Setter>
+                    <Setter Property="Header" Value="{Binding Name}"></Setter>
+                    <Setter Property="Command" Value="{Binding ContextMenuSelectedCommand}"></Setter>
+                </Style>
+            </ContextMenu.ItemContainerStyle>
+        </ContextMenu>
+    </Window.ContextMenu>
     <Window.DataContext>
         <App:ApplicationViewModel></App:ApplicationViewModel>
     </Window.DataContext>
@@ -42,6 +53,9 @@
         <DataTemplate DataType="{x:Type Project:ProjectViewModel}">
             <Project:ProjectView></Project:ProjectView>
         </DataTemplate>
+        <!--<DataTemplate DataType="{x:Type Common:ApplicationContextViewModel}">
+            <MenuItem Header="{Binding Name}" Command="{Binding ContextMenuSelectedCommand}" ItemsSource="{Binding innerMenu}"></MenuItem>
+        </DataTemplate>-->
     </Window.Resources>
     <Grid DockPanel.Dock="Top">
         <Grid.RowDefinitions>

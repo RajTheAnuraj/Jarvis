@@ -284,7 +284,7 @@ namespace LogicLayer.Implementations
         }
     }
 
-    public class FileReadAsStringCommand : ICustomCommand, IReadTillEndAsString
+    public class FileReadAsStringCommand : ICustomCommand, IReadTillEndAsString, ICustomCommand<string>
     {
 
         public string FilePath { get; set; }
@@ -306,6 +306,21 @@ namespace LogicLayer.Implementations
             {
                 ReadTillEndAsString = File.ReadAllText(FilePath);
             }
+        }
+
+        string ICustomCommand<string>.Execute()
+        {
+            string retval = null;
+            if (File.Exists(FilePath))
+            {
+                using (StreamReader Sr = new StreamReader(FilePath))
+                {
+                    retval = Sr.ReadToEnd();
+                    Sr.Close();
+                }
+
+            }
+            return retval;
         }
     }
 

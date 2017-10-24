@@ -32,17 +32,24 @@ namespace LogicLayer.Interfaces
         IUndoableCommand GetProjectSaveCommand(ProjectPayload Project);
         IUndoableCommand GetModifyProjectItemCommand(ProjectPayload Project, PayloadBase ProjectItem, string FieldName, string FieldValue);
         ICustomCommand GetRetrieveProjectListCommand(ref ProjectListPayload projectListPayload);
+        IUndoableCommand GetSaveProjectListCommand(ProjectListPayload projectListPayload);
 
         IUndoableCommand GetApplicationInitializeCommand();
 
 
         ICustomCommand GetFileReadAsStringCommand(string FilePath);
+        ICustomCommand<string> GetFileReadAsString2Command(string FilePath);
         ICustomCommand GetFileReadAsStreamCommand(string FilePath, ref Stream stream);
         ICustomCommand GetReadContentToProjectItem(ProjectPayload Project, PayloadBase ProjectItem);
 
         ICustomCommand<bool> GetCanCreateFromClipboardCommand();
         IUndoableCommand GetCreateFromClipboardCommand(ProjectPayload Project);
+        ICustomCommand GetCopyTextToClipBoardCommand(string text, string Format = null);
 
         ICustomCommand GetStartProcessCommand(string Argument);
+
+
+        IUndoableCommand GetSaveCommonItemCommand(List<ApplicationContextMenuPayload> ItemToSave);
+        ICustomCommand<List<ApplicationContextMenuPayload>> GetRetrieveCommonItemCommand();
     }
 }

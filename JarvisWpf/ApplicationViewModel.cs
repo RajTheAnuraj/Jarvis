@@ -13,6 +13,8 @@ using System.Linq;
 using System.Text;
 using System.Windows;
 using JarvisWpf.Project;
+using JarvisWpf.Common;
+using System.Collections.ObjectModel;
 
 namespace JarvisWpf
 {
@@ -20,7 +22,8 @@ namespace JarvisWpf
     {
         Stack<BindableBase> _History = null;
         BindableBase _CurrentViewModel;
-        
+        IResourceProvider ResourceProvider = null;
+
         ProjectListViewModel _ProjectList;
 
         public ProjectListViewModel ProjectList
@@ -33,6 +36,18 @@ namespace JarvisWpf
             {
                 _ProjectList = value;
                 PropertyChanged.Invoke(this, new PropertyChangedEventArgs("ProjectList"));
+            }
+        }
+
+        public List<ApplicationContextMenuPayload> AppContextMenuPayload { get; set; }
+
+        public ObservableCollection<ApplicationContextViewModel> ApplicationContextMenu
+        {
+            get
+            {
+                return new ObservableCollection<Common.ApplicationContextViewModel>(
+                    AppContextMenuPayload.Select(c => new ApplicationContextViewModel(c))
+                    );
             }
         }
 
@@ -63,11 +78,21 @@ namespace JarvisWpf
         public ApplicationViewModel()
         {
             if (DesignerProperties.GetIsInDesignMode(new DependencyObject())) return;
+            ResourceProvider = ProviderFactory.GetCurrentProvider();
+            AppContextMenuPayload = new List<ApplicationContextMenuPayload>();
+            FillAppContextMenu();
             History = new Stack<BindableBase>();
             ProjectList = new ProjectListViewModel();
             statusBarData = new StatusBarViewModel();
             ProjectList.statusBarData = statusBarData;
             NavigateToView(ProjectList);
+
+        }
+
+        private void FillAppContextMenu()
+        {
+            ICustomCommand<List<ApplicationContextMenuPayload>> menuRetrieveCommand = ResourceProvider.GetRetrieveCommonItemCommand();
+            AppContextMenuPayload = menuRetrieveCommand.Execute();
         }
 
         private bool ShowHistory()

@@ -211,15 +211,63 @@ namespace LogicLayer.Implementations
             if (projectList == null)
                 projectList = new ProjectListPayload();
             string ProjectsFilePath = ResourceProvider.GetSystemFolder() + "\\Projects.Jarvis";
-            ICustomCommand fileReadCommand = ResourceProvider.GetFileReadAsStringCommand(ProjectsFilePath);
-            fileReadCommand.Execute();
-            string xml = ((IReadTillEndAsString)fileReadCommand).ReadTillEndAsString;
+            ICustomCommand<string> fileReadCommand = ResourceProvider.GetFileReadAsString2Command(ProjectsFilePath);
+
+            string xml = fileReadCommand.Execute();
             XmlDocument xdoc = new XmlDocument();
             xdoc.LoadXml(xml);
             foreach (XmlNode Xn in xdoc.DocumentElement.SelectNodes("Project"))
             {
                 projectList.Add(Xn);
             }
+            xdoc = null;
+        }
+    }
+
+
+    public class SaveProjectListCommand : IUndoableCommand
+    {
+        Stack<IUndoableCommand> History = new Stack<IUndoableCommand>();
+        IResourceProvider ResourceProvider = null;
+        public ProjectListPayload projectList { get; set; }
+
+        public SaveProjectListCommand()
+        {
+            ResourceProvider = ProviderFactory.GetCurrentProvider();
+        }
+
+        public SaveProjectListCommand(ProjectListPayload ProjectList)
+            : this()
+        {
+            projectList = ProjectList;
+        }
+
+        public void Execute()
+        {
+            //The assumption is this call wil be made only after applicationInitialize is called
+            //else this will error out
+            if (projectList == null)
+                projectList = new ProjectListPayload();
+            string ProjectsFilePath = ResourceProvider.GetSystemFolder() + "\\Projects.Jarvis";
+            string NewContent = projectList.ReadToString();
+            if (File.Exists(ProjectsFilePath))
+            {
+                IUndoableCommand fileModifyCommand = ResourceProvider.GetFileModifyContentCommand(ProjectsFilePath, NewContent);
+                History.Push(fileModifyCommand);
+                fileModifyCommand.Execute();
+            }
+            else
+            {
+                IUndoableCommand fileCreateCommand = ResourceProvider.GetFileCreateCommand(ProjectsFilePath, NewContent);
+                History.Push(fileCreateCommand);
+                fileCreateCommand.Execute();
+            }
+        }
+
+
+        public void Undo()
+        {
+            throw new NotImplementedException();
         }
     }
 }

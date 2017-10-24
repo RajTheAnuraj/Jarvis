@@ -37,6 +37,9 @@ namespace LogicLayer.Implementations
                 dirCreateCommand.Execute();
             }
 
+            DirectoryInfo rootFolderDI = new DirectoryInfo(RootFolder);
+            rootFolderDI.Attributes &= ~FileAttributes.ReadOnly;
+
             //Get system Folder
             string SystemsFolder = ResourceProvider.GetSystemFolder();
 
@@ -47,6 +50,9 @@ namespace LogicLayer.Implementations
                 History.Push(dirCreateCommand);
                 dirCreateCommand.Execute();
             }
+
+            DirectoryInfo systemsFolderDI = new DirectoryInfo(SystemsFolder);
+            systemsFolderDI.Attributes &= ~FileAttributes.ReadOnly;
 
             //See if Projects File exists in System Folder
             //If project file doesnt exist create the base
@@ -60,6 +66,16 @@ namespace LogicLayer.Implementations
 
             //Get ArchiveFolder
             //If Archive folder doesnt exist create it
+            string ArchiveFolder = String.Format("{0}\\Archive", RootFolder);
+            if (!Directory.Exists(ArchiveFolder))
+            {
+                IUndoableCommand dirCreateCommand = ResourceProvider.GetDirectoryCreateRecursiveCommand(ArchiveFolder);
+                History.Push(dirCreateCommand);
+                dirCreateCommand.Execute();
+            }
+
+            DirectoryInfo ArchiveFolderDI = new DirectoryInfo(ArchiveFolder);
+            ArchiveFolderDI.Attributes &= ~FileAttributes.ReadOnly;
         }
 
         private string GetRootFolder()

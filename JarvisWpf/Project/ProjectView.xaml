@@ -38,6 +38,7 @@
             </Setter>
         </Style>
     </UserControl.Resources>
+    
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="90"></RowDefinition>
@@ -69,8 +70,8 @@
                     <TextBlock Text="{Binding ProjectId}"></TextBlock>
                 </StackPanel>
                 <StackPanel Orientation="Horizontal" Grid.Row="2" Grid.Column="0">
-                    <Label Width="200">Is Remote Project</Label>
-                    <CheckBox IsChecked="{Binding isRemoteProject}"></CheckBox>
+                    <Label Width="200">Is Shared Project</Label>
+                    <TextBlock Text="{Binding isRemoteProject}"></TextBlock>
                 </StackPanel>
                 <StackPanel Orientation="Horizontal" Grid.Row="2" Grid.Column="1">
                     <Label Width="200">Project Root Folder</Label>

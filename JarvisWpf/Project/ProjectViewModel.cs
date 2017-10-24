@@ -220,7 +220,6 @@ namespace JarvisWpf.Project
             CopySourceControlItemsCommand = new RelayCommand<object>(CopySourceControlItems, CanCopySourceControlItems);
            
             _Documents = new List<DocumentViewModel>();
-            
         }
 
         private bool CanCopySourceControlItems()

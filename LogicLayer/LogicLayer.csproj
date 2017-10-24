@@ -46,6 +46,7 @@
     <Compile Include="HouseKeeping.cs" />
     <Compile Include="Implementations\ApplicationCommands.cs" />
     <Compile Include="Implementations\ClipboardCommands.cs" />
+    <Compile Include="Implementations\CommonItemsCommands.cs" />
     <Compile Include="Implementations\DiagnosticProcessCommands.cs" />
     <Compile Include="Implementations\DirectoryCommands.cs" />
     <Compile Include="Implementations\FileCommands.cs" />
@@ -57,6 +58,7 @@
     <Compile Include="Interfaces\IProjectPayloadProvider.cs" />
     <Compile Include="Interfaces\IReadTillEndAsString.cs" />
     <Compile Include="Interfaces\IXmlLoadable.cs" />
+    <Compile Include="Payloads\ApplicationContextMenuPayload.cs" />
     <Compile Include="Payloads\CheckListPayload.cs" />
     <None Include="Payloads\CommunicationPayload.cs" />
     <Compile Include="Payloads\DocumentPayload.cs" />

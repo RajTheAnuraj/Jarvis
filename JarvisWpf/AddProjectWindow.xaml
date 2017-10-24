@@ -1,7 +1,7 @@
 ﻿<Controls:MetroWindow  x:Class="JarvisWpf.AddProjectWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Title="Add New Project" Height="300" Width="500"
+        Title="Add New Project" Height="300" Width="600"
         xmlns:Controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
         ShowIconOnTitleBar="True"  
         TitleCaps="False"
@@ -22,6 +22,7 @@
             <RowDefinition Height="30"></RowDefinition>
             <RowDefinition Height="30"></RowDefinition>
             <RowDefinition Height="30"></RowDefinition>
+            <RowDefinition Height="30"></RowDefinition>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="0.3*"></ColumnDefinition>
@@ -30,24 +31,29 @@
 
         
         <ComboBox x:Name="ProjectType" Width="200" VerticalAlignment="Center" 
-                 Grid.Row="0"  Grid.Column="0" Grid.ColumnSpan="2" Height="23" Margin="3" HorizontalAlignment="Left" SelectionChanged="ProjectType_SelectionChanged">
+                 Grid.Row="0"  Grid.Column="0" Grid.ColumnSpan="2" Height="23" Margin="3" HorizontalAlignment="Center" SelectionChanged="ProjectType_SelectionChanged">
             <ComboBoxItem IsSelected="True">New</ComboBoxItem>
             <ComboBoxItem>Existing</ComboBoxItem>
         </ComboBox>
-        
-        <Label VerticalAlignment="Center" Grid.Row="1" Grid.Column="0" Margin="3" HorizontalAlignment="Left" Content="Project Name"/>
+
+        <Label x:Name="projectNameLabel" VerticalAlignment="Center" Grid.Row="1" Grid.Column="0" Margin="3" HorizontalAlignment="Left" Content="Project Name"/>
         <TextBox x:Name="projectNameTextBox" Width="200" VerticalAlignment="Center" 
-                 Grid.Row="1"  Grid.Column="1" Height="23" Margin="3" HorizontalAlignment="Left"/>
+                 Grid.Row="1"  Grid.Column="1" Height="23" Margin="3" HorizontalAlignment="Left" />
 
-        <Label VerticalAlignment="Center" Grid.Row="2" Grid.Column="0" Margin="3" HorizontalAlignment="Left" Content="Is Remote"/>
+        <Label VerticalAlignment="Center" Grid.Row="2" Grid.Column="0" Margin="3" HorizontalAlignment="Left" Content="Is Shared Project"/>
         <CheckBox x:Name="isRemoteCheckBox"  VerticalAlignment="Center" 
-                 Grid.Row="2"  Grid.Column="1" Height="23" Margin="3" HorizontalAlignment="Left"/>
+                 Grid.Row="2"  Grid.Column="1" Height="23" Margin="3" HorizontalAlignment="Left" Click="isRemoteCheckBox_Click"/>
 
-        <Label VerticalAlignment="Center" Grid.Row="3" Grid.Column="0" Margin="3" HorizontalAlignment="Left" Content="Project Path"/>
+
+        
+        <Label x:Name="projectPathLabel" VerticalAlignment="Center" Grid.Row="3" Grid.Column="0" Margin="3" HorizontalAlignment="Left" Content="Project Path"/>
+
+        <StackPanel x:Name="projectPathPanel" Orientation="Horizontal" Grid.Row="3"  Grid.Column="1">
         <TextBox x:Name="projectPathTextBox" Width="300" VerticalAlignment="Center" 
-                 Grid.Row="3"  Grid.Column="1" Height="23" Margin="3" HorizontalAlignment="Left"
-                 
-                 />
+                  Height="23" Margin="3" HorizontalAlignment="Left"/>
+            <Button Content="browse" Click="Button_Click"></Button>    
+        </StackPanel>
 
+        <Button Grid.Row="4" Grid.Column="0" Content="Create" Click="Create_Click"></Button>
     </Grid>
 </Controls:MetroWindow>

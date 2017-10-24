@@ -22,6 +22,16 @@ namespace LogicLayer.Payloads
             }
         }
 
+        public void Add(ProjectListItem projectListItem)
+        {
+            projectListItems.Add(projectListItem);
+        }
+
+        public void Remove(ProjectListItem projectListItem)
+        {
+            projectListItems.Remove(projectListItem);
+        }
+
         public void Add(XmlNode projectListItem)
         {
             if (projectListItem != null)
@@ -59,6 +69,23 @@ namespace LogicLayer.Payloads
             {
                 yield return item;
             }
+        }
+
+        public string ReadToString()
+        {
+            StringBuilder sb = new StringBuilder();
+            sb.Append("<Projects>");
+            foreach (ProjectListItem item in this)
+            {
+                sb.Append("<Project>");
+                sb.AppendFormat("<ProjectId>{0}</ProjectId>", item.ProjectId);
+                sb.AppendFormat("<ProjectRelativePath>{0}</ProjectRelativePath>", item.ProjectRelativePath);
+                sb.AppendFormat("<isRemoteProject>{0}</isRemoteProject>", item.isRemoteProject);
+                sb.AppendFormat("<ProjectName>{0}</ProjectName>", item.ProjectName);
+                sb.Append("</Project>");
+            }
+            sb.Append("</Projects>");
+            return sb.ToString();
         }
     }
 

@@ -154,5 +154,35 @@ namespace LogicLayer.Implementations
         {
             return new ThumbnailStreamCommand(FilePath);
         }
+
+
+        public IUndoableCommand GetSaveProjectListCommand(ProjectListPayload projectListPayload)
+        {
+            return new SaveProjectListCommand(projectListPayload);
+        }
+
+
+        public ICustomCommand<string> GetFileReadAsString2Command(string FilePath)
+        {
+            return new FileReadAsStringCommand(FilePath);
+        }
+
+
+        public ICustomCommand GetCopyTextToClipBoardCommand(string text, string Format = null)
+        {
+            return new CopyTextToClipBoardCommand(text, Format);
+        }
+
+
+        public IUndoableCommand GetSaveCommonItemCommand(List<ApplicationContextMenuPayload> ItemToSave)
+        {
+            return new SaveCommonItemCommand(ItemToSave);
+        }
+
+
+        public ICustomCommand<List<ApplicationContextMenuPayload>> GetRetrieveCommonItemCommand()
+        {
+            return new RetrieveCommonItemCommand();
+        }
     }
 }

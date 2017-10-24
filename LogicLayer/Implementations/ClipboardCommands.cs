@@ -221,4 +221,24 @@ namespace LogicLayer.Implementations
     }
 
 
+    public class CopyTextToClipBoardCommand : ICustomCommand
+    {
+        public string text { get; set; }
+        public string Format { get; set; }
+
+        public CopyTextToClipBoardCommand(string text, string Format = null)
+        {
+            this.text = text;
+            this.Format = Format;
+        }
+
+        public void Execute()
+        {
+            if (this.Format == null)
+                this.Format = DataFormats.UnicodeText;
+            Clipboard.SetData(Format, text);
+        }
+    }
+
+
 }
