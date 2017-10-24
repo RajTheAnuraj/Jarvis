@@ -53,15 +53,13 @@
         <DataTemplate DataType="{x:Type Project:ProjectViewModel}">
             <Project:ProjectView></Project:ProjectView>
         </DataTemplate>
-        <!--<DataTemplate DataType="{x:Type Common:ApplicationContextViewModel}">
-            <MenuItem Header="{Binding Name}" Command="{Binding ContextMenuSelectedCommand}" ItemsSource="{Binding innerMenu}"></MenuItem>
-        </DataTemplate>-->
     </Window.Resources>
     <Grid DockPanel.Dock="Top">
         <Grid.RowDefinitions>
             <RowDefinition Height="*"></RowDefinition>
             <RowDefinition Height="25"></RowDefinition>
         </Grid.RowDefinitions>
+        
         <ContentControl Content="{Binding CurrentViewModel, Mode=TwoWay}" Grid.Row="0"></ContentControl>
         <StatusBar Grid.Row="1">
             <StatusBarItem Content="{Binding statusBarData.StatusText}"></StatusBarItem>

@@ -31,14 +31,6 @@ namespace LogicLayer.Implementations
             ms.Position = 0;
             string Content = System.Text.Encoding.Default.GetString(ms.ToArray());
 
-            //StringBuilder sb = new StringBuilder();
-            //sb.Append("<ArrayOfApplicationContextMenuPayload>");
-            //foreach (ApplicationContextMenuPayload item in ItemToSave)
-            //{
-            //    sb.Append(item.GetXml());
-            //}
-            //sb.Append("</ArrayOfApplicationContextMenuPayload>");
-
             if (File.Exists(CommonItemFile))
             {
                 IUndoableCommand fileModifyCommand = ResourceProvider.GetFileModifyContentCommand(CommonItemFile, Content);
@@ -82,7 +74,44 @@ namespace LogicLayer.Implementations
                 if (obj != null)
                 {
                     retval = (List<ApplicationContextMenuPayload>)obj;
+                    retval = retval.OrderBy(c => c.Category).ToList();
                 }
+            }
+
+            ApplicationContextMenuPayload ExternalToolMenuItem = new ApplicationContextMenuPayload();
+            ExternalToolMenuItem.DisplayName = "External Tools";
+            ExternalToolMenuItem.isCategory = true;
+
+            string ExternalToolsFolder = String.Format("{0}\\External Tools", ResourceProvider.GetProjectsRootFolder());
+            if (Directory.Exists(ExternalToolsFolder))
+            {
+                ExternalToolMenuItem.innerList = new List<ApplicationContextMenuPayload>();
+                DirectoryInfo externalTools = new DirectoryInfo(ExternalToolsFolder);
+                foreach (DirectoryInfo ToolCategories in externalTools.GetDirectories())
+                {
+                    ApplicationContextMenuPayload ExternalToolMenuCategory = new ApplicationContextMenuPayload();
+                    ExternalToolMenuCategory.DisplayName = ToolCategories.Name;
+                    ExternalToolMenuCategory.isCategory = true;
+                    FileInfo[] fi = ToolCategories.GetFiles();
+                    if (fi != null)
+                    {
+                        if (fi.Length > 0)
+                        {
+                            ExternalToolMenuCategory.innerList = new List<ApplicationContextMenuPayload>();
+                            foreach (FileInfo toolItem in fi)
+                            {
+                                ApplicationContextMenuPayload ExternalToolItem = new ApplicationContextMenuPayload();
+                                ExternalToolItem.DisplayName = toolItem.Name;
+                                ExternalToolItem.isCategory = false;
+                                ExternalToolItem.isAction = true;
+                                ExternalToolItem.ActionString = toolItem.FullName;
+                                ExternalToolMenuCategory.innerList.Add(ExternalToolItem);
+                            }
+                        }
+                    }
+                    ExternalToolMenuItem.innerList.Add(ExternalToolMenuCategory);
+                }
+                retval.Insert(0,ExternalToolMenuItem);
             }
 
             return retval;
