@@ -36,6 +36,8 @@ namespace JarvisWpf.CommonItems
                 _selectedCategory = value;
                 NotifyPropertyChanged("selectedCategory");
                 NotifyPropertyChanged("SelectedCategoryCommonItems");
+                NotifyPropertyChanged("RichTextBoxVisibility");
+                AddCommonItemCommand.RaiseCanExecuteChanged();
             }
         }
 
@@ -69,6 +71,8 @@ namespace JarvisWpf.CommonItems
             {
                 _selectedCommonItem = value;
                 NotifyPropertyChanged("selectedCommonItem");
+                NotifyPropertyChanged("RichTextBoxVisibility");
+
             }
         }
 
@@ -84,9 +88,13 @@ namespace JarvisWpf.CommonItems
             {
                 _NewCategory = value;
                 NotifyPropertyChanged("NewCategory");
+                NotifyPropertyChanged("RichTextBoxVisibility");
+
             }
         }
 
+
+        public List<string> ClipBoardFormats { get; set; }
 
         public RelayCommand<object> AddNewCategoryCommand { get; set; }
         public RelayCommand<object> AddCommonItemCommand { get; set; }
@@ -95,14 +103,25 @@ namespace JarvisWpf.CommonItems
 
         public CommonItemsViewModel()
         {
+            ClipBoardFormats = new List<string>()
+            {
+                "Rich Text Format",
+                "UnicodeText",
+                "Text"
+            };
             AddNewCategoryCommand = new RelayCommand<object>(AddNewCategory);
-            AddCommonItemCommand = new RelayCommand<object>(AddCommonItem);
+            AddCommonItemCommand = new RelayCommand<object>(AddCommonItem, CanAddCommonItem);
             ItemDeleteCommand = new RelayCommand<ApplicationContextMenuPayload>(ItemDelete);
             SaveCommand = new RelayCommand<object>(Save);
             ResourceProvider = ProviderFactory.GetCurrentProvider();
             ICustomCommand<List<ApplicationContextMenuPayload>> menuRetrieveCommand = ResourceProvider.GetRetrieveCommonItemCommand();
             AppContextMenuPayload = menuRetrieveCommand.Execute();
 
+        }
+
+        private bool CanAddCommonItem()
+        {
+            return !string.IsNullOrWhiteSpace(selectedCategory);
         }
 
         private void Save(object obj)
@@ -138,6 +157,8 @@ namespace JarvisWpf.CommonItems
                             {
                                 category.innerList.Remove(obj);
                                 NotifyPropertyChanged("SelectedCategoryCommonItems");
+                                NotifyPropertyChanged("RichTextBoxVisibility");
+
                                 if (category.innerList.Count == 0)
                                 {
                                     if (AppContextMenuPayload.Contains(category))
@@ -147,6 +168,7 @@ namespace JarvisWpf.CommonItems
                                         selectedCategory = null;
                                         NotifyPropertyChanged("selectedCategory");
                                         NotifyPropertyChanged("SelectedCategoryCommonItems");
+                                        NotifyPropertyChanged("RichTextBoxVisibility");
                                     }
                                 }
                             }
@@ -171,6 +193,7 @@ namespace JarvisWpf.CommonItems
                     CommonItem.Category = selectedCategory;
                     category.innerList.Add(CommonItem);
                     NotifyPropertyChanged("SelectedCategoryCommonItems");
+                    NotifyPropertyChanged("RichTextBoxVisibility");
                     selectedCommonItem = CommonItem;
                 }
             }
@@ -193,6 +216,7 @@ namespace JarvisWpf.CommonItems
                 }
                 );
             NotifyPropertyChanged("Categories");
+            NotifyPropertyChanged("RichTextBoxVisibility");
             selectedCategory = NewCategory;
         }
 

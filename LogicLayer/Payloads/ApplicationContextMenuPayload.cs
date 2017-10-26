@@ -12,7 +12,6 @@ namespace LogicLayer.Payloads
         public string DisplayName { get; set; }
         public bool isAction { get; set; }
         public bool isCategory { get; set; }
-        public string ActionType { get; set; }
         public string ActionString { get; set; }
         public string Format { get; set; }
         public List<ApplicationContextMenuPayload> innerList { get; set; }
@@ -25,7 +24,6 @@ namespace LogicLayer.Payloads
             sb.AppendFormat("<DisplayName>{0}</DisplayName>", this.DisplayName);
             sb.AppendFormat("<isAction>{0}</isAction>", XmlConvert.ToString(this.isAction));
             sb.AppendFormat("<isCategory>{0}</isCategory>", XmlConvert.ToString(this.isCategory));
-            sb.AppendFormat("<ActionType>{0}</ActionType>", this.ActionType);
             sb.AppendFormat("<ActionString>{0}</ActionString>", this.ActionString);
             sb.AppendFormat("<Format>{0}</Format>", this.Format);
             if (innerList != null)
