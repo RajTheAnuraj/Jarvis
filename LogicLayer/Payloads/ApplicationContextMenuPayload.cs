@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Xml;
+using System.Xml.Serialization;
 
 namespace LogicLayer.Payloads
 {
@@ -12,35 +13,49 @@ namespace LogicLayer.Payloads
         public string DisplayName { get; set; }
         public bool isAction { get; set; }
         public bool isCategory { get; set; }
-        public string ActionString { get; set; }
         public string Format { get; set; }
         public List<ApplicationContextMenuPayload> innerList { get; set; }
+        
+        [XmlIgnore]
+        public string ActionStringText { get; set; }
 
-        public string GetXml()
+        string _ActionString;
+        public string ActionString
         {
-            StringBuilder sb = new StringBuilder();
-            sb.Append("<ApplicationContextMenuPayload>");
-            sb.AppendFormat("<Category>{0}</Category>", this.Category);
-            sb.AppendFormat("<DisplayName>{0}</DisplayName>", this.DisplayName);
-            sb.AppendFormat("<isAction>{0}</isAction>", XmlConvert.ToString(this.isAction));
-            sb.AppendFormat("<isCategory>{0}</isCategory>", XmlConvert.ToString(this.isCategory));
-            sb.AppendFormat("<ActionString>{0}</ActionString>", this.ActionString);
-            sb.AppendFormat("<Format>{0}</Format>", this.Format);
-            if (innerList != null)
+            get
             {
-                sb.Append("<innerList>");
-                sb.Append("<ArrayOfApplicationContextMenuPayload>");
-                foreach (var item in innerList)
-                {
-                    sb.Append(item.GetXml());
-                }
-                sb.Append("</ArrayOfApplicationContextMenuPayload>");
-                sb.Append("</innerList>");
+                return _ActionString;
             }
-            sb.Append("</ApplicationContextMenuPayload>");
-
-            return sb.ToString();
+            set
+            {
+                _ActionString = value;
+                SetTextIfNeeded();
+            }
         }
+
+        private void SetTextIfNeeded()
+        {
+            if (this.isAction == true || this.Format != "Rich Text Format")
+            {
+                if(!String.IsNullOrWhiteSpace(ActionString))
+                    if (ActionString.StartsWith(@"{\rtf"))
+                    {
+                        System.Windows.Forms.RichTextBox rtb = new System.Windows.Forms.RichTextBox();
+                        rtb.Rtf = ActionString;
+                        ActionStringText = rtb.Text;
+                    }
+                    else
+                    {
+                        ActionStringText = ActionString;
+                    }
+            }
+            else
+            {
+                ActionStringText = ActionString;
+            }
+        }
+
+        
     }
 
    

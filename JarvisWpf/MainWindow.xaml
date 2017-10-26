@@ -45,7 +45,7 @@
             </Controls:Flyout>
             <Controls:Flyout x:Name="commonItemsFlyout" Header="Common Items" Position="Right" 
                              Width="{Binding Path=ActualWidth, RelativeSource={RelativeSource AncestorType={x:Type Window}}, Mode=OneWay}"
-                             Theme="Inverse">
+                             Theme="Light">
                 <CommonItem:CommonItemsView></CommonItem:CommonItemsView>
             </Controls:Flyout>
         </Controls:FlyoutsControl>

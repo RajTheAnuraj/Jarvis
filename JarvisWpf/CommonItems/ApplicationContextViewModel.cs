@@ -44,15 +44,21 @@ namespace JarvisWpf.Common
         {
             if (UnderlyingObject != null)
             {
+                string Args = null;
+
+                if (UnderlyingObject.isAction || UnderlyingObject.Format != "Rich Text Format")
+                    Args = UnderlyingObject.ActionStringText;
+                else
+                    Args = UnderlyingObject.ActionString;
+
                 if (UnderlyingObject.isAction)
                 {
-                    string Args = UnderlyingObject.ActionString;
                     ICustomCommand openCommand = ResourceProvider.GetStartProcessCommand(Args);
                     openCommand.Execute();
                 }
                 else
                 {
-                    ICustomCommand clipboardCommand = ResourceProvider.GetCopyTextToClipBoardCommand(UnderlyingObject.ActionString, UnderlyingObject.Format);
+                    ICustomCommand clipboardCommand = ResourceProvider.GetCopyTextToClipBoardCommand(Args, UnderlyingObject.Format);
                     clipboardCommand.Execute();
                 }
             }
