@@ -20,6 +20,8 @@ namespace JarvisWpf
 {
     public class ApplicationViewModel : INotifyPropertyChanged
     {
+        
+
         Stack<BindableBase> _History = null;
         BindableBase _CurrentViewModel;
         IResourceProvider ResourceProvider = null;
@@ -88,8 +90,16 @@ namespace JarvisWpf
             ProjectList = new ProjectListViewModel();
             statusBarData = new StatusBarViewModel();
             ProjectList.statusBarData = statusBarData;
+            CommonItems.CommonItemsViewModel.CommonItemsSaved += CommonItemsViewModel_CommonItemsSaved;
             NavigateToView(ProjectList);
 
+        }
+
+        void CommonItemsViewModel_CommonItemsSaved()
+        {
+            FillAppContextMenu();
+            if (PropertyChanged != null)
+                PropertyChanged.Invoke(this, new PropertyChangedEventArgs("ApplicationContextMenu"));
         }
 
 

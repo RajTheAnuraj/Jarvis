@@ -13,6 +13,8 @@ namespace JarvisWpf.CommonItems
 {
     public class CommonItemsViewModel: BindableBase
     {
+        public static event Action CommonItemsSaved;
+
         IResourceProvider ResourceProvider = null;
         public ObservableCollection<string> Categories
         {
@@ -32,6 +34,7 @@ namespace JarvisWpf.CommonItems
             set
             {
                 _selectedCategory = value;
+                NotifyPropertyChanged("selectedCategory");
                 NotifyPropertyChanged("SelectedCategoryCommonItems");
             }
         }
@@ -45,6 +48,7 @@ namespace JarvisWpf.CommonItems
                 {
                     var category = utems.SingleOrDefault();
                     if (category != null)
+                        if (category.innerList != null)
                         return new ObservableCollection<ApplicationContextMenuPayload>(category.innerList);
                 }
 
@@ -68,12 +72,128 @@ namespace JarvisWpf.CommonItems
             }
         }
 
+        private string _NewCategory;
+
+        public string NewCategory
+        {
+            get
+            {
+                return _NewCategory;
+            }
+            set
+            {
+                _NewCategory = value;
+                NotifyPropertyChanged("NewCategory");
+            }
+        }
+
+
+        public RelayCommand<object> AddNewCategoryCommand { get; set; }
+        public RelayCommand<object> AddCommonItemCommand { get; set; }
+        public RelayCommand<ApplicationContextMenuPayload> ItemDeleteCommand { get; set; }
+        public RelayCommand<object> SaveCommand { get; set; }
 
         public CommonItemsViewModel()
         {
+            AddNewCategoryCommand = new RelayCommand<object>(AddNewCategory);
+            AddCommonItemCommand = new RelayCommand<object>(AddCommonItem);
+            ItemDeleteCommand = new RelayCommand<ApplicationContextMenuPayload>(ItemDelete);
+            SaveCommand = new RelayCommand<object>(Save);
             ResourceProvider = ProviderFactory.GetCurrentProvider();
             ICustomCommand<List<ApplicationContextMenuPayload>> menuRetrieveCommand = ResourceProvider.GetRetrieveCommonItemCommand();
             AppContextMenuPayload = menuRetrieveCommand.Execute();
+
+        }
+
+        private void Save(object obj)
+        {
+            string ValidationMessages = ValidatePayload();
+
+            AppContextMenuPayload.Remove(AppContextMenuPayload.Find(c => c.DisplayName == "External Tools"));
+
+            IUndoableCommand commonItemSaveCommand = ResourceProvider.GetSaveCommonItemCommand(AppContextMenuPayload);
+            commonItemSaveCommand.Execute();
+
+            if (CommonItemsSaved != null)
+                CommonItemsSaved.Invoke();
+        }
+
+        private string ValidatePayload()
+        {
+            return string.Empty;
+        }
+
+        private void ItemDelete(ApplicationContextMenuPayload obj)
+        {
+            if (obj != null)
+            {
+                var utems = AppContextMenuPayload.Where(c => c.isCategory == true && c.DisplayName == selectedCategory);
+                if (utems != null)
+                {
+                    var category = utems.SingleOrDefault();
+                    if (category != null)
+                        if (category.innerList != null)
+                        {
+                            if(category.innerList.Contains(obj))
+                            {
+                                category.innerList.Remove(obj);
+                                NotifyPropertyChanged("SelectedCategoryCommonItems");
+                                if (category.innerList.Count == 0)
+                                {
+                                    if (AppContextMenuPayload.Contains(category))
+                                    {
+                                        AppContextMenuPayload.Remove(category);
+                                        NotifyPropertyChanged("Categories");
+                                        selectedCategory = null;
+                                        NotifyPropertyChanged("selectedCategory");
+                                        NotifyPropertyChanged("SelectedCategoryCommonItems");
+                                    }
+                                }
+                            }
+                        }
+                }
+            }
+            
+        }
+
+        private void AddCommonItem(object obj)
+        {
+            var utems = AppContextMenuPayload.Where(c => c.isCategory == true && c.DisplayName == selectedCategory);
+            if (utems != null)
+            {
+                var category = utems.SingleOrDefault();
+                if (category != null)
+                {
+                    if (category.innerList == null)
+                        category.innerList = new List<ApplicationContextMenuPayload>();
+                    ApplicationContextMenuPayload CommonItem = new ApplicationContextMenuPayload();
+                    CommonItem.isCategory = false;
+                    CommonItem.Category = selectedCategory;
+                    category.innerList.Add(CommonItem);
+                    NotifyPropertyChanged("SelectedCategoryCommonItems");
+                    selectedCommonItem = CommonItem;
+                }
+            }
+        }
+
+        private void AddNewCategory(object obj)
+        {
+            string cat = Categories.ToList<string>().Find((c) => c.ToLower() == NewCategory.ToLower());
+            if (cat != null)
+            {
+                selectedCategory = cat;
+                return;
+            }
+
+            AppContextMenuPayload.Add(
+                new ApplicationContextMenuPayload
+                {
+                    isCategory = true,
+                    DisplayName = NewCategory
+                }
+                );
+            NotifyPropertyChanged("Categories");
+            selectedCategory = NewCategory;
         }
 
         public List<ApplicationContextMenuPayload> AppContextMenuPayload { get; set; }
