@@ -6,7 +6,11 @@
         xmlns:Project="clr-namespace:JarvisWpf.Project"
         xmlns:local="clr-namespace:JarvisWpf"
         xmlns:Common="clr-namespace:JarvisWpf.Common"
+                       xmlns:Behaviour="clr-namespace:JarvisWpf.Behaviours"
+                      xmlns:PresentationOptions="http://schemas.microsoft.com/winfx/2006/xaml/presentation/options"
                       xmlns:Dialog="clr-namespace:MahApps.Metro.Controls.Dialogs;assembly=MahApps.Metro"
+                      xmlns:CommonItem="clr-namespace:JarvisWpf.CommonItems"
+                      xmlns:tb="http://www.hardcodet.net/taskbar"
         Title="Jarvis : The Helper" Height="900" Width="1000"
         ShowIconOnTitleBar="True"  
                       TitleCaps="False"
@@ -16,9 +20,18 @@
                       WindowTransitionsEnabled="False"
                       WindowStartupLocation="CenterScreen"
                     Dialog:DialogParticipation.Register="{Binding}"  
+                      ShowInTaskbar="False"
+                      Behaviour:MvvmBehaviours.StateChangedMethodName ="WindowStateChanged"
                       >
+    
+    <Controls:MetroWindow.Icon>
+        <BitmapImage UriSource="/Images/JarvisIcon3D Pink.png">
+        
+        </BitmapImage>
+    </Controls:MetroWindow.Icon>
     <Controls:MetroWindow.RightWindowCommands>
         <Controls:WindowCommands ShowLastSeparator="False">
+            <ToggleButton Content="Common Items" IsChecked="{Binding ElementName=commonItemsFlyout, Path=IsOpen}" Cursor="Hand"/>
             <ToggleButton Content="Settings" IsChecked="{Binding ElementName=SettingsFlyout, Path=IsOpen}" Cursor="Hand"/>
         </Controls:WindowCommands>
     </Controls:MetroWindow.RightWindowCommands>
@@ -30,6 +43,11 @@
                              Theme="Inverse">
                 <local:SettingsView></local:SettingsView>
             </Controls:Flyout>
+            <Controls:Flyout x:Name="commonItemsFlyout" Header="Common Items" Position="Right" 
+                             Width="{Binding Path=ActualWidth, RelativeSource={RelativeSource AncestorType={x:Type Window}}, Mode=OneWay}"
+                             Theme="Inverse">
+                <CommonItem:CommonItemsView></CommonItem:CommonItemsView>
+            </Controls:Flyout>
         </Controls:FlyoutsControl>
     </Controls:MetroWindow.Flyouts>
     <Window.ContextMenu>
@@ -39,10 +57,12 @@
                     <Setter Property="ItemsSource" Value="{Binding innerMenu}"></Setter>
                     <Setter Property="Header" Value="{Binding Name}"></Setter>
                     <Setter Property="Command" Value="{Binding ContextMenuSelectedCommand}"></Setter>
+                    <Setter Property="Padding" Value="3"></Setter>
                 </Style>
             </ContextMenu.ItemContainerStyle>
         </ContextMenu>
     </Window.ContextMenu>
+
     <Window.DataContext>
         <App:ApplicationViewModel></App:ApplicationViewModel>
     </Window.DataContext>
@@ -59,10 +79,25 @@
             <RowDefinition Height="*"></RowDefinition>
             <RowDefinition Height="25"></RowDefinition>
         </Grid.RowDefinitions>
-        
+
         <ContentControl Content="{Binding CurrentViewModel, Mode=TwoWay}" Grid.Row="0"></ContentControl>
         <StatusBar Grid.Row="1">
             <StatusBarItem Content="{Binding statusBarData.StatusText}"></StatusBarItem>
+            <tb:TaskbarIcon IconSource="Images/JarvisIcon 3D Pink.ico" DoubleClickCommand="{Binding MaximizeMainWindowCommand}">
+                <tb:TaskbarIcon.ContextMenu>
+                    <ContextMenu ItemsSource="{Binding ApplicationContextMenu}">
+                        <ContextMenu.ItemContainerStyle>
+                            <Style TargetType="MenuItem">
+                                <Setter Property="ItemsSource" Value="{Binding innerMenu}"></Setter>
+                                <Setter Property="Header" Value="{Binding Name}"></Setter>
+                                <Setter Property="Command" Value="{Binding ContextMenuSelectedCommand}"></Setter>
+                                <Setter Property="Padding" Value="3"></Setter>
+                            </Style>
+                        </ContextMenu.ItemContainerStyle>
+                    </ContextMenu>
+                </tb:TaskbarIcon.ContextMenu>
+
+            </tb:TaskbarIcon>
         </StatusBar>
     </Grid>
 </Controls:MetroWindow>

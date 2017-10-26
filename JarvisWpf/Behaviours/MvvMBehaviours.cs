@@ -38,6 +38,38 @@ namespace JarvisWpf.Behaviours
 
 
 
+        public static string GetStateChangedMethodName(DependencyObject obj)
+        {
+            return (string)obj.GetValue(StateChangedMethodNameProperty);
+        }
+
+        public static void SetStateChangedMethodName(DependencyObject obj, string value)
+        {
+            obj.SetValue(StateChangedMethodNameProperty, value);
+        }
+
+        // Using a DependencyProperty as the backing store for StateChangedMethodName.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty StateChangedMethodNameProperty =
+            DependencyProperty.RegisterAttached("StateChangedMethodName", typeof(string), typeof(MvvmBehaviours), new PropertyMetadata(StateChangedMethodNameChanged));
+
+
+        private static void StateChangedMethodNameChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            Window F = d as Window;
+            if (F == null) return;
+            F.StateChanged += (sender, newE) =>
+            {
+                var dataContext = F.DataContext;
+                if (dataContext == null) return;
+                var stateChangeMethodInstance = dataContext.GetType().GetMethod(e.NewValue.ToString());
+                if (stateChangeMethodInstance == null) return;
+                stateChangeMethodInstance.Invoke(dataContext, null);
+            };
+        }
+
+
+
+
 
         //DataContext Changed Event Wire Up
 

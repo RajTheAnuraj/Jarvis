@@ -26,6 +26,8 @@ namespace JarvisWpf
 
         ProjectListViewModel _ProjectList;
 
+        public RelayCommand<object> MaximizeMainWindowCommand { get; set; }
+
         public ProjectListViewModel ProjectList
         {
             get
@@ -81,12 +83,28 @@ namespace JarvisWpf
             ResourceProvider = ProviderFactory.GetCurrentProvider();
             AppContextMenuPayload = new List<ApplicationContextMenuPayload>();
             FillAppContextMenu();
+            MaximizeMainWindowCommand = new Common.RelayCommand<object>(MaximizeMainWindow);
             History = new Stack<BindableBase>();
             ProjectList = new ProjectListViewModel();
             statusBarData = new StatusBarViewModel();
             ProjectList.statusBarData = statusBarData;
             NavigateToView(ProjectList);
 
+        }
+
+
+        private void MaximizeMainWindow(object obj)
+        {
+            Application.Current.MainWindow.Visibility = Visibility.Visible;
+            Application.Current.MainWindow.WindowState = WindowState.Maximized;
+        }
+
+        public void WindowStateChanged()
+        {
+            if(Application.Current.MainWindow.WindowState== WindowState.Minimized)
+                Application.Current.MainWindow.Visibility = Visibility.Collapsed;
+            else
+                Application.Current.MainWindow.Visibility = Visibility.Visible;
         }
 
         private void FillAppContextMenu()

@@ -1,7 +1,13 @@
-﻿using System;
+﻿using LogicLayer.Factories;
+using LogicLayer.Interfaces;
+using LogicLayer.Payloads;
+using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
@@ -11,25 +17,18 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
-using MahApps.Metro.Controls;
-using System.Drawing;
-using System.Collections.ObjectModel;
-using JarvisWpf.Common;
-using Hardcodet.Wpf.TaskbarNotification;
 
-namespace JarvisWpf
+namespace JarvisWpf.CommonItems
 {
     /// <summary>
-    /// Interaction logic for MainWindow.xaml
+    /// Interaction logic for CommonItemsView.xaml
     /// </summary>
-    /// 
-
-
-    public partial class MainWindow
+    public partial class CommonItemsView : UserControl
     {
-        public MainWindow()
+        public CommonItemsView()
         {
             InitializeComponent();
+            this.DataContext = new CommonItemsViewModel();
         }
 
         

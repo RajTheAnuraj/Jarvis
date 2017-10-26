@@ -37,12 +37,16 @@
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Hardcodet.Wpf.TaskbarNotification">
+      <HintPath>..\packages\SignedBuild-Hardcodet.NotifyIcon.Wpf.1.0.5\lib\net35\Hardcodet.Wpf.TaskbarNotification.dll</HintPath>
+    </Reference>
     <Reference Include="MahApps.Metro">
       <HintPath>..\packages\MahApps.Metro.1.5.0\lib\net40\MahApps.Metro.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Data" />
+    <Reference Include="System.Drawing" />
     <Reference Include="System.Windows.Interactivity, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\MahApps.Metro.1.5.0\lib\net40\System.Windows.Interactivity.dll</HintPath>
     </Reference>
@@ -66,9 +70,13 @@
     <Compile Include="AddProjectWindow.xaml.cs">
       <DependentUpon>AddProjectWindow.xaml</DependentUpon>
     </Compile>
+    <Compile Include="CommonItems\CommonItemsView.xaml.cs">
+      <DependentUpon>CommonItemsView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="CommonItems\CommonItemsViewModel.cs" />
     <Compile Include="Common\StatusBarViewModel.cs" />
     <Compile Include="Converters\SourceControlTypeToBrush.cs" />
-    <Compile Include="Common\ApplicationContextViewModel.cs" />
+    <Compile Include="CommonItems\ApplicationContextViewModel.cs" />
     <Compile Include="SettingsView.xaml.cs">
       <DependentUpon>SettingsView.xaml</DependentUpon>
     </Compile>
@@ -77,6 +85,10 @@
     </Compile>
     <Compile Include="SourceControl\SourceControlViewModel.cs" />
     <Page Include="AddProjectWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="CommonItems\CommonItemsView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -183,6 +195,12 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Images\SharedFolder.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\JarvisIcon3D Pink.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\JarvisIcon 3D Pink.ico" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
