@@ -189,6 +189,16 @@ namespace LogicLayer.Implementations
         }
 
 
-        
+
+        public ICustomCommand<bool> GetApplicationDontShowMeCommand(string featureName)
+        {
+            return new ApplicationDontShowMeCommand(featureName);
+        }
+
+
+        public ICustomCommand GetApplicationDontShowMeSetCommand(string featureName)
+        {
+            return new ApplicationDontShowMeSetCommand(featureName);
+        }
     }
 }

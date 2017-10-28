@@ -84,6 +84,7 @@
             <StatusBarItem Content="{Binding statusBarData.StatusText}"></StatusBarItem>
             <tb:TaskbarIcon IconSource="Images/JarvisIcon 3D Pink.ico" DoubleClickCommand="{Binding MaximizeMainWindowCommand}"
                             DoubleClickCommandParameter="{Binding RelativeSource={RelativeSource AncestorType={x:Type Window}}}"
+                            Behaviour:MvvmBehaviours.LoadedMethodName="NotificationIconLoaded"
                             >
                 <tb:TaskbarIcon.ContextMenu>
                     <ContextMenu ItemsSource="{Binding ApplicationContextMenu}">
@@ -97,7 +98,6 @@
                         </ContextMenu.ItemContainerStyle>
                     </ContextMenu>
                 </tb:TaskbarIcon.ContextMenu>
-
             </tb:TaskbarIcon>
         </StatusBar>
     </Grid>

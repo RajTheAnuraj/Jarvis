@@ -137,6 +137,7 @@ namespace JarvisWpf.CommonItems
                 CommonItemsSaved.Invoke();
 
             ShowMessageBox("Common Items Saved");
+           
         }
 
         private string ValidatePayload()

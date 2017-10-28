@@ -36,7 +36,8 @@ namespace LogicLayer.Interfaces
         IUndoableCommand GetSaveProjectListCommand(ProjectListPayload projectListPayload);
 
         IUndoableCommand GetApplicationInitializeCommand();
-
+        ICustomCommand<bool> GetApplicationDontShowMeCommand(string featureName);
+        ICustomCommand GetApplicationDontShowMeSetCommand(string featureName);
 
         ICustomCommand GetFileReadAsStringCommand(string FilePath);
         ICustomCommand<string> GetFileReadAsString2Command(string FilePath);

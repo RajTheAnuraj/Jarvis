@@ -50,6 +50,8 @@ namespace JarvisWpf
             IResourceProvider ResourceProvider = ProviderFactory.GetCurrentProvider();
             ICrosstalkService crosstalkservice = ResourceProvider.CrosstalkService;
             crosstalkservice.Crosstalk("Application", "AppShutDown", null);
+            ICustomCommand DontShowCloseBaloonCommand = ResourceProvider.GetApplicationDontShowMeSetCommand("CloseNotification");
+            DontShowCloseBaloonCommand.Execute();
             Application.Current.Shutdown();
         }
     }

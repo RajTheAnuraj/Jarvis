@@ -100,4 +100,40 @@ namespace LogicLayer.Implementations
             }
         }
     }
+
+    public class ApplicationDontShowMeCommand:ICustomCommand<bool>
+    {
+        public ApplicationDontShowMeCommand(string featureName)
+        {
+
+        }
+
+        public bool Execute()
+        {
+            IResourceProvider resourceProvider = ProviderFactory.GetCurrentProvider();
+            string pathOfMarker = resourceProvider.GetSystemFolder() + "\\marker.Jarvis";
+            return File.Exists(pathOfMarker);
+            
+        }
+    }
+
+    public class ApplicationDontShowMeSetCommand : ICustomCommand
+    {
+        public ApplicationDontShowMeSetCommand(string featureName)
+        {
+
+        }
+
+        public void Execute()
+        {
+            IResourceProvider resourceProvider = ProviderFactory.GetCurrentProvider();
+            string pathOfMarker = resourceProvider.GetSystemFolder() + "\\marker.Jarvis";
+            if(!File.Exists(pathOfMarker))
+            {
+                IUndoableCommand fileCreationCommand = resourceProvider.GetFileCreateCommand(pathOfMarker, "");
+                fileCreationCommand.Execute();
+            }
+
+        }
+    }
 }

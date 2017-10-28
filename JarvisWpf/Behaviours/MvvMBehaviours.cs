@@ -32,6 +32,13 @@ namespace JarvisWpf.Behaviours
                 if (dataContext == null) return;
                 var loadedMethodInstance = dataContext.GetType().GetMethod(e.NewValue.ToString());
                 if (loadedMethodInstance == null) return;
+                var parameters = loadedMethodInstance.GetParameters();
+                if (parameters != null)
+                    if (parameters.Length == 2)
+                    {
+                        loadedMethodInstance.Invoke(dataContext, new object[] { sender, newE });
+                        return;
+                    }
                 loadedMethodInstance.Invoke(dataContext, null);
             };
         }
