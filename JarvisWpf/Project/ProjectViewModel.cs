@@ -276,9 +276,16 @@ namespace JarvisWpf.Project
 
         private void Save(object obj)
         {
-            CopyFromViewModelToProjectPayload();
-            IUndoableCommand saveProjectCommand = CommandProvider.GetProjectSaveCommand(this.projectPayLoad);
-            saveProjectCommand.Execute();
+            try
+            {
+                CopyFromViewModelToProjectPayload();
+                IUndoableCommand saveProjectCommand = CommandProvider.GetProjectSaveCommand(this.projectPayLoad);
+                saveProjectCommand.Execute();
+            }
+            catch (Exception ex)
+            {
+                ShowErrorNotification("Error in Saving Project", ex.Message);
+            }
         }
 
         private void CopyFromViewModelToProjectPayload()
@@ -294,17 +301,24 @@ namespace JarvisWpf.Project
 
         private void CreateFromClipboard(object obj)
         {
-            ICustomCommand<bool> command = CommandProvider.GetCanCreateFromClipboardCommand();
-            if (command.Execute())
+            try
             {
-                IUndoableCommand clipbrdCommand = CommandProvider.GetCreateFromClipboardCommand(this.projectPayLoad);
-                History.Push(clipbrdCommand);
-                clipbrdCommand.Execute();
-                CopyToViewModel(this.projectPayLoad);
+                ICustomCommand<bool> command = CommandProvider.GetCanCreateFromClipboardCommand();
+                if (command.Execute())
+                {
+                    IUndoableCommand clipbrdCommand = CommandProvider.GetCreateFromClipboardCommand(this.projectPayLoad);
+                    History.Push(clipbrdCommand);
+                    clipbrdCommand.Execute();
+                    CopyToViewModel(this.projectPayLoad);
+                }
+
+                IUndoableCommand saveProjectCommand = CommandProvider.GetProjectSaveCommand(this.projectPayLoad);
+                saveProjectCommand.Execute();
             }
-            
-            IUndoableCommand saveProjectCommand = CommandProvider.GetProjectSaveCommand(this.projectPayLoad);
-            saveProjectCommand.Execute();
+            catch (Exception ex)
+            {
+                ShowErrorNotification("Error in Creating from Clipboard", ex.Message);
+            }
         }
 
         private void CreateDocument(object obj)
@@ -333,13 +347,20 @@ namespace JarvisWpf.Project
         
         public void LoadedMethod()
         {
-            ProjectPayload pl = new ProjectPayload(_ProjectName);
-            pl.isRemoteProject = isRemoteProject;
-            pl.RemoteServerRoot = RemoteServerRoot;
-            IUndoableCommand initProjCommand = CommandProvider.GetProjectInitializeCommand(pl);
-            History.Push(initProjCommand);
-            initProjCommand.Execute();
-            CopyToViewModel(pl);
+            try
+            {
+                ProjectPayload pl = new ProjectPayload(_ProjectName);
+                pl.isRemoteProject = isRemoteProject;
+                pl.RemoteServerRoot = RemoteServerRoot;
+                IUndoableCommand initProjCommand = CommandProvider.GetProjectInitializeCommand(pl);
+                History.Push(initProjCommand);
+                initProjCommand.Execute();
+                CopyToViewModel(pl);
+            }
+            catch (Exception ex)
+            {
+                ShowErrorNotification("Error in Loading the Project", ex.Message);
+            }
         }
 
         private void CopyToViewModel(ProjectPayload pl)
@@ -424,8 +445,5 @@ namespace JarvisWpf.Project
         {
             NavigateToView(new ProjectListViewModel());
         }
-
-
-       
     }
 }

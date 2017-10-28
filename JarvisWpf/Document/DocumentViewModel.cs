@@ -243,9 +243,16 @@ namespace JarvisWpf.Document
 
         private void OpenDocument(DocumentViewModel parameter)
         {
-            string Args = GetProjectItemProcessArgument();
-            ICustomCommand openCommand = ResourceProvider.GetStartProcessCommand(Args);
-            openCommand.Execute();
+            try
+            {
+                string Args = GetProjectItemProcessArgument();
+                ICustomCommand openCommand = ResourceProvider.GetStartProcessCommand(Args);
+                openCommand.Execute();
+            }
+            catch (Exception ex)
+            {
+                ShowErrorNotification("Error in Opening the document", ex.Message);
+            }
         }
 
         private bool CanDeleteDocument()
@@ -255,11 +262,18 @@ namespace JarvisWpf.Document
 
         private void DeleteDocument(object obj)
         {
-            IUndoableCommand deleteProjectItemCommand = ResourceProvider.GetDeleteProjectItemCommand(this.project, this.Document as PayloadBase);
-            deleteProjectItemCommand.Execute();
-            RaiseChildChangedEvent("DocumentDeleted", this);
-            IUndoableCommand saveProjectCommand = ResourceProvider.GetProjectSaveCommand(this.project);
-            saveProjectCommand.Execute();
+            try
+            {
+                IUndoableCommand deleteProjectItemCommand = ResourceProvider.GetDeleteProjectItemCommand(this.project, this.Document as PayloadBase);
+                deleteProjectItemCommand.Execute();
+                RaiseChildChangedEvent("DocumentDeleted", this);
+                IUndoableCommand saveProjectCommand = ResourceProvider.GetProjectSaveCommand(this.project);
+                saveProjectCommand.Execute();
+            }
+            catch (Exception ex)
+            {
+                ShowErrorNotification("Error in deleting the document", ex.Message);
+            }
         }
 
         private void FileBrowse(object obj)
@@ -280,53 +294,60 @@ namespace JarvisWpf.Document
 
         private void SaveDocument(object obj)
         {
-            string ActionToInvoke = "";
-            if (isEditMode)
+            try
             {
-                IUndoableCommand documentModifyCommand = null;
-                string fieldName = null, fieldValue = null;
+                string ActionToInvoke = "";
+                if (isEditMode)
+                {
+                    IUndoableCommand documentModifyCommand = null;
+                    string fieldName = null, fieldValue = null;
 
-                if (Document.FileContent != this.FileContent)
-                {
-                    fieldName = "FileContent";
-                    fieldValue = this.FileContent;
-                    documentModifyCommand = ResourceProvider.GetModifyProjectItemCommand(this.project, this.Document as PayloadBase, fieldName, fieldValue);
-                    documentModifyCommand.Execute();
+                    if (Document.FileContent != this.FileContent)
+                    {
+                        fieldName = "FileContent";
+                        fieldValue = this.FileContent;
+                        documentModifyCommand = ResourceProvider.GetModifyProjectItemCommand(this.project, this.Document as PayloadBase, fieldName, fieldValue);
+                        documentModifyCommand.Execute();
+                    }
+                    if (Document.DisplayString != this.DisplayString)
+                    {
+                        fieldName = "DisplayString";
+                        fieldValue = this.DisplayString;
+                        documentModifyCommand = ResourceProvider.GetModifyProjectItemCommand(this.project, this.Document as PayloadBase, fieldName, fieldValue);
+                        documentModifyCommand.Execute();
+                    }
+                    if (Document.UploadPath != this.UploadPath)
+                    {
+                        fieldName = "UploadPath";
+                        fieldValue = this.UploadPath;
+                        documentModifyCommand = ResourceProvider.GetModifyProjectItemCommand(this.project, this.Document as PayloadBase, fieldName, fieldValue);
+                        documentModifyCommand.Execute();
+                    }
+                    if (Document.FileName != this.FileName)
+                    {
+                        fieldName = "FileName";
+                        fieldValue = this.FileName;
+                        documentModifyCommand = ResourceProvider.GetModifyProjectItemCommand(this.project, this.Document as PayloadBase, fieldName, fieldValue);
+                        documentModifyCommand.Execute();
+                    }
+                    ActionToInvoke = "DocumentModified";
                 }
-                if (Document.DisplayString != this.DisplayString)
+                else
                 {
-                    fieldName = "DisplayString";
-                    fieldValue = this.DisplayString;
-                    documentModifyCommand = ResourceProvider.GetModifyProjectItemCommand(this.project, this.Document as PayloadBase, fieldName, fieldValue);
-                    documentModifyCommand.Execute();
+                    CopyViewModelToDocument();
+                    IUndoableCommand AddItemToProjCommand = ResourceProvider.GetAddProjectItemCommand(this.project, (PayloadBase)this.Document);
+                    AddItemToProjCommand.Execute();
+                    ActionToInvoke = "DocumentAdded";
                 }
-                if (Document.UploadPath != this.UploadPath)
-                {
-                    fieldName = "UploadPath";
-                    fieldValue = this.UploadPath;
-                    documentModifyCommand = ResourceProvider.GetModifyProjectItemCommand(this.project, this.Document as PayloadBase, fieldName, fieldValue);
-                    documentModifyCommand.Execute();
-                }
-                if (Document.FileName != this.FileName)
-                {
-                    fieldName = "FileName";
-                    fieldValue = this.FileName;
-                    documentModifyCommand = ResourceProvider.GetModifyProjectItemCommand(this.project, this.Document as PayloadBase, fieldName, fieldValue);
-                    documentModifyCommand.Execute();
-                }
-                ActionToInvoke = "DocumentModified";
+
+                IUndoableCommand saveProjectCommand = ResourceProvider.GetProjectSaveCommand(this.project);
+                saveProjectCommand.Execute();
+                RaiseChildChangedEvent(ActionToInvoke, this);
             }
-            else
+            catch (Exception ex)
             {
-                CopyViewModelToDocument();
-                IUndoableCommand AddItemToProjCommand = ResourceProvider.GetAddProjectItemCommand(this.project, (PayloadBase)this.Document);
-                AddItemToProjCommand.Execute();
-                ActionToInvoke = "DocumentAdded";
+                ShowErrorNotification("Error in saving the document", ex.Message);
             }
-
-            IUndoableCommand saveProjectCommand = ResourceProvider.GetProjectSaveCommand(this.project);
-            saveProjectCommand.Execute();
-            RaiseChildChangedEvent(ActionToInvoke, this);
 
         }
         #endregion
@@ -376,9 +397,16 @@ namespace JarvisWpf.Document
         {
             if (this.NeedFileManipulation && this.NeedsUpload == false)
             {
-                ICustomCommand readCommand = ResourceProvider.GetReadContentToProjectItem(this.project, this.Document as PayloadBase);
-                readCommand.Execute();
-                FileContent = Document.FileContent;
+                try
+                {
+                    ICustomCommand readCommand = ResourceProvider.GetReadContentToProjectItem(this.project, this.Document as PayloadBase);
+                    readCommand.Execute();
+                    FileContent = Document.FileContent;
+                }
+                catch (Exception ex)
+                {
+                    ShowErrorNotification("Error in Loading the document data", ex.Message);
+                }
             }
         }
 

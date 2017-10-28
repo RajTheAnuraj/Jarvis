@@ -42,7 +42,7 @@
 
                 
                 <Label VerticalAlignment="Center" Grid.Row="1" Margin="3" HorizontalAlignment="Left" Grid.Column="0" Content="Document Name:"/>
-                <TextBox x:Name="displayStringTextBox" Width="600" VerticalAlignment="Center" Text="{Binding DisplayString}" Grid.Row="1" Margin="3" Height="23" HorizontalAlignment="Left" Grid.Column="1"/>
+                <TextBox x:Name="displayStringTextBox" Width="600" VerticalAlignment="Center" Text="{Binding DisplayString, UpdateSourceTrigger=PropertyChanged}" Grid.Row="1" Margin="3" Height="23" HorizontalAlignment="Left" Grid.Column="1"/>
 
                 <Label VerticalAlignment="Center" Grid.Row="2" Margin="3" HorizontalAlignment="Left" Grid.Column="0" Content="{Binding DocumentFileNameLabelText}"/>
                 <TextBox x:Name="fileNameTextBox" Width="600" VerticalAlignment="Center" Text="{Binding FileName}" Grid.Row="2" Margin="3"

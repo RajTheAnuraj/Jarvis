@@ -5,7 +5,9 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:Common="clr-namespace:JarvisWpf.Common"
              mc:Ignorable="d" 
-             d:DesignHeight="300" d:DesignWidth="300">
+             d:DesignHeight="300" d:DesignWidth="300"
+             xmlns:mt="http://metro.mahapps.com/winfx/xaml/controls"
+             >
     <Grid Margin="20,5">
         <Grid.RowDefinitions>
             <RowDefinition Height="40"></RowDefinition>
@@ -20,10 +22,8 @@
         </Grid.ColumnDefinitions>
 
 
-        <StackPanel Orientation="Horizontal" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2">
-
-            
-            <Button Content="Save" Width="150" Command="{Binding SaveCommand}"></Button>
+        <StackPanel Orientation="Horizontal" Grid.Row="0" Grid.Column="1" HorizontalAlignment="Right">
+            <Button Content="Save" Width="150" Command="{Binding SaveCommand}" HorizontalAlignment="Right"></Button>
         </StackPanel>
 
         <StackPanel Orientation="Horizontal" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2">
@@ -32,9 +32,11 @@
                   ItemsSource="{Binding Categories}" 
                   SelectedItem="{Binding selectedCategory}"
                   ></ComboBox>
-            <TextBox Margin="10,3" Width="200" Text="{Binding NewCategory}"></TextBox>
-            <Button Margin="10,3" Content="Add New Category" Width="150" Command="{Binding AddNewCategoryCommand}"></Button>
+            <TextBox Margin="10,3" Width="200" Text="{Binding NewCategory, UpdateSourceTrigger=PropertyChanged}" 
+                     mt:TextBoxHelper.Watermark="New Category Name"  VerticalContentAlignment="Center" Visibility="{Binding NewCategoryControlVisibility}"></TextBox>
+            <Button Margin="10,3" Content="Add New Category" Width="150" Command="{Binding AddNewCategoryCommand}" Visibility="{Binding NewCategoryControlVisibility}"></Button>
             <Button Margin="20,3" Content="Add Common Item" Width="150" Command="{Binding AddCommonItemCommand}"></Button>
+
         </StackPanel>
 
 
@@ -68,10 +70,12 @@
             </Grid.RowDefinitions>
 
             <Label Grid.Row="0" Grid.Column="0"  Content="Name" HorizontalAlignment="Right" VerticalAlignment="Center"></Label>
-            <TextBox Grid.Row="0" Grid.Column="1" Text="{Binding selectedCommonItem.DisplayName}" Width="200" HorizontalAlignment="Left" VerticalAlignment="Center"></TextBox>
+            <TextBox Grid.Row="0" Grid.Column="1" Text="{Binding selectedCommonItem.DisplayName}" Width="200" 
+                     mt:TextBoxHelper.Watermark="New Common Item Name"  VerticalContentAlignment="Center"
+                     HorizontalAlignment="Left" VerticalAlignment="Center"></TextBox>
 
             <Label Grid.Row="1" Grid.Column="0"  Content="isAction" HorizontalAlignment="Right" VerticalAlignment="Center"></Label>
-            <CheckBox Grid.Row="1" Grid.Column="1" IsChecked="{Binding selectedCommonItem.isAction}"  Width="200" HorizontalAlignment="Left" VerticalAlignment="Center"></CheckBox>
+            <CheckBox Grid.Row="1" Grid.Column="1" IsChecked="{Binding selectedCommonItem.isAction}" Width="200" HorizontalAlignment="Left" VerticalAlignment="Center"></CheckBox>
 
             <Label Grid.Row="2" Grid.Column="0"  Content="Format" HorizontalAlignment="Right" VerticalAlignment="Center"></Label>
             <ComboBox Grid.Row="2" Grid.Column="1" ItemsSource="{Binding ClipBoardFormats}" Width="200" SelectedItem="{Binding selectedCommonItem.Format}" HorizontalAlignment="Left" VerticalAlignment="Center"></ComboBox>

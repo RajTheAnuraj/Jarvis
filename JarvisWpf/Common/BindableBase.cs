@@ -115,6 +115,12 @@ namespace JarvisWpf.Common
             return ProviderFactory.GetCurrentProvider().CrosstalkService.Crosstalk("MainWindowModel", "ShowBaloon", new object[] { Title, Message });
         }
 
+
+        public object ShowErrorNotification(string Title, string Message)
+        {
+            return ProviderFactory.GetCurrentProvider().CrosstalkService.Crosstalk("MainWindowModel", "ShowBaloon", new object[] { Title, Message });
+        }
+
         public void Validate()
         {
             List<ValidationResult> validationresults = new List<ValidationResult>();

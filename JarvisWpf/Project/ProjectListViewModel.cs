@@ -61,35 +61,49 @@ namespace JarvisWpf.Project
                 Projects.Remove(obj);
                 NotifyPropertyChanged("Projects");
                 this.ProjectList.Remove(obj);
-                IUndoableCommand projListSaveCommand = ResourceProvider.GetSaveProjectListCommand(this.ProjectList);
-                projListSaveCommand.Execute();
-                if (!obj.isRemoteProject)
+                try
                 {
-                    string ArchiveFolder = String.Format("{0}\\Archive\\{1}", ResourceProvider.GetProjectsRootFolder(), obj.ProjectName);
-                    string ProjectFolder = String.Format("{0}\\{1}", ResourceProvider.GetProjectsRootFolder(), obj.ProjectName);
-                    System.IO.Directory.Move(ProjectFolder, ArchiveFolder);
+                    IUndoableCommand projListSaveCommand = ResourceProvider.GetSaveProjectListCommand(this.ProjectList);
+                    projListSaveCommand.Execute();
+                    if (!obj.isRemoteProject)
+                    {
+                        string ArchiveFolder = String.Format("{0}\\Archive\\{1}", ResourceProvider.GetProjectsRootFolder(), obj.ProjectName);
+                        string ProjectFolder = String.Format("{0}\\{1}", ResourceProvider.GetProjectsRootFolder(), obj.ProjectName);
+                        System.IO.Directory.Move(ProjectFolder, ArchiveFolder);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    ShowErrorNotification("Error in Saving Project List", ex.Message);
                 }
             } 
         }
 
         private void ProjectAdd(object obj)
         {
-            NewProject = new ProjectListItem();
-            NewProject.ProjectId = Guid.NewGuid().ToString();
-            AddProjectWindow ap = new AddProjectWindow(NewProject);
-            if (ap.ShowDialog() == true)
+            try
             {
-                bool isPresent = false;
-                isPresent = IsProjectAlreadyPresent(NewProject);
-                if (!isPresent)
+                NewProject = new ProjectListItem();
+                NewProject.ProjectId = Guid.NewGuid().ToString();
+                AddProjectWindow ap = new AddProjectWindow(NewProject);
+                if (ap.ShowDialog() == true)
                 {
-                    Projects.Add(NewProject);
-                    this.ProjectList.Add(NewProject);
-                    IUndoableCommand projListSaveCommand = ResourceProvider.GetSaveProjectListCommand(this.ProjectList);
-                    projListSaveCommand.Execute();
-                    NotifyPropertyChanged("Projects");
-                    ShowSelectedProject(NewProject);
+                    bool isPresent = false;
+                    isPresent = IsProjectAlreadyPresent(NewProject);
+                    if (!isPresent)
+                    {
+                        Projects.Add(NewProject);
+                        this.ProjectList.Add(NewProject);
+                        IUndoableCommand projListSaveCommand = ResourceProvider.GetSaveProjectListCommand(this.ProjectList);
+                        projListSaveCommand.Execute();
+                        NotifyPropertyChanged("Projects");
+                        ShowSelectedProject(NewProject);
+                    }
                 }
+            }
+            catch (Exception ex)
+            {
+                ShowErrorNotification("Error in Saving Project", ex.Message);
             }
         }
 
