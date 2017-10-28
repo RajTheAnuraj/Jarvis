@@ -356,6 +356,18 @@ namespace JarvisWpf.Document
             this.project = Project;
             this.Document = doc;
         }
+
+        public void DataContextChanged()
+        {
+            string statusText = "";
+            if (this.project != null)
+            {
+                statusText = "Project Selected : " + this.project.ProjectName;
+            }
+            UpdateStatusBarText(statusText + " | Document Selected : " + DisplayString);
+        }
+
+        
         #endregion
 
         #region BindableBase Overrides

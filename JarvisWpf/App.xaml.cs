@@ -31,7 +31,7 @@ namespace JarvisWpf
                 ApplicationInitializeCommand.Execute();
                 provider.CrosstalkService = JarvisCrosstalkService.CreateInstance();
                 provider.CrosstalkService.RegisterCallback("Application", this);
-
+                provider.CrosstalkService.RegisterCallback("MessageBox", MessageBoxService.CreateInstance());
             }
             catch (Exception)
             {

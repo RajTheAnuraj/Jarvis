@@ -100,9 +100,14 @@ namespace JarvisWpf.Common
         }
 
 
-        public void UpdateStatusText(string Text)
+        public void UpdateStatusBarText(string Text)
         {
             ProviderFactory.GetCurrentProvider().CrosstalkService.Crosstalk("StatusBar", null, new object[] { Text });
+        }
+
+        public object ShowMessageBox(string Message)
+        {
+            return ProviderFactory.GetCurrentProvider().CrosstalkService.Crosstalk("MessageBox", "Show", new object[] { Message });
         }
 
         public void Validate()

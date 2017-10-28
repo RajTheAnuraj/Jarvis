@@ -194,6 +194,7 @@ namespace JarvisWpf.Project
             set
             {
                 _SelectedTabIndex = value;
+                UpdateStatusBarText("Project Selected : " + this.ProjectName);
                 SelectedItemViewModel = null;
             }
         }

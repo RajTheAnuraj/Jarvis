@@ -75,6 +75,7 @@
     </Compile>
     <Compile Include="CommonItems\CommonItemsViewModel.cs" />
     <Compile Include="Common\JarvisCrosstalkService.cs" />
+    <Compile Include="Common\MessageBoxService.cs" />
     <Compile Include="Common\StatusBarViewModel.cs" />
     <Compile Include="Converters\SourceControlTypeToBrush.cs" />
     <Compile Include="CommonItems\ApplicationContextViewModel.cs" />

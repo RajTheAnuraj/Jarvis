@@ -89,7 +89,16 @@ namespace JarvisWpf.Behaviours
 
         private static void DataContextChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-           
+            FrameworkElement F = d as FrameworkElement;
+            if (F == null) return;
+            F.DataContextChanged += (sender, newE) =>
+            {
+                var dataContext = F.DataContext;
+                if (dataContext == null) return;
+                var DataContextChangedInstance = dataContext.GetType().GetMethod(e.NewValue.ToString());
+                if (DataContextChangedInstance == null) return;
+                DataContextChangedInstance.Invoke(dataContext, null);
+            };
         }
 
 
