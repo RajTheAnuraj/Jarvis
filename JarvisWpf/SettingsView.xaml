@@ -12,16 +12,17 @@
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
             <RowDefinition Height="40"></RowDefinition>
+            <RowDefinition Height="40"></RowDefinition>
             <RowDefinition></RowDefinition>
         </Grid.RowDefinitions>
-        <TextBlock Text="Root Path" Grid.Column="0" Margin="10,0,0,0" VerticalAlignment="Center"></TextBlock>
-        <StackPanel Orientation="Horizontal" Grid.Column="1">
+
+        <Button Content="Quit" Grid.Row="0" Grid.ColumnSpan="2" Width="100" Height="40" VerticalAlignment="Top" x:Name="btnAppQuit" Click="btnAppQuit_Click"></Button>
+        
+        <TextBlock Text="Root Path" Grid.Row="2" Grid.Column="0" Margin="10,0,0,0" VerticalAlignment="Center"></TextBlock>
+        <StackPanel Orientation="Horizontal" Grid.Column="1" Grid.Row="2">
         <TextBox x:Name="txtRootPath"  Margin="0,0,10,0" VerticalAlignment="Center" Width="300"></TextBox>
-        <Button Content="brw" Grid.Column="1" Margin="0,0,10,0" VerticalAlignment="Center" Width="20"></Button>
+        <Button Content="brw" Margin="0,0,10,0" VerticalAlignment="Center" Width="20"></Button>
         </StackPanel>
-        <Button Content="Save" Grid.Row="1" Grid.ColumnSpan="2" Width="100" Height="40" VerticalAlignment="Top"
-                Margin="0,30,0,0" Click="SaveButton_Click"
-                ></Button>
         
         
     </Grid>

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using LogicLayer.Factories;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
@@ -76,23 +77,6 @@ namespace JarvisWpf.Common
             IsValidationOn = false;
         }
 
-        public StatusBarViewModel statusBarData { get; set; }
-        
-        string _WindowStatusText;
-        public string WindowStatusText
-        {
-            get
-            {
-                return _WindowStatusText;
-            }
-            set
-            {
-                _WindowStatusText = value;
-                if (statusBarData != null)
-                    statusBarData.StatusText = value;
-            }
-        }
-
         protected virtual void NavigateToView(BindableBase newViewModel)
         {
             if (onNavigate != null)
@@ -113,6 +97,12 @@ namespace JarvisWpf.Common
                 PropertyChanged.Invoke(this, new PropertyChangedEventArgs(Name));
             if (IsValidationOn)
                 Validate();
+        }
+
+
+        public void UpdateStatusText(string Text)
+        {
+            ProviderFactory.GetCurrentProvider().CrosstalkService.Crosstalk("StatusBar", null, new object[] { Text });
         }
 
         public void Validate()

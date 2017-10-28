@@ -6,22 +6,21 @@
         xmlns:Project="clr-namespace:JarvisWpf.Project"
         xmlns:local="clr-namespace:JarvisWpf"
         xmlns:Common="clr-namespace:JarvisWpf.Common"
-                       xmlns:Behaviour="clr-namespace:JarvisWpf.Behaviours"
-                      xmlns:PresentationOptions="http://schemas.microsoft.com/winfx/2006/xaml/presentation/options"
-                      xmlns:Dialog="clr-namespace:MahApps.Metro.Controls.Dialogs;assembly=MahApps.Metro"
-                      xmlns:CommonItem="clr-namespace:JarvisWpf.CommonItems"
-                      xmlns:tb="http://www.hardcodet.net/taskbar"
-        Title="Jarvis : The Helper" Height="900" Width="1000"
+        xmlns:Behaviour="clr-namespace:JarvisWpf.Behaviours"
+        xmlns:PresentationOptions="http://schemas.microsoft.com/winfx/2006/xaml/presentation/options"
+        xmlns:Dialog="clr-namespace:MahApps.Metro.Controls.Dialogs;assembly=MahApps.Metro"
+        xmlns:CommonItem="clr-namespace:JarvisWpf.CommonItems"
+        xmlns:tb="http://www.hardcodet.net/taskbar"
+        Title="Jarvis : The Helper" 
         ShowIconOnTitleBar="True"  
-                      TitleCaps="False"
-                      BorderThickness="0" 
-                      GlowBrush="Black"
-                      ResizeMode="CanResizeWithGrip"
-                      WindowTransitionsEnabled="False"
-                      WindowStartupLocation="CenterScreen"
-                    Dialog:DialogParticipation.Register="{Binding}"  
-                      ShowInTaskbar="False"
-                      Behaviour:MvvmBehaviours.StateChangedMethodName ="WindowStateChanged"
+        TitleCaps="False"
+        BorderThickness="0" 
+        GlowBrush="Black"
+        ResizeMode="CanResizeWithGrip"
+        WindowTransitionsEnabled="False"
+        WindowStartupLocation="CenterScreen"
+        Dialog:DialogParticipation.Register="{Binding}"  
+        Behaviour:MvvmBehaviours.WindowClosingMethodName ="WindowClosing"
                       >
     
     <Controls:MetroWindow.Icon>
@@ -83,7 +82,9 @@
         <ContentControl Content="{Binding CurrentViewModel, Mode=TwoWay}" Grid.Row="0"></ContentControl>
         <StatusBar Grid.Row="1">
             <StatusBarItem Content="{Binding statusBarData.StatusText}"></StatusBarItem>
-            <tb:TaskbarIcon IconSource="Images/JarvisIcon 3D Pink.ico" DoubleClickCommand="{Binding MaximizeMainWindowCommand}">
+            <tb:TaskbarIcon IconSource="Images/JarvisIcon 3D Pink.ico" DoubleClickCommand="{Binding MaximizeMainWindowCommand}"
+                            DoubleClickCommandParameter="{Binding RelativeSource={RelativeSource AncestorType={x:Type Window}}}"
+                            >
                 <tb:TaskbarIcon.ContextMenu>
                     <ContextMenu ItemsSource="{Binding ApplicationContextMenu}">
                         <ContextMenu.ItemContainerStyle>

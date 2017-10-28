@@ -1,11 +1,13 @@
-﻿using System;
+﻿using LogicLayer.Factories;
+using LogicLayer.Interfaces;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
 namespace JarvisWpf.Common
 {
-    public class StatusBarViewModel: BindableBase
+    public class StatusBarViewModel: BindableBase, ICrosstalk
     {
         private string _StatusText;
 
@@ -19,5 +21,17 @@ namespace JarvisWpf.Common
             }
         }
 
+
+        public object IncomingCrosstalk(string ActionName, object[] Parameters)
+        {
+            if (Parameters != null)
+            {
+                if (Parameters.Length > 0)
+                {
+                    StatusText = Convert.ToString(Parameters[0]);
+                }
+            }
+            return null;
+        }
     }
 }

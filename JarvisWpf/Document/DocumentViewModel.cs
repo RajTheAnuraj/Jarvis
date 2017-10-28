@@ -355,7 +355,6 @@ namespace JarvisWpf.Document
             this.UploadPath = doc.UploadPath;
             this.project = Project;
             this.Document = doc;
-            WindowStatusText = String.Format("{0} - Document - {1} - {2}", Project.ProjectName, isEditMode == true ? "Editing" : "", doc.DisplayString);
         }
         #endregion
 

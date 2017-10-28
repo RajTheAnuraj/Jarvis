@@ -38,36 +38,34 @@ namespace JarvisWpf.Behaviours
 
 
 
-        public static string GetStateChangedMethodName(DependencyObject obj)
+        public static string GetWindowClosingMethodName(DependencyObject obj)
         {
-            return (string)obj.GetValue(StateChangedMethodNameProperty);
+            return (string)obj.GetValue(WindowClosingMethodNameProperty);
         }
 
-        public static void SetStateChangedMethodName(DependencyObject obj, string value)
+        public static void SetWindowClosingMethodName(DependencyObject obj, string value)
         {
-            obj.SetValue(StateChangedMethodNameProperty, value);
+            obj.SetValue(WindowClosingMethodNameProperty, value);
         }
 
-        // Using a DependencyProperty as the backing store for StateChangedMethodName.  This enables animation, styling, binding, etc...
-        public static readonly DependencyProperty StateChangedMethodNameProperty =
-            DependencyProperty.RegisterAttached("StateChangedMethodName", typeof(string), typeof(MvvmBehaviours), new PropertyMetadata(StateChangedMethodNameChanged));
+        // Using a DependencyProperty as the backing store for WindowClosingMethodName.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty WindowClosingMethodNameProperty =
+            DependencyProperty.RegisterAttached("WindowClosingMethodName", typeof(string), typeof(MvvmBehaviours), new PropertyMetadata(WindowClosingMethodNameChanged));
 
 
-        private static void StateChangedMethodNameChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        private static void WindowClosingMethodNameChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             Window F = d as Window;
             if (F == null) return;
-            F.StateChanged += (sender, newE) =>
+            F.Closing += (sender, newE) =>
             {
                 var dataContext = F.DataContext;
                 if (dataContext == null) return;
-                var stateChangeMethodInstance = dataContext.GetType().GetMethod(e.NewValue.ToString());
-                if (stateChangeMethodInstance == null) return;
-                stateChangeMethodInstance.Invoke(dataContext, null);
+                var WindowClosingMethodInstance = dataContext.GetType().GetMethod(e.NewValue.ToString());
+                if (WindowClosingMethodInstance == null) return;
+                WindowClosingMethodInstance.Invoke(dataContext, new object[] { sender, newE });
             };
         }
-
-
 
 
 

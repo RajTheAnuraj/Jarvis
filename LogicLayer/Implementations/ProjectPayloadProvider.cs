@@ -28,6 +28,9 @@ namespace LogicLayer.Implementations
             _rootFolder = rootFolder;
         }
 
+
+        public ICrosstalkService CrosstalkService { get; set; }
+
         public IUndoableCommand GetDirectoryCreateRecursiveCommand(string DirectoryPath)
         {
             return new DirectoryCreateRecursiveCommand(DirectoryPath);
@@ -184,5 +187,8 @@ namespace LogicLayer.Implementations
         {
             return new RetrieveCommonItemCommand();
         }
+
+
+        
     }
 }

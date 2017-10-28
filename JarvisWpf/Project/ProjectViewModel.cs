@@ -194,7 +194,6 @@ namespace JarvisWpf.Project
             set
             {
                 _SelectedTabIndex = value;
-                WindowStatusText = _ProjectName;
                 SelectedItemViewModel = null;
             }
         }
@@ -340,7 +339,6 @@ namespace JarvisWpf.Project
             History.Push(initProjCommand);
             initProjCommand.Execute();
             CopyToViewModel(pl);
-            WindowStatusText = _ProjectName;
         }
 
         private void CopyToViewModel(ProjectPayload pl)
@@ -374,7 +372,6 @@ namespace JarvisWpf.Project
                             DocumentViewModel DVM = new DocumentViewModel();
                             DVM.setDocument(doc,pl);
                             DVM.ChildChanged += ProjectItemChanged;
-                            DVM.statusBarData = statusBarData;
                             _Documents.Add(DVM);
                             NotifyPropertyChanged("Documents");
                             break;

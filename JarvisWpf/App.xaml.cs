@@ -11,13 +11,14 @@ using System.Configuration;
 using System.Data;
 using System.Linq;
 using System.Windows;
+using JarvisWpf.Common;
 
 namespace JarvisWpf
 {
     /// <summary>
     /// Interaction logic for App.xaml
     /// </summary>
-    public partial class App : Application
+    public partial class App : Application, ICrosstalk
     {
         
 
@@ -28,12 +29,21 @@ namespace JarvisWpf
             try
             {
                 ApplicationInitializeCommand.Execute();
+                provider.CrosstalkService = JarvisCrosstalkService.CreateInstance();
+                provider.CrosstalkService.RegisterCallback("Application", this);
+
             }
             catch (Exception)
             {
                 ApplicationInitializeCommand.Undo();
                 throw;
             }
+        }
+
+        public object IncomingCrosstalk(string ActionName, object[] Parameters)
+        {
+
+            return null;
         }
     }
 }

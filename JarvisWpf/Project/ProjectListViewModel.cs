@@ -41,6 +41,7 @@ namespace JarvisWpf.Project
             ProjectSelectedCommand = new RelayCommand<ProjectListItem>(ShowSelectedProject);
             ProjectAddCommand = new RelayCommand<object>(ProjectAdd);
             ProjectDeletedCommand = new RelayCommand<ProjectListItem>(ProjectDeleted);
+            UpdateStatusText("Project List");
         }
 
         private async void ProjectDeleted(ProjectListItem obj)
@@ -116,7 +117,6 @@ namespace JarvisWpf.Project
             {
                 Projects = new ObservableCollection<ProjectListItem>(ProjectList);
             }
-            WindowStatusText = "Project List";
         }
 
         private void ShowSelectedProject(ProjectListItem obj)
@@ -126,7 +126,7 @@ namespace JarvisWpf.Project
             projectViewModel.ProjectName = obj.ProjectName;
             projectViewModel.RemoteServerRoot = obj.ProjectRelativePath;
             projectViewModel.isRemoteProject = obj.isRemoteProject;
-            projectViewModel.statusBarData = statusBarData;
+            UpdateStatusText("Project Selected : " + projectViewModel.ProjectName);
             NavigateToView(projectViewModel as BindableBase);
         }
     }

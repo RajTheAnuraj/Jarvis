@@ -20,8 +20,6 @@ namespace JarvisWpf
 {
     public class ApplicationViewModel : INotifyPropertyChanged
     {
-        
-
         Stack<BindableBase> _History = null;
         BindableBase _CurrentViewModel;
         IResourceProvider ResourceProvider = null;
@@ -55,7 +53,6 @@ namespace JarvisWpf
             }
         }
 
-        public StatusBarViewModel statusBarData { get; set; }
 
         public Stack<BindableBase> History
         {
@@ -79,20 +76,21 @@ namespace JarvisWpf
             }
         }
 
+        public StatusBarViewModel statusBarData { get; set; }
+
         public ApplicationViewModel()
         {
             if (DesignerProperties.GetIsInDesignMode(new DependencyObject())) return;
             ResourceProvider = ProviderFactory.GetCurrentProvider();
+            statusBarData = new Common.StatusBarViewModel();
+            ResourceProvider.CrosstalkService.RegisterCallback("StatusBar", statusBarData);
             AppContextMenuPayload = new List<ApplicationContextMenuPayload>();
             FillAppContextMenu();
             MaximizeMainWindowCommand = new Common.RelayCommand<object>(MaximizeMainWindow);
             History = new Stack<BindableBase>();
             ProjectList = new ProjectListViewModel();
-            statusBarData = new StatusBarViewModel();
-            ProjectList.statusBarData = statusBarData;
             CommonItems.CommonItemsViewModel.CommonItemsSaved += CommonItemsViewModel_CommonItemsSaved;
             NavigateToView(ProjectList);
-
         }
 
         void CommonItemsViewModel_CommonItemsSaved()
@@ -103,18 +101,25 @@ namespace JarvisWpf
         }
 
 
-        private void MaximizeMainWindow(object obj)
+        private void MaximizeMainWindow(object sender)
         {
-            Application.Current.MainWindow.Visibility = Visibility.Visible;
-            Application.Current.MainWindow.WindowState = WindowState.Maximized;
+            System.Windows.Window window = sender as System.Windows.Window;
+            if (window == null) return;
+
+            window.Show();
+            window.Activate();
         }
 
-        public void WindowStateChanged()
+        public void WindowClosing(object sender, object e)
         {
-            if(Application.Current.MainWindow.WindowState== WindowState.Minimized)
-                Application.Current.MainWindow.Visibility = Visibility.Collapsed;
-            else
-                Application.Current.MainWindow.Visibility = Visibility.Visible;
+            System.Windows.Window window = sender as System.Windows.Window;
+            System.ComponentModel.CancelEventArgs cancelEvtArg = e as System.ComponentModel.CancelEventArgs;
+
+            if (sender != null || cancelEvtArg != null)
+            {
+                window.Hide();
+                cancelEvtArg.Cancel = true;
+            }
         }
 
         private void FillAppContextMenu()

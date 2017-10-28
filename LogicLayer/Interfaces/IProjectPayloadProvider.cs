@@ -12,7 +12,8 @@ namespace LogicLayer.Interfaces
         string GetProjectsRootFolder();
         string GetSystemFolder();
         void setRootFolder(string rootFolder);
-        
+
+        ICrosstalkService CrosstalkService { get; set; }
 
         //Commands
         IUndoableCommand GetDirectoryCreateRecursiveCommand(string DirectoryPath);
@@ -51,5 +52,6 @@ namespace LogicLayer.Interfaces
 
         IUndoableCommand GetSaveCommonItemCommand(List<ApplicationContextMenuPayload> ItemToSave);
         ICustomCommand<List<ApplicationContextMenuPayload>> GetRetrieveCommonItemCommand();
+
     }
 }

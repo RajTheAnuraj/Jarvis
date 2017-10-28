@@ -14,6 +14,8 @@ using System.Windows.Shapes;
 using MahApps.Metro.Controls.Dialogs;
 using MahApps.Metro.Controls;
 using System.Threading.Tasks;
+using LogicLayer.Interfaces;
+using LogicLayer.Factories;
 
 namespace JarvisWpf
 {
@@ -41,6 +43,14 @@ namespace JarvisWpf
         private void SaveButton_Click(object sender, RoutedEventArgs e)
         {
             
+        }
+
+        private void btnAppQuit_Click(object sender, RoutedEventArgs e)
+        {
+            IResourceProvider ResourceProvider = ProviderFactory.GetCurrentProvider();
+            ICrosstalkService crosstalkservice = ResourceProvider.CrosstalkService;
+            crosstalkservice.Crosstalk("Application", "AppShutDown", null);
+            Application.Current.Shutdown();
         }
     }
 }
