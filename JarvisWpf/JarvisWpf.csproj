@@ -180,9 +180,6 @@
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
     <None Include="app.config" />
-    <None Include="Configuration.Jarvis">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
     <None Include="packages.config" />
     <None Include="Properties\DataSources\JarvisWpf.Document.DocumentViewModel.datasource" />
     <None Include="Properties\Settings.settings">

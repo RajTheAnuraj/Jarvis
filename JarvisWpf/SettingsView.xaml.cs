@@ -24,35 +24,36 @@ namespace JarvisWpf
     /// </summary>
     public partial class SettingsView : UserControl
     {
+        IResourceProvider ResourceProvider = ProviderFactory.GetCurrentProvider();
+
         public SettingsView()
         {
             InitializeComponent();
-            var metroWindow = Application.Current.MainWindow as MetroWindow;
-            //metroWindow.ShowMessageAsync("Root Folder", "Please Set Root Folder");
-            if (String.IsNullOrWhiteSpace(Properties.Settings.Default.RootPath))
-            {
-                Properties.Settings.Default.RootPath = "C:\\Temp";
-                Properties.Settings.Default.Save();
-            }
-            else
-            {
-                txtRootPath.Text = Properties.Settings.Default.RootPath;
-            }
-        }
-
-        private void SaveButton_Click(object sender, RoutedEventArgs e)
-        {
             
         }
 
+
         private void btnAppQuit_Click(object sender, RoutedEventArgs e)
         {
-            IResourceProvider ResourceProvider = ProviderFactory.GetCurrentProvider();
             ICrosstalkService crosstalkservice = ResourceProvider.CrosstalkService;
             crosstalkservice.Crosstalk("Application", "AppShutDown", null);
             ICustomCommand DontShowCloseBaloonCommand = ResourceProvider.GetApplicationDontShowMeSetCommand("CloseNotification");
             DontShowCloseBaloonCommand.Execute();
             Application.Current.Shutdown();
+        }
+
+        private void ButtonReset_Click(object sender, RoutedEventArgs e)
+        {
+            object retval = ResourceProvider.CrosstalkService.Crosstalk("MessageBox", "ConfirmYesNo", new object[] { "This will restart the application. Are you sure to continue?" });
+            MessageBoxResult dr = (MessageBoxResult)retval;
+            if (dr == MessageBoxResult.No)
+                return;
+
+            string assemPath = System.Reflection.Assembly.GetCallingAssembly().Location;
+            assemPath = System.IO.Path.GetDirectoryName(assemPath);
+            assemPath = assemPath + "\\Configuration.Jarvis";
+            System.IO.File.Delete(assemPath);
+            ResourceProvider.CrosstalkService.Crosstalk("Application", "AppShutDown", null);
         }
     }
 }

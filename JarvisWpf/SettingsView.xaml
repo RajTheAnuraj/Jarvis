@@ -17,13 +17,6 @@
         </Grid.RowDefinitions>
 
         <Button Content="Quit" Grid.Row="0" Grid.ColumnSpan="2" Width="100" Height="40" VerticalAlignment="Top" x:Name="btnAppQuit" Click="btnAppQuit_Click"></Button>
-        
-        <TextBlock Text="Root Path" Grid.Row="2" Grid.Column="0" Margin="10,0,0,0" VerticalAlignment="Center"></TextBlock>
-        <StackPanel Orientation="Horizontal" Grid.Column="1" Grid.Row="2">
-        <TextBox x:Name="txtRootPath"  Margin="0,0,10,0" VerticalAlignment="Center" Width="300"></TextBox>
-        <Button Content="brw" Margin="0,0,10,0" VerticalAlignment="Center" Width="20"></Button>
-        </StackPanel>
-        
-        
+        <Button Content="Reset" x:Name="ButtonReset" Click="ButtonReset_Click"></Button>
     </Grid>
 </UserControl>

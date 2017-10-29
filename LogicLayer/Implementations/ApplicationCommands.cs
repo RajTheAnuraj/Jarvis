@@ -80,18 +80,7 @@ namespace LogicLayer.Implementations
             ArchiveFolderDI.Attributes &= ~FileAttributes.ReadOnly;
         }
 
-        private string GetRootFolder()
-        {
-            string assemPath = System.Reflection.Assembly.GetCallingAssembly().Location;
-            assemPath = Path.GetDirectoryName(assemPath);
-            assemPath = assemPath + "\\Configuration.Jarvis";
-            XmlDocument xdoc = new XmlDocument();
-            ICustomCommand fileReadAsStringCommand = ResourceProvider.GetFileReadAsStringCommand(assemPath);
-            fileReadAsStringCommand.Execute();
-            xdoc.LoadXml(((IReadTillEndAsString)fileReadAsStringCommand).ReadTillEndAsString);
-            var node = xdoc.DocumentElement.SelectSingleNode("RootFolder");
-            return node.InnerText;
-        }
+        
 
         public void Undo()
         {

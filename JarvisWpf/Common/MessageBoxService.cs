@@ -33,6 +33,14 @@ namespace JarvisWpf.Common
                         System.Windows.MessageBox.Show(Convert.ToString(Parameters[0]));
                     }
             }
+            else if (ActionName == "ConfirmYesNo")
+            {
+                if (Parameters != null)
+                    if (Parameters.Length > 0)
+                    {
+                        return System.Windows.MessageBox.Show(Convert.ToString(Parameters[0]),"Confirmation",System.Windows.MessageBoxButton.YesNo);
+                    }
+            }
             return null;
         }
     }
