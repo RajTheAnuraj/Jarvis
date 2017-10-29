@@ -13,21 +13,23 @@ namespace LogicLayer.Implementations
     {
         public IResourceProvider ResourceProvider { get; set; }
         Stack<IUndoableCommand> History = new Stack<IUndoableCommand>();
+        public string RootFolder { get; set; }
 
-        public ApplicationInitializeCommand()
+        public ApplicationInitializeCommand(string RootFolder)
         {
             ResourceProvider = ProviderFactory.GetCurrentProvider();
+            this.RootFolder = RootFolder;
         }
 
         public void Execute()
         {
             //if root folder is null get it from config
-            ResourceProvider.setRootFolder(GetRootFolder());
+            ResourceProvider.setRootFolder(this.RootFolder);
 
             //Get the root folder
             string RootFolder = ResourceProvider.GetProjectsRootFolder();
             if (RootFolder == null)
-                throw new ArgumentNullException("Rootfolder in AppConfig");
+                throw new ArgumentNullException("Rootfolder");
 
             //Check whether the root folder exists
             if (!Directory.Exists(RootFolder))

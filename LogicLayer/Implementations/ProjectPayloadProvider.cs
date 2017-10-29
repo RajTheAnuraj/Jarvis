@@ -106,9 +106,9 @@ namespace LogicLayer.Implementations
         }
 
 
-        public IUndoableCommand GetApplicationInitializeCommand()
+        public IUndoableCommand GetApplicationInitializeCommand(string RootFolder)
         {
-            return new ApplicationInitializeCommand();
+            return new ApplicationInitializeCommand(RootFolder);
         }
 
 

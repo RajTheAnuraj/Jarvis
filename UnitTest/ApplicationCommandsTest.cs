@@ -12,7 +12,7 @@ namespace UnitTest
         [TestMethod]
         public void TestMethod1()
         {
-            IUndoableCommand appInit = new ApplicationInitializeCommand();
+            IUndoableCommand appInit = new ApplicationInitializeCommand("");
             appInit.Execute();
 
             ProjectListPayload plist = new ProjectListPayload();

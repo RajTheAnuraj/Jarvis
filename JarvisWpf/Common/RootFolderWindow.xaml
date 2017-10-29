@@ -1,0 +1,23 @@
+﻿<Controls:MetroWindow x:Class="JarvisWpf.Common.RootFolderWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:Controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
+                      WindowStartupLocation="CenterScreen"
+                     Controls:ControlsHelper.ContentCharacterCasing="Normal"
+                      GlowBrush="Black"
+                      ShowMinButton="False"
+                      ShowMaxRestoreButton="False"
+                      ResizeMode="NoResize"
+        Title="Enter The Root Folder" Height="150" Width="700">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="50"></RowDefinition>
+            <RowDefinition Height="50"></RowDefinition>
+        </Grid.RowDefinitions>
+        <TextBox x:Name="txtRootPath" Margin="10" Grid.Row="0" 
+                 Controls:TextBoxHelper.Watermark="Root Path (ex: C:\Temp\Jarvis)" 
+                 VerticalContentAlignment="Center" Width="650">
+        </TextBox>
+        <Button x:Name="btnSave" Margin="10" HorizontalAlignment="Center" Content="Save" Grid.Row="1" Width="100" Click="btnSave_Click"></Button>
+    </Grid>
+</Controls:MetroWindow>

@@ -76,6 +76,9 @@
     <Compile Include="CommonItems\CommonItemsViewModel.cs" />
     <Compile Include="Common\JarvisCrosstalkService.cs" />
     <Compile Include="Common\MessageBoxService.cs" />
+    <Compile Include="Common\RootFolderWindow.xaml.cs">
+      <DependentUpon>RootFolderWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Common\StatusBarViewModel.cs" />
     <Compile Include="Converters\SourceControlTypeToBrush.cs" />
     <Compile Include="CommonItems\ApplicationContextViewModel.cs" />
@@ -95,6 +98,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Common\BindableRichTextBox.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Common\RootFolderWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

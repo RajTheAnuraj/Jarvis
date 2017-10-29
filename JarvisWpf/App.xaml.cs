@@ -20,18 +20,29 @@ namespace JarvisWpf
     /// </summary>
     public partial class App : Application, ICrosstalk
     {
-        
+
 
         private void Application_Startup(object sender, StartupEventArgs e)
         {
             IResourceProvider provider = ProviderFactory.GetCurrentProvider();
-            IUndoableCommand ApplicationInitializeCommand = provider.GetApplicationInitializeCommand();
+            provider.CrosstalkService = JarvisCrosstalkService.CreateInstance();
+            provider.CrosstalkService.RegisterCallback("Application", this);
+            provider.CrosstalkService.RegisterCallback("MessageBox", MessageBoxService.CreateInstance());
+
+            string rootPath = null;
+
+            RootFolderWindow rfw = new RootFolderWindow();
+            if (!rfw.ShowDialog(out rootPath))
+            {
+                provider.CrosstalkService.Crosstalk("MessageBox", "Show", new object[] { "The app cannot start without a valid root path. Exiting the App" });
+                this.Shutdown();
+                return;
+            }
+
+            IUndoableCommand ApplicationInitializeCommand = provider.GetApplicationInitializeCommand(rootPath);
             try
             {
                 ApplicationInitializeCommand.Execute();
-                provider.CrosstalkService = JarvisCrosstalkService.CreateInstance();
-                provider.CrosstalkService.RegisterCallback("Application", this);
-                provider.CrosstalkService.RegisterCallback("MessageBox", MessageBoxService.CreateInstance());
             }
             catch (Exception)
             {
